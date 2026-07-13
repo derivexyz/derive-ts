@@ -1,17 +1,14 @@
 # @derivexyz/derive-ts
 
+[![npm version](https://img.shields.io/npm/v/@derivexyz/derive-ts)](https://www.npmjs.com/package/@derivexyz/derive-ts)
+[![CI](https://github.com/derivexyz/derive-ts/actions/workflows/ci.yml/badge.svg)](https://github.com/derivexyz/derive-ts/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/@derivexyz/derive-ts)](./LICENSE)
+
 TypeScript SDK for the [Derive](https://derive.xyz) v3 exchange API — a typed
 client for market data, orders, RFQs, transfers, withdrawals, deposits, vaults,
 session keys, and websocket subscriptions.
 
-- **Typed end to end.** Request params and responses are generated from the
-  exchange's canonical API spec, so `client.orders.place(...)` and
-  `client.send('public/get_ticker', ...)` are both fully typed.
-- **Correct signing.** EIP-712 action signing and EIP-191 login are built in and
-  verified byte-for-byte against the protocol's own encoders.
-
-> Status: `3.0.0`. Requires Node 18+ (uses the built-in `fetch`). Peer runtime
-> deps: `ethers` v6 and `ws`.
+For more detailed docs see the [Derive v3 API reference](https://docs.derive.xyz/).
 
 ## Install
 
