@@ -1,0 +1,57 @@
+{
+  "name": "@derivexyz/derive-ts",
+  "version": "3.0.2",
+  "description": "TypeScript SDK for the Derive v3 exchange API",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js",
+      "require": "./dist/types/index.cjs"
+    },
+    "./types/endpoints": {
+      "types": "./dist/types/endpoints.d.ts",
+      "import": "./dist/types/endpoints.js",
+      "require": "./dist/types/endpoints.cjs"
+    },
+    "./codecs": {
+      "types": "./dist/codecs/index.d.ts",
+      "import": "./dist/codecs/index.js",
+      "require": "./dist/codecs/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "codecs/package.json",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ethers": "^6.13.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/ws": "^8.5.10",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.0"
+  }
+}

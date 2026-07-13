@@ -1,0 +1,38 @@
+name: Publish to npm
+
+# Auth is npm Trusted Publishing (OIDC) — NO token. Register this repo +
+# workflow as a Trusted Publisher on the npm package settings. `id-token: write`
+# provides both the OIDC auth and the provenance attestation.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Must match the Environment name configured on the npm Trusted Publisher.
+    # Create this environment in the derive-ts repo settings (optionally add
+    # protection rules, e.g. restrict to v* tags / required reviewers).
+    environment: release
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      # Trusted publishing needs npm >= 11.5.1; the node-bundled npm is older.
+      - run: npm install -g npm@latest
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test
+
+      - name: Publish (provenance via OIDC trusted publishing)
+        run: npm publish --provenance --access public

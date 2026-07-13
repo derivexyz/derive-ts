@@ -1,0 +1,7 @@
+{
+  "name": "@derivexyz/derive-ts-codecs",
+  "private": true,
+  "main": "../dist/codecs/index.cjs",
+  "module": "../dist/codecs/index.js",
+  "types": "../dist/codecs/index.d.ts"
+}
