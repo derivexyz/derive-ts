@@ -1,8 +1,12 @@
 {
   "name": "@derivexyz/derive-ts",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "TypeScript SDK for the Derive v3 exchange API",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/derivexyz/derive-ts.git"
+  },
   "type": "module",
   "engines": {
     "node": ">=18"
