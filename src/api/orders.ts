@@ -4,6 +4,7 @@ import { SignedAction } from '../signing/action';
 import { domainSeparator } from '../signing/eip712';
 import { DEFAULT_SIGNATURE_EXPIRY_SEC, expiresIn, randomNonce, toE18, type DecimalLike } from '../signing/encoding';
 import type {
+  AlgoType,
   CancelAllResponse,
   CancelByLabelWireResponse,
   InstrumentPublicResponse,
@@ -55,7 +56,7 @@ export interface PlaceOrderParams {
   /** Reject the order if the server clock is past this unix-seconds deadline. */
   rejectTimestamp?: number;
   /** Algo-order parameters (e.g. TWAP). */
-  algoType?: string;
+  algoType?: AlgoType;
   algoDurationSec?: number;
   algoNumSlices?: number;
 }

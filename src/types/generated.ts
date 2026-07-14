@@ -41,6 +41,11 @@ export type JSONRPCResponseFor_OrderWireResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AlgoType".
+ */
+export type AlgoType = 'twap';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "Direction".
  */
 export type Direction = 'buy' | 'sell';
@@ -738,6 +743,21 @@ export type JSONRPCResponseFor_OrderCreatedWireResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_SignedActionDebugEdgeRpcResponse_for_OrderActionDataEdgeRpcResponse".
+ */
+export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_OrderActionDataEdgeRpcResponse =
+  JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_OrderActionDataEdgeRpcResponse1 & {
+    id: JsonRpcId;
+  };
+export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_OrderActionDataEdgeRpcResponse1 =
+  | {
+      result: SignedActionDebugEdgeRpcResponseFor_OrderActionDataEdgeRpcResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_OrderQuoteEdgeRpcResponse".
  */
 export type JSONRPCResponseFor_OrderQuoteEdgeRpcResponse = JSONRPCResponseFor_OrderQuoteEdgeRpcResponse1 & {
@@ -1214,14 +1234,14 @@ export type JSONRPCResponseFor_GetReferralPerformanceResult1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JSONRPCResponse_for_AnyValue".
+ * via the `definition` "JSONRPCResponse_for_TickerSlimSnapshot".
  */
-export type JSONRPCResponseFor_AnyValue = JSONRPCResponseFor_AnyValue1 & {
+export type JSONRPCResponseFor_TickerSlimSnapshot = JSONRPCResponseFor_TickerSlimSnapshot1 & {
   id: JsonRpcId;
 };
-export type JSONRPCResponseFor_AnyValue1 =
+export type JSONRPCResponseFor_TickerSlimSnapshot1 =
   | {
-      result: unknown;
+      result: TickerSlimSnapshot;
     }
   | {
       error: RPCError;
@@ -1236,6 +1256,20 @@ export type JSONRPCResponseFor_GetTickersResponse = JSONRPCResponseFor_GetTicker
 export type JSONRPCResponseFor_GetTickersResponse1 =
   | {
       result: GetTickersResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_int64".
+ */
+export type JSONRPCResponseForInt64 = JSONRPCResponseForInt641 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseForInt641 =
+  | {
+      result: number;
     }
   | {
       error: RPCError;
@@ -1415,6 +1449,20 @@ export type JSONRPCResponseFor_QuoteSendDebugResult = JSONRPCResponseFor_QuoteSe
 export type JSONRPCResponseFor_QuoteSendDebugResult1 =
   | {
       result: QuoteSendDebugResult;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_AnyValue".
+ */
+export type JSONRPCResponseFor_AnyValue = JSONRPCResponseFor_AnyValue1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_AnyValue1 =
+  | {
+      result: unknown;
     }
   | {
       error: RPCError;
@@ -1708,6 +1756,10 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_CreateOrderEdgeRpcParams;
     response: JSONRPCResponseFor_OrderCreatedWireResponse;
   };
+  'private/order_debug': {
+    request: JsonRpcRequestFor_CreateOrderEdgeRpcParams;
+    response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_OrderActionDataEdgeRpcResponse;
+  };
   'private/order_quote': {
     request: JsonRpcRequestFor_OrderQuoteEdgeRpcParams;
     response: JSONRPCResponseFor_OrderQuoteEdgeRpcResponse;
@@ -1850,11 +1902,15 @@ export interface EndpointMap {
   };
   'public/get_ticker': {
     request: JsonRpcRequestFor_GetTickerEdgeRpcParams;
-    response: JSONRPCResponseFor_AnyValue;
+    response: JSONRPCResponseFor_TickerSlimSnapshot;
   };
   'public/get_tickers': {
     request: JsonRpcRequestFor_GetTickersEdgeRpcParams;
     response: JSONRPCResponseFor_GetTickersResponse;
+  };
+  'public/get_time': {
+    request: JsonRpcRequestFor_NoParams;
+    response: JSONRPCResponseForInt64;
   };
   'public/get_trade_history': {
     request: JsonRpcRequestFor_GetPublicTradeHistoryEdgeRpcParams;
@@ -2002,7 +2058,7 @@ export interface OrderWireResponse {
   algo_duration_sec?: number | null;
   algo_num_slices?: number | null;
   algo_slices_completed?: number | null;
-  algo_type?: string | null;
+  algo_type?: AlgoType | null;
   amount: string;
   average_price: string;
   cancel_reason?:
@@ -3822,7 +3878,7 @@ export interface JsonRpcRequestFor_CreateOrderEdgeRpcParams {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/order';
+  method: 'private/order_debug';
   params: CreateOrderEdgeRpcParams;
 }
 /**
@@ -3832,7 +3888,7 @@ export interface JsonRpcRequestFor_CreateOrderEdgeRpcParams {
 export interface CreateOrderEdgeRpcParams {
   algo_duration_sec?: number | null;
   algo_num_slices?: number | null;
-  algo_type?: string | null;
+  algo_type?: AlgoType | null;
   amount: string;
   client?: string | null;
   direction: Direction;
@@ -3894,6 +3950,49 @@ export interface TradeWireResponse {
   trade_price: string;
   tx_hash?: string | null;
   tx_status: TxStatus;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SignedActionDebugEdgeRpcResponse_for_OrderActionDataEdgeRpcResponse".
+ */
+export interface SignedActionDebugEdgeRpcResponseFor_OrderActionDataEdgeRpcResponse {
+  action_hash: string;
+  action_typehash: string;
+  domain_separator: string;
+  encoded_data: string;
+  encoded_data_hashed: string;
+  expected_signer: string;
+  input_data: ActionInputDataEdgeRpcResponseFor_OrderActionDataEdgeRpcResponse;
+  module: string;
+  owner: string;
+  recovered_signer?: string | null;
+  typed_data_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ActionInputDataEdgeRpcResponse_for_OrderActionDataEdgeRpcResponse".
+ */
+export interface ActionInputDataEdgeRpcResponseFor_OrderActionDataEdgeRpcResponse {
+  data: OrderActionDataEdgeRpcResponse;
+  expiry: number;
+  module: string;
+  nonce: number;
+  owner: string;
+  signer: string;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OrderActionDataEdgeRpcResponse".
+ */
+export interface OrderActionDataEdgeRpcResponse {
+  asset_address: string;
+  asset_sub_id: string;
+  desired_amount: string;
+  is_bid: boolean;
+  limit_price: string;
+  recipient_id: number;
+  worst_fee: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -4110,7 +4209,7 @@ export interface JsonRpcRequestFor_ReplaceOrderEdgeRpcParams {
 export interface ReplaceOrderEdgeRpcParams {
   algo_duration_sec?: number | null;
   algo_num_slices?: number | null;
-  algo_type?: string | null;
+  algo_type?: AlgoType | null;
   amount: string;
   client?: string | null;
   direction: Direction;
@@ -4694,7 +4793,7 @@ export interface JsonRpcRequestFor_NoParams {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'public/get_all_live_instruments';
+  method: 'public/get_time';
   params: NoParams;
 }
 /**
@@ -5366,6 +5465,55 @@ export interface GetTickerEdgeRpcParams {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "TickerSlimSnapshot".
+ */
+export interface TickerSlimSnapshot {
+  A: string;
+  B: string;
+  I: string;
+  M: string;
+  a: string;
+  b: string;
+  f?: string | null;
+  maxp: string;
+  minp: string;
+  option_pricing?: OptionPricing | null;
+  stats: DailyTradingStatistics;
+  t: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OptionPricing".
+ */
+export interface OptionPricing {
+  ai: string;
+  bi: string;
+  d: string;
+  df: string;
+  f: string;
+  g: string;
+  i: string;
+  m: string;
+  r: string;
+  t: string;
+  v: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DailyTradingStatistics".
+ */
+export interface DailyTradingStatistics {
+  c: string;
+  h: string;
+  l: string;
+  n: number;
+  oi: string;
+  p: string;
+  pr: string;
+  v: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_GetTickersEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_GetTickersEdgeRpcParams {
@@ -5699,18 +5847,18 @@ export interface PublicGetWalletsFromSessionKeyRPCResponse {
  * via the `definition` "RateLimitResult".
  */
 export interface RateLimitResult {
-  remaining_connections?: DistributedRateLimiterRes | null;
-  remaining_matching: DistributedRateLimiterRes;
-  remaining_non_matching: DistributedRateLimiterRes;
+  remaining_connections?: RateLimitInfo | null;
+  remaining_matching: RateLimitInfo;
+  remaining_non_matching: RateLimitInfo;
   remaining_per_endpoint: {
-    [k: string]: DistributedRateLimiterRes;
+    [k: string]: RateLimitInfo;
   };
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "DistributedRateLimiterRes".
+ * via the `definition` "RateLimitInfo".
  */
-export interface DistributedRateLimiterRes {
+export interface RateLimitInfo {
   consumedPoints: number;
   isFirstInDuration: boolean;
   msBeforeNext: number;
@@ -6125,55 +6273,6 @@ export interface SpotFeedEntry {
 export interface TickerSlimPayload {
   instrument_ticker: TickerSlimSnapshot;
   timestamp: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "TickerSlimSnapshot".
- */
-export interface TickerSlimSnapshot {
-  A: string;
-  B: string;
-  I: string;
-  M: string;
-  a: string;
-  b: string;
-  f?: string | null;
-  maxp: string;
-  minp: string;
-  option_pricing?: OptionPricing | null;
-  stats: DailyTradingStatistics;
-  t: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "OptionPricing".
- */
-export interface OptionPricing {
-  ai: string;
-  bi: string;
-  d: string;
-  df: string;
-  f: string;
-  g: string;
-  i: string;
-  m: string;
-  r: string;
-  t: string;
-  v: string;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "DailyTradingStatistics".
- */
-export interface DailyTradingStatistics {
-  c: string;
-  h: string;
-  l: string;
-  n: number;
-  oi: string;
-  p: string;
-  pr: string;
-  v: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
