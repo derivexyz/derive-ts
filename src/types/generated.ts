@@ -1234,6 +1234,20 @@ export type JSONRPCResponseFor_OptionSettlementPricesResult1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_GetPendingDepositsResult".
+ */
+export type JSONRPCResponseFor_GetPendingDepositsResult = JSONRPCResponseFor_GetPendingDepositsResult1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_GetPendingDepositsResult1 =
+  | {
+      result: GetPendingDepositsResult;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_GetReferralPerformanceResult".
  */
 export type JSONRPCResponseFor_GetReferralPerformanceResult = JSONRPCResponseFor_GetReferralPerformanceResult1 & {
@@ -1913,6 +1927,10 @@ export interface EndpointMap {
   'public/get_option_settlement_prices': {
     request: JsonRpcRequestFor_GetOptionSettlementPricesEdgeRpcParams;
     response: JSONRPCResponseFor_OptionSettlementPricesResult;
+  };
+  'public/get_pending_deposits': {
+    request: JsonRpcRequestFor_GetPendingDepositsParams;
+    response: JSONRPCResponseFor_GetPendingDepositsResult;
   };
   'public/get_referral_performance': {
     request: JsonRpcRequestFor_GetReferralPerformanceParams;
@@ -2992,6 +3010,7 @@ export interface DepositHistoryResult {
  * via the `definition` "DepositEntry".
  */
 export interface DepositEntry {
+  action_id?: number | null;
   amount: string;
   asset: string;
   batch_status: BatchStatus;
@@ -5463,6 +5482,51 @@ export interface ExpirySettlementPrice {
   expiry_date: string;
   price?: string | null;
   utc_expiry_sec: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetPendingDepositsParams".
+ */
+export interface JsonRpcRequestFor_GetPendingDepositsParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_pending_deposits';
+  params: GetPendingDepositsParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetPendingDepositsParams".
+ */
+export interface GetPendingDepositsParams {
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetPendingDepositsResult".
+ */
+export interface GetPendingDepositsResult {
+  pending_deposits: PendingDepositEntry[];
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PendingDepositEntry".
+ */
+export interface PendingDepositEntry {
+  action_id: number;
+  action_type: string;
+  amount: string;
+  asset: string;
+  block_number: number;
+  log_index: number;
+  manager_id: number;
+  status: string;
+  subaccount_id: number;
+  timestamp: number;
+  tx_hash: string;
+  updated_at_ms: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
