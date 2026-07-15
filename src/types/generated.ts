@@ -1455,6 +1455,11 @@ export type JSONRPCResponseFor_ArrayOfUint641 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DepositType".
+ */
+export type DepositType = 'slow' | 'fast';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_RegisterDepositAddressResult".
  */
 export type JSONRPCResponseFor_RegisterDepositAddressResult = JSONRPCResponseFor_RegisterDepositAddressResult1 & {
@@ -5521,6 +5526,8 @@ export interface PendingDepositEntry {
   amount: string;
   asset: string;
   block_number: number;
+  credit_nonce?: string | null;
+  deposit_type: string;
   log_index: number;
   manager_id: number;
   status: string;
@@ -6040,6 +6047,7 @@ export interface JsonRpcRequestFor_RegisterDepositAddressParams {
  * via the `definition` "RegisterDepositAddressParams".
  */
 export interface RegisterDepositAddressParams {
+  deposit_type: DepositType;
   manager_id?: number | null;
   subaccount_id?: number;
   wallet: string;
@@ -6050,6 +6058,7 @@ export interface RegisterDepositAddressParams {
  */
 export interface RegisterDepositAddressResult {
   deposit_address: string;
+  deposit_type: DepositType;
   manager_id?: number | null;
   subaccount_id?: number | null;
   wallet: string;

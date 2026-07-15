@@ -52,7 +52,7 @@ run(async () => {
   // again returns the same one. Anything sent to it is swept and credited
   // asynchronously; with managerId (no subaccountId) the first sweep
   // creates your account's first subaccount under that manager.
-  const registration = await client.deposits.depositAddress.register({ managerId });
+  const registration = await client.deposits.depositAddress.register({ managerId, depositType: 'slow' });
   console.log(`[A] deposit address for ${registration.wallet}: ${registration.deposit_address}`);
   console.log('[A] send USDC there from any wallet/exchange; crediting is asynchronous.');
 

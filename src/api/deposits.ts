@@ -176,11 +176,18 @@ export class DepositAddressDeposits {
 
   /**
    * Registers (or re-fetches — the address is deterministic per wallet/
-   * subaccount/manager) the deposit address the exchange watches and
-   * sweeps, routing funds to an existing subaccount or, with
+   * subaccount/manager/factory) the deposit address the exchange watches
+   * and sweeps, routing funds to an existing subaccount or, with
    * `managerId`, a new one. `wallet` defaults to the client's owner.
+   * `depositType` picks the flow: `slow` (swept on-chain through the
+   * ActionManager) or `fast` (pooled and credited off-chain).
    */
-  async register(options: { wallet?: string; subaccountId?: number; managerId?: number } = {}) {
+  async register(options: {
+    wallet?: string;
+    subaccountId?: number;
+    managerId?: number;
+    depositType: 'slow' | 'fast';
+  }) {
     // The address is deterministic per (wallet, subaccount, manager). The
     // server requires a non-zero managerId whenever a subaccount isn't
     // given (it would be creating one), so fail early rather than eat a
@@ -192,6 +199,7 @@ export class DepositAddressDeposits {
       wallet: getAddress(options.wallet ?? this.ctx.credentials().ownerAddress),
       subaccount_id: options.subaccountId,
       manager_id: options.managerId,
+      deposit_type: options.depositType,
     });
   }
 }
