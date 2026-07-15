@@ -25,8 +25,7 @@ export interface AuthCredentials {
  * Owner-wallet signatures must be fresh; session-key signatures skip
  * the freshness window but the key must be registered and unexpired.
  *
- * Note: header names are `X-Lyra*` — the live wire format predates the
- * Derive rebrand.
+ * Note: header names use the `X-Derive*` prefix on the wire.
  */
 export async function authHeaders(credentials: {
   ownerAddress: string;
@@ -35,9 +34,9 @@ export async function authHeaders(credentials: {
   const timestamp = Date.now().toString();
   const signature = await credentials.signer.signMessage(timestamp);
   return {
-    'X-LyraWallet': credentials.ownerAddress,
-    'X-LyraTimestamp': timestamp,
-    'X-LyraSignature': signature,
+    'X-DeriveWallet': credentials.ownerAddress,
+    'X-DeriveTimestamp': timestamp,
+    'X-DeriveSignature': signature,
   };
 }
 

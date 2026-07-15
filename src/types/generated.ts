@@ -1206,6 +1206,20 @@ export type JSONRPCResponseFor_GetLatestSignedFeedsResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_GetOnchainActionHistoryResponse".
+ */
+export type JSONRPCResponseFor_GetOnchainActionHistoryResponse = JSONRPCResponseFor_GetOnchainActionHistoryResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_GetOnchainActionHistoryResponse1 =
+  | {
+      result: GetOnchainActionHistoryResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_OptionSettlementPricesResult".
  */
 export type JSONRPCResponseFor_OptionSettlementPricesResult = JSONRPCResponseFor_OptionSettlementPricesResult1 & {
@@ -1891,6 +1905,10 @@ export interface EndpointMap {
   'public/get_latest_signed_feeds': {
     request: JsonRpcRequestFor_GetLatestSignedFeedsEdgeRpcParams;
     response: JSONRPCResponseFor_GetLatestSignedFeedsResponse;
+  };
+  'public/get_onchain_action_history': {
+    request: JsonRpcRequestFor_GetOnchainActionHistoryParams;
+    response: JSONRPCResponseFor_GetOnchainActionHistoryResponse;
   };
   'public/get_option_settlement_prices': {
     request: JsonRpcRequestFor_GetOptionSettlementPricesEdgeRpcParams;
@@ -5355,6 +5373,61 @@ export interface VolSVIParamDataResponse {
   SVI_refTau: string;
   SVI_rho: string;
   SVI_sigma: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetOnchainActionHistoryParams".
+ */
+export interface JsonRpcRequestFor_GetOnchainActionHistoryParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_onchain_action_history';
+  params: GetOnchainActionHistoryParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetOnchainActionHistoryParams".
+ */
+export interface GetOnchainActionHistoryParams {
+  action_type?: number | null;
+  end_timestamp?: number | null;
+  page?: number | null;
+  page_size?: number | null;
+  start_timestamp?: number | null;
+  wallet?: string | null;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetOnchainActionHistoryResponse".
+ */
+export interface GetOnchainActionHistoryResponse {
+  actions: OnchainActionHistoryEntry[];
+  pagination: PaginationInfo;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OnchainActionHistoryEntry".
+ */
+export interface OnchainActionHistoryEntry {
+  acc: string;
+  action_id: number;
+  action_type: number;
+  action_type_label: string;
+  block_number: number;
+  data: string;
+  error_code?: number | null;
+  error_message?: string | null;
+  fallback_at?: number | null;
+  first_failed_at?: number | null;
+  l1_sender: string;
+  last_failed_at?: number | null;
+  op_uuid?: string | null;
+  queue: string;
+  status: string;
+  tx_hash?: string | null;
+  updated_at: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema

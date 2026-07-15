@@ -2,6 +2,7 @@ import type {
   CurrencyResponse,
   GetAllInstrumentsResponse,
   GetLatestSignedFeedsResponse,
+  GetOnchainActionHistoryResponse,
   GetReferralPerformanceResult,
   GetTickersResponse,
   GetTransactionResult,
@@ -127,6 +128,32 @@ export class MarketDataApi {
   /** On-chain settlement status and hash for a single op by its uuid. */
   getTransaction(opUuid: string): Promise<GetTransactionResult> {
     return this.ctx.send('public/get_transaction', { op_uuid: opUuid });
+  }
+
+  /**
+   * Lifecycle of L1 onchain actions (deposits, forced withdrawals, admin
+   * config) scraped from the OnchainActionManager: applied (with op uuid),
+   * consumed as a fallback no-op, or still failing with the retry policy and
+   * latest rejection. Timestamps filter on the action's last state change.
+   */
+  getOnchainActionHistory(
+    params: {
+      wallet?: string;
+      actionType?: number;
+      startTimestamp?: number;
+      endTimestamp?: number;
+      page?: number;
+      pageSize?: number;
+    } = {},
+  ): Promise<GetOnchainActionHistoryResponse> {
+    return this.ctx.send('public/get_onchain_action_history', {
+      wallet: params.wallet ?? null,
+      action_type: params.actionType ?? null,
+      start_timestamp: params.startTimestamp ?? null,
+      end_timestamp: params.endTimestamp ?? null,
+      page: params.page ?? null,
+      page_size: params.pageSize ?? null,
+    });
   }
 
   /** Referral fee-share and reward breakdown over a millisecond window. */

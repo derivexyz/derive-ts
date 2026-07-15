@@ -181,9 +181,8 @@ protocol's constant `Matching` verifying contract; the action typehash is a
 protocol constant. You normally just pass `network: 'mainnet' | 'testnet' |
 'local'`. To point at a custom deployment, pass a full `NetworkConfig`.
 
-> **Security note:** auth headers are named `X-Lyra*` on the wire — this is the
-> live protocol format and predates the Derive rebrand. Keep your private keys
-> in a secret manager; the SDK never logs key material.
+> **Security note:** auth headers are named `X-Derive*` on the wire. Keep your
+> private keys in a secret manager; the SDK never logs key material.
 
 ## License
 

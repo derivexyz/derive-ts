@@ -43,7 +43,7 @@ export class HttpTransport {
         method: 'POST',
         headers,
         body: JSON.stringify(params),
-        // Never follow a redirect: it would forward the signed X-Lyra*
+        // Never follow a redirect: it would forward the signed X-Derive*
         // auth headers to the redirect target.
         redirect: 'error',
         signal: AbortSignal.timeout(timeoutMs),
