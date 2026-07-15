@@ -3798,6 +3798,7 @@ export interface VaultShareEntryWireResponse {
  */
 export interface VaultWireResponse {
   benchmark_price?: string | null;
+  curator: Address;
   curator_shares: string;
   description: string;
   mtm_cap?: string | null;
