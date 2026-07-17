@@ -1,6 +1,6 @@
 {
   "name": "@derivexyz/derive-ts",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "TypeScript SDK for the Derive v3 exchange API",
   "license": "MIT",
   "repository": {
