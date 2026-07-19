@@ -1262,6 +1262,25 @@ export type JSONRPCResponseFor_GetReferralPerformanceResult1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_Array_of_RiskUniverseResponse".
+ */
+export type JSONRPCResponseFor_ArrayOf_RiskUniverseResponse = JSONRPCResponseFor_ArrayOf_RiskUniverseResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_ArrayOf_RiskUniverseResponse1 =
+  | {
+      result: RiskUniverseResponse[];
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MarginType".
+ */
+export type MarginType = 'SM' | 'PM2';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_TickerSlimSnapshot".
  */
 export type JSONRPCResponseFor_TickerSlimSnapshot = JSONRPCResponseFor_TickerSlimSnapshot1 & {
@@ -1457,7 +1476,7 @@ export type JSONRPCResponseFor_ArrayOfUint641 =
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "DepositType".
  */
-export type DepositType = 'standard' | 'instant' | 'direct';
+export type DepositType = 'slow' | 'fast';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_RegisterDepositAddressResult".
@@ -1940,6 +1959,10 @@ export interface EndpointMap {
   'public/get_referral_performance': {
     request: JsonRpcRequestFor_GetReferralPerformanceParams;
     response: JSONRPCResponseFor_GetReferralPerformanceResult;
+  };
+  'public/get_risk_universes': {
+    request: JsonRpcRequestFor_NoParams;
+    response: JSONRPCResponseFor_ArrayOf_RiskUniverseResponse;
   };
   'public/get_ticker': {
     request: JsonRpcRequestFor_GetTickerEdgeRpcParams;
@@ -4860,6 +4883,7 @@ export interface CurrencyResponse {
 export interface UniverseManagers {
   pm?: number | null;
   risk_universe_id: number;
+  risk_universe_name?: string | null;
   sm?: number | null;
 }
 /**
@@ -4878,6 +4902,7 @@ export interface AssetEntry {
 export interface AssetUniverse {
   oi: OpenInterestStats;
   risk_universe_id: number;
+  risk_universe_name?: string | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5588,6 +5613,48 @@ export interface ReferralPerformanceByInstrumentType {
   notional_volume: string;
   referred_fee: string;
   unique_traders_referred: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RiskUniverseResponse".
+ */
+export interface RiskUniverseResponse {
+  description?: string | null;
+  managers: RiskUniverseManager[];
+  name?: string | null;
+  risk_universe_id: number;
+  security_module: SecurityModuleDetails;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RiskUniverseManager".
+ */
+export interface RiskUniverseManager {
+  collaterals: ManagerCollateral[];
+  instruments: string[];
+  manager_id: number;
+  margin_type: MarginType;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ManagerCollateral".
+ */
+export interface ManagerCollateral {
+  address: string;
+  erc20: Erc20Details;
+  im_discount: string;
+  min_deposit_usd: string;
+  mm_discount: string;
+  name: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SecurityModuleDetails".
+ */
+export interface SecurityModuleDetails {
+  cash_asset: string;
+  cash_currency: string;
+  subaccount_id: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema

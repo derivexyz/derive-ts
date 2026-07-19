@@ -12,6 +12,7 @@ import type {
   MarginWatchResult,
   OptionSettlementPricesResult,
   PublicAssetType,
+  RiskUniverseResponse,
   TickerSlimSnapshot,
 } from '../types';
 import type { ClientContext } from './context';
@@ -106,6 +107,15 @@ export class MarketDataApi {
 
   getAllCurrencies(): Promise<CurrencyResponse[]> {
     return this.ctx.send('public/get_all_currencies', null);
+  }
+
+  /**
+   * Every risk universe with its managers (instruments + accepted collaterals
+   * each) and Security Module — the one call for choosing a `manager_id`
+   * and the collateral `address` to deposit.
+   */
+  getRiskUniverses(): Promise<RiskUniverseResponse[]> {
+    return this.ctx.send('public/get_risk_universes', null);
   }
 
   getCurrency(currency: string): Promise<CurrencyResponse> {

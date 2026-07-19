@@ -19,7 +19,7 @@ function entry(overrides: Partial<PendingDepositEntry>): PendingDepositEntry {
     log_index: 3,
     block_number: 100,
     status: 'pending',
-    deposit_type: 'instant',
+    deposit_type: 'fast',
     timestamp: 1,
     updated_at_ms: 1,
     ...overrides,

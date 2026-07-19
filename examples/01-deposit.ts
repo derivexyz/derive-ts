@@ -14,7 +14,7 @@
  *       exchange; they are swept and credited asynchronously, creating
  *       your subaccount. (~2 min).
  *   Instant — deposit address (fast): same mechanism with
- *       depositType 'instant' — a distinct address whose deposits are pooled
+ *       depositType 'fast' — a distinct address whose deposits are pooled
  *       and credited near-instantly up to a per-currency cap (larger
  *       amounts are credited in capped chunks). (~30 sec)
  *   Direct — contract call (self-custody): YOUR wallet submits the
@@ -43,25 +43,25 @@ run(async () => {
   // creates.)
   const client = ownerClient();
 
-  // Discover deposit routing from public metadata instead of hardcoding:
-  // a currency lists its protocol spot assets (the on-protocol balance the
-  // deposit credits — NOT the ERC-20) and the margin managers that can
-  // risk it. A subaccount is created under a manager, so every method
-  // needs a manager id to route the first deposit into a NEW subaccount.
-  const currencies = await client.marketData.getAllCurrencies();
-  const usdc = currencies.find((c) => c.currency === 'USDC');
-  if (!usdc) throw new Error('USDC is not listed on this network');
-  const spotAsset = usdc.spot.find((s) => s.name === 'USDC') ?? usdc.spot[0];
-  if (!spotAsset) throw new Error('USDC has no registered spot asset');
-  const managerId = usdc.managers[0]?.sm; // standard (cross) margin manager
-  if (managerId == null) throw new Error('no standard-margin manager risks USDC');
+  // Discover deposit routing from public metadata instead of hardcoding: pick
+  // the manager that both trades what you want (ETH options) and accepts the
+  // collateral you'll post (USDC), then take its accepted-collateral entry —
+  // the entry's `address` is the protocol spot asset the deposit credits (NOT
+  // the ERC-20), and the manager's id routes the first deposit into a NEW
+  // subaccount. (The fallback manager `0` trades nothing, so it never matches.)
+  const universes = await client.marketData.getRiskUniverses();
+  const manager = universes
+    .flatMap((u) => u.managers)
+    .find((m) => m.instruments.includes('ETH-OPTION') && m.collaterals.some((c) => c.name === 'USDC'))!;
+  const spotAsset = manager.collaterals.find((c) => c.name === 'USDC')!;
+  const managerId = manager.manager_id;
 
   // ── Standard: deposit address ──────────────────────────────────────────
   // The address is deterministic per (wallet, manager, depositType) —
   // calling register again returns the same one. Anything sent to it is
   // swept and credited asynchronously; with managerId (no subaccountId)
   // the sweep creates a subaccount under that manager.
-  const standard = await client.deposits.depositAddress.register({ managerId, depositType: 'standard' });
+  const standard = await client.deposits.depositAddress.register({ managerId, depositType: 'slow' });
   console.log(`[standard] deposit address for ${standard.wallet}: ${standard.deposit_address}`);
   console.log('[standard] send USDC there from any wallet/exchange; crediting is asynchronous.');
 
@@ -70,7 +70,7 @@ run(async () => {
   // credited near-instantly up to a per-currency cap; larger amounts are
   // credited in capped chunks. Track them with deposits.getPending /
   // awaitFastDeposit (they never appear in the deposit history).
-  const instant = await client.deposits.depositAddress.register({ managerId, depositType: 'instant' });
+  const instant = await client.deposits.depositAddress.register({ managerId, depositType: 'fast' });
   console.log(`[instant] fast deposit address: ${instant.deposit_address}`);
 
   const rpcUrl = process.env.RPC_URL;
