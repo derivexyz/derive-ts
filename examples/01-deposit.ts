@@ -14,7 +14,7 @@
  *       exchange; they are swept and credited asynchronously, creating
  *       your subaccount. (~2 min).
  *   Instant — deposit address (fast): same mechanism with
- *       depositType 'fast' — a distinct address whose deposits are pooled
+ *       depositType 'instant' — a distinct address whose deposits are pooled
  *       and credited near-instantly up to a per-currency cap (larger
  *       amounts are credited in capped chunks). (~30 sec)
  *   Direct — contract call (self-custody): YOUR wallet submits the
@@ -61,7 +61,7 @@ run(async () => {
   // calling register again returns the same one. Anything sent to it is
   // swept and credited asynchronously; with managerId (no subaccountId)
   // the sweep creates a subaccount under that manager.
-  const standard = await client.deposits.depositAddress.register({ managerId, depositType: 'slow' });
+  const standard = await client.deposits.depositAddress.register({ managerId, depositType: 'standard' });
   console.log(`[standard] deposit address for ${standard.wallet}: ${standard.deposit_address}`);
   console.log('[standard] send USDC there from any wallet/exchange; crediting is asynchronous.');
 
@@ -70,7 +70,7 @@ run(async () => {
   // credited near-instantly up to a per-currency cap; larger amounts are
   // credited in capped chunks. Track them with deposits.getPending /
   // awaitFastDeposit (they never appear in the deposit history).
-  const instant = await client.deposits.depositAddress.register({ managerId, depositType: 'fast' });
+  const instant = await client.deposits.depositAddress.register({ managerId, depositType: 'instant' });
   console.log(`[instant] fast deposit address: ${instant.deposit_address}`);
 
   const rpcUrl = process.env.RPC_URL;
