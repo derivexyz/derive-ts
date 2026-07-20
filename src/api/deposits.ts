@@ -13,22 +13,22 @@ import type { ClientContext } from './context';
  * - `deposits.contractCall.*` — self-custody (Direct): YOUR wallet sends
  *   the on-chain ActionManager transaction (approve + deposit); you
  *   provide an ethers Signer connected to the chain RPC.
- * - `deposits.depositAddress.register({ depositType: 'slow' })` — CEX-style
+ * - `deposits.depositAddress.register({ depositType: 'standard' })` — CEX-style
  *   (Standard): register a deterministic deposit address, send funds to it
  *   from anywhere, and the exchange sweeps and credits them asynchronously.
- * - `deposits.depositAddress.register({ depositType: 'fast' })` — CEX-style
+ * - `deposits.depositAddress.register({ depositType: 'instant' })` — CEX-style
  *   (Instant): same address mechanism, but the deposit is pooled and
  *   credited off-chain near-instantly up to a per-currency cap (larger
  *   amounts are credited in capped chunks).
  *
  * Tracking: `getPending` gives the first feedback for every method — an
  * entry appears the moment the exchange picks the deposit up. From there,
- * fast deposits are processed straight off that feed (`awaitFastDeposit`
- * polls it to completion), while contract-call and slow deposits wait
+ * instant deposits are processed straight off that feed (`awaitFastDeposit`
+ * polls it to completion), while contract-call and standard deposits wait
  * ~2 minutes of confirmations before entering exchange state — poll
  * `awaitNewSubaccount` (or the subaccount balance) for those. `getHistory`
- * records credited contract-call and slow deposits only; fast deposits are
- * credited as transfers and never appear there.
+ * records credited contract-call and standard deposits only; instant deposits
+ * are credited as transfers and never appear there.
  */
 export class DepositsApi {
   readonly contractCall: ContractCallDeposits;
@@ -244,8 +244,8 @@ export class DepositAddressDeposits {
    * `managerId`, a new one. `wallet` defaults to the client's owner.
    * `depositType` picks the flow, and each type has its own distinct
    * address for the same identity:
-   * - `slow` (Standard): swept on-chain through the ActionManager.
-   * - `fast` (Instant): pooled and credited off-chain near-instantly up
+   * - `standard`: swept on-chain through the ActionManager.
+   * - `instant`: pooled and credited off-chain near-instantly up
    *   to a per-currency cap; larger amounts are credited in capped
    *   chunks. Track progress with `deposits.getPending` /
    *   `deposits.awaitFastDeposit`.
@@ -254,7 +254,7 @@ export class DepositAddressDeposits {
     wallet?: string;
     subaccountId?: number;
     managerId?: number;
-    depositType: 'slow' | 'fast';
+    depositType: 'standard' | 'instant';
   }) {
     // The address is deterministic per (wallet, subaccount, manager). The
     // server requires a non-zero managerId whenever a subaccount isn't

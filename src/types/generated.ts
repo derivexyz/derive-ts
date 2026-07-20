@@ -1476,7 +1476,7 @@ export type JSONRPCResponseFor_ArrayOfUint641 =
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "DepositType".
  */
-export type DepositType = 'slow' | 'fast';
+export type DepositType = 'standard' | 'instant' | 'direct';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_RegisterDepositAddressResult".
