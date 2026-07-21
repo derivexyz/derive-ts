@@ -1,5 +1,5 @@
 import { Contract, getAddress, type Signer } from 'ethers';
-import { ACTION_MANAGER_ABI } from '../abis/actionManager';
+import { ONCHAIN_ACTION_MANAGER_ABI } from '../abis/onchainActionManager';
 import { ERC20_ABI } from '../abis/erc20';
 import { DeriveTimeoutError } from '../errors';
 import { toScaled, type DecimalLike } from '../signing/encoding';
@@ -134,7 +134,7 @@ export class DepositsApi {
 export interface ContractCallDepositBase {
   /** Caller-provided ethers signer connected to the chain RPC (the SDK holds no provider). */
   signer: Signer;
-  /** Protocol asset label the deposit credits (see abis/actionManager.ts), NOT the ERC-20. */
+  /** Protocol asset label the deposit credits (see abis/onchainActionManager.ts), NOT the ERC-20. */
   asset: string;
   /** Underlying ERC-20 to approve and pull funds from. Defaults to the network's USDC. */
   erc20?: string;
@@ -226,7 +226,7 @@ export class ContractCallDeposits {
       const approval = await token.getFunction('approve')(managerAddress, amountRaw);
       await approval.wait();
     }
-    return { actionManager: new Contract(managerAddress, ACTION_MANAGER_ABI, params.signer), amountRaw };
+    return { actionManager: new Contract(managerAddress, ONCHAIN_ACTION_MANAGER_ABI, params.signer), amountRaw };
   }
 }
 

@@ -4976,6 +4976,7 @@ export interface GetAllInstrumentsEdgeRpcParams {
   instrument_type: PublicAssetType;
   page?: number | null;
   page_size?: number | null;
+  risk_universe_id?: number | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6094,7 +6095,7 @@ export interface JsonRpcRequestFor_LoginEdgeRpcParams {
  */
 export interface LoginEdgeRpcParams {
   signature?: string | null;
-  timestamp?: unknown;
+  timestamp?: number | null;
   wallet?: string | null;
 }
 /**

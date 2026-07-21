@@ -28,6 +28,12 @@ export {
   type VaultWithdrawRequest,
 } from './api/vaults';
 export { SessionKeysApi, type CreateSessionKeyParams } from './api/sessionKeys';
+export {
+  OnchainActionsApi,
+  ONCHAIN_ACTION_TYPE,
+  type RevokeSessionKeyParams,
+  type SetSessionKeyParams,
+} from './api/onchainActions';
 export { OffchainScope, ProtocolScopeCode, ProtocolScopeWireString } from './auth/scopes';
 export { authHeaders, loginParams, type AuthCredentials, type AuthSigner } from './auth/auth';
 export { channel, type TypedChannel } from './subscriptions/channels';

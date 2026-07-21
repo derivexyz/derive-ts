@@ -1,6 +1,7 @@
 import { Wallet, type BaseWallet } from 'ethers';
 import { DepositsApi } from './api/deposits';
 import { MarketDataApi } from './api/marketData';
+import { OnchainActionsApi } from './api/onchainActions';
 import { OrdersApi } from './api/orders';
 import { PositionTransfersApi } from './api/positionTransfers';
 import { RfqApi } from './api/rfq';
@@ -38,6 +39,7 @@ export class DeriveClient {
   readonly deposits: DepositsApi;
   readonly vaults: VaultsApi;
   readonly sessionKeys: SessionKeysApi;
+  readonly onchainActions: OnchainActionsApi;
   readonly subscriptions: Subscriptions;
 
   readonly logger: Logger;
@@ -84,6 +86,7 @@ export class DeriveClient {
     this.deposits = new DepositsApi(this);
     this.vaults = new VaultsApi(this);
     this.sessionKeys = new SessionKeysApi(this);
+    this.onchainActions = new OnchainActionsApi(this);
     this.subscriptions = new Subscriptions(this, this.ws);
   }
 

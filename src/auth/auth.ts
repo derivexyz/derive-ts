@@ -44,11 +44,13 @@ export async function authHeaders(credentials: {
 export async function loginParams(credentials: {
   ownerAddress: string;
   signer: AuthSigner;
-}): Promise<{ wallet: string; timestamp: string; signature: string }> {
-  const timestamp = Date.now().toString();
+}): Promise<{ wallet: string; timestamp: number; signature: string }> {
+  // Timestamp travels as a JSON number in the WS body (REST headers carry it as
+  // a string); the EIP-191 signature is over its decimal-string form either way.
+  const timestamp = Date.now();
   return {
     wallet: credentials.ownerAddress,
     timestamp,
-    signature: await credentials.signer.signMessage(timestamp),
+    signature: await credentials.signer.signMessage(String(timestamp)),
   };
 }
