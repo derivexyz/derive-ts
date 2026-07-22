@@ -687,14 +687,14 @@ export type JSONRPCResponseFor_AggregatedTriggerOrdersResult1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JSONRPCResponse_for_PaginatedVaultActionsResult".
+ * via the `definition` "JSONRPCResponse_for_PaginatedVaultRequestHistory".
  */
-export type JSONRPCResponseFor_PaginatedVaultActionsResult = JSONRPCResponseFor_PaginatedVaultActionsResult1 & {
+export type JSONRPCResponseFor_PaginatedVaultRequestHistory = JSONRPCResponseFor_PaginatedVaultRequestHistory1 & {
   id: JsonRpcId;
 };
-export type JSONRPCResponseFor_PaginatedVaultActionsResult1 =
+export type JSONRPCResponseFor_PaginatedVaultRequestHistory1 =
   | {
-      result: PaginatedVaultActionsResult;
+      result: PaginatedVaultRequestHistory;
     }
   | {
       error: RPCError;
@@ -1379,14 +1379,14 @@ export type JSONRPCResponseFor_VaultWireResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JSONRPCResponse_for_PaginatedVaultActionsResult2".
+ * via the `definition` "JSONRPCResponse_for_PaginatedVaultActionHistory".
  */
-export type JSONRPCResponseFor_PaginatedVaultActionsResult2 = JSONRPCResponseFor_PaginatedVaultActionsResult21 & {
+export type JSONRPCResponseFor_PaginatedVaultActionHistory = JSONRPCResponseFor_PaginatedVaultActionHistory1 & {
   id: JsonRpcId;
 };
-export type JSONRPCResponseFor_PaginatedVaultActionsResult21 =
+export type JSONRPCResponseFor_PaginatedVaultActionHistory1 =
   | {
-      result: PaginatedVaultActionsResult2;
+      result: PaginatedVaultActionHistory;
     }
   | {
       error: RPCError;
@@ -1790,7 +1790,7 @@ export interface EndpointMap {
   };
   'private/get_vault_request_history': {
     request: JsonRpcRequestFor_GetVaultRequestHistoryEdgeRpcParams;
-    response: JSONRPCResponseFor_PaginatedVaultActionsResult;
+    response: JSONRPCResponseFor_PaginatedVaultRequestHistory;
   };
   'private/get_vault_shares': {
     request: JsonRpcRequestFor_GetVaultSharesEdgeRpcParams;
@@ -1994,7 +1994,7 @@ export interface EndpointMap {
   };
   'public/get_vault_action_history': {
     request: JsonRpcRequestFor_GetVaultActionHistoryEdgeRpcParams;
-    response: JSONRPCResponseFor_PaginatedVaultActionsResult2;
+    response: JSONRPCResponseFor_PaginatedVaultActionHistory;
   };
   'public/get_vault_performance_history': {
     request: JsonRpcRequestFor_GetVaultPerformanceHistoryEdgeRpcParams;
@@ -2297,8 +2297,8 @@ export interface JsonRpcRequestFor_CancelBatchQuotesEdgeRpcParams {
  * via the `definition` "CancelBatchQuotesEdgeRpcParams".
  */
 export interface CancelBatchQuotesEdgeRpcParams {
-  label?: unknown;
-  nonce?: unknown;
+  label?: string | null;
+  nonce?: number | null;
   quote_id?: string | null;
   rfq_id?: string | null;
   subaccount_id: number;
@@ -2327,8 +2327,8 @@ export interface JsonRpcRequestFor_CancelBatchRfqsEdgeRpcParams {
  * via the `definition` "CancelBatchRfqsEdgeRpcParams".
  */
 export interface CancelBatchRfqsEdgeRpcParams {
-  label?: unknown;
-  nonce?: unknown;
+  label?: string | null;
+  nonce?: number | null;
   rfq_id?: string | null;
   subaccount_id: number;
 }
@@ -2439,8 +2439,8 @@ export interface JsonRpcRequestFor_CancelQuoteEdgeRpcParams {
  * via the `definition` "CancelQuoteEdgeRpcParams".
  */
 export interface CancelQuoteEdgeRpcParams {
-  label?: unknown;
-  nonce?: unknown;
+  label?: string | null;
+  nonce?: number | null;
   quote_id: string;
   rfq_id?: string | null;
   subaccount_id: number;
@@ -2690,18 +2690,18 @@ export interface JsonRpcRequestFor_ExecuteQuoteEdgeRpcParams {
  */
 export interface ExecuteQuoteEdgeRpcParams {
   client?: string;
-  direction: unknown;
+  direction: Direction;
   enable_taker_protection?: boolean;
   label?: string;
-  legs: unknown;
+  legs: PricedLegParamsAndResponse[];
   max_fee: string;
-  nonce: unknown;
+  nonce: number;
   quote_id: string;
   referral_code?: string;
   rfq_id: string;
-  signature: unknown;
-  signature_expiry_sec: unknown;
-  signer: unknown;
+  signature: string;
+  signature_expiry_sec: number;
+  signer: Address;
   subaccount_id: number;
 }
 /**
@@ -3754,9 +3754,9 @@ export interface GetVaultRequestHistoryEdgeRpcParams {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PaginatedVaultActionsResult".
+ * via the `definition` "PaginatedVaultRequestHistory".
  */
-export interface PaginatedVaultActionsResult {
+export interface PaginatedVaultRequestHistory {
   actions: VaultActionEdgeRpcResponse[];
   pagination: PaginationInfo;
   wallet: string;
@@ -4332,20 +4332,20 @@ export interface JsonRpcRequestFor_ReplaceQuoteEdgeRpcParams {
  */
 export interface ReplaceQuoteEdgeRpcParams {
   client?: string;
-  direction: unknown;
+  direction: Direction;
   extra_fee?: string;
   label?: string;
-  legs: unknown;
+  legs: PricedLegParamsAndResponse[];
   max_fee: string;
   mmp?: boolean;
-  nonce: unknown;
-  nonce_to_cancel?: unknown;
+  nonce: number;
+  nonce_to_cancel?: number | null;
   quote_id_to_cancel?: string | null;
   referral_code?: string;
   rfq_id: string;
-  signature: unknown;
-  signature_expiry_sec: unknown;
-  signer: unknown;
+  signature: string;
+  signature_expiry_sec: number;
+  signer: Address;
   subaccount_id: number;
 }
 /**
@@ -4425,8 +4425,11 @@ export interface JsonRpcRequestFor_RfqGetBestQuoteEdgeRpcParams {
  * via the `definition` "RfqGetBestQuoteEdgeRpcParams".
  */
 export interface RfqGetBestQuoteEdgeRpcParams {
-  direction: unknown;
-  legs: unknown;
+  client?: string;
+  direction?: 'buy' | 'sell';
+  extra_fee?: string;
+  legs?: LegUnpricedParams[];
+  rfq_id?: string | null;
   subaccount_id: number;
 }
 /**
@@ -4504,7 +4507,7 @@ export interface SendRfqEdgeRpcParams {
   counterparties?: string[] | null;
   extra_fee?: string;
   label?: string;
-  legs: unknown;
+  legs: LegUnpricedParams[];
   max_total_cost?: string | null;
   min_total_cost?: string | null;
   partial_fill_step?: string;
@@ -4996,7 +4999,7 @@ export interface InstrumentPublicResponse {
   base_asset_sub_id: string;
   base_currency: string;
   base_fee: string;
-  erc20_details?: ERC20PublicDetails | null;
+  erc20_details?: SpotPublicDetails | null;
   fifo_min_allocation: string;
   instrument_name: string;
   instrument_type: PublicAssetType;
@@ -5017,9 +5020,9 @@ export interface InstrumentPublicResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "ERC20PublicDetails".
+ * via the `definition` "SpotPublicDetails".
  */
-export interface ERC20PublicDetails {
+export interface SpotPublicDetails {
   borrow_index: string;
   decimals: number;
   supply_index: string;
@@ -5113,7 +5116,7 @@ export interface AssetResponsePublic {
   asset_name: string;
   asset_type: PublicAssetType;
   currency: string;
-  erc20_details?: ERC20PublicDetails | null;
+  erc20_details?: SpotPublicDetails | null;
   is_collateral: boolean;
   is_position: boolean;
   option_details?: OptionPublicDetails | null;
@@ -5743,7 +5746,7 @@ export interface JsonRpcRequestFor_GetTickersEdgeRpcParams {
  */
 export interface GetTickersEdgeRpcParams {
   currency?: string | null;
-  expiry_date?: unknown;
+  expiry_date?: number | null;
   instrument_type: PublicAssetType;
 }
 /**
@@ -5752,7 +5755,7 @@ export interface GetTickersEdgeRpcParams {
  */
 export interface GetTickersResponse {
   tickers: {
-    [k: string]: unknown;
+    [k: string]: TickerSlimSnapshot;
   };
 }
 /**
@@ -5925,9 +5928,9 @@ export interface GetVaultActionHistoryEdgeRpcParams {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PaginatedVaultActionsResult2".
+ * via the `definition` "PaginatedVaultActionHistory".
  */
-export interface PaginatedVaultActionsResult2 {
+export interface PaginatedVaultActionHistory {
   events: PublicVaultActionEdgeRpcResponse[];
   pagination: PaginationInfo;
   subaccount_id: number;

@@ -139,15 +139,15 @@ export class RfqApi {
   /** The exchange's pick of the best open quote for an RFQ, with margin/cost estimates. */
   async getBestQuote(params: {
     subaccountId: number;
-    /** The open RFQ whose quotes should be evaluated. */
-    rfqId: string;
+    /** The open RFQ whose quotes should be evaluated. Omit for a dry-run priced at mark from `legs`. */
+    rfqId?: string;
     /** The direction the taker wants to trade. */
     direction: Direction;
     legs: RfqLeg[];
   }): Promise<RfqGetBestQuoteWireResponse> {
     return this.ctx.send('private/rfq_get_best_quote', {
       subaccount_id: params.subaccountId,
-      rfq_id: params.rfqId,
+      ...(params.rfqId != null ? { rfq_id: params.rfqId } : {}),
       direction: params.direction,
       legs: unpricedWireLegs(params.legs),
     } as never);
@@ -159,7 +159,7 @@ export class RfqApi {
    * maker's exact leg bundle, so legs and prices come from the quote itself.
    */
   async executeQuote(params: ExecuteQuoteParams): Promise<QuoteExecuteWireResponse> {
-    return this.ctx.send('private/execute_quote', await this.buildExecutePayload(params));
+    return this.ctx.send('private/execute_quote', (await this.buildExecutePayload(params)) as never);
   }
 
   /**
