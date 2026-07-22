@@ -1,4 +1,5 @@
 import type {
+  BatchStatus,
   CurrencyResponse,
   GetAllInstrumentsResponse,
   GetLatestSignedFeedsResponse,
@@ -12,6 +13,7 @@ import type {
   MarginWatchResult,
   OptionSettlementPricesResult,
   PublicAssetType,
+  PublicTradesResult,
   RiskUniverseResponse,
   TickerSlimSnapshot,
 } from '../types';
@@ -22,6 +24,22 @@ export interface InstrumentsQuery {
   currency?: string;
   /** Include expired instruments. Default false. */
   expired?: boolean;
+  page?: number;
+  pageSize?: number;
+}
+
+/** Filters for the anonymized public trade tape. All optional. */
+export interface PublicTradeHistoryQuery {
+  tradeId?: string;
+  instrumentName?: string;
+  instrumentType?: PublicAssetType;
+  currency?: string;
+  subaccountId?: number;
+  /** Batch lifecycle status filter; defaults to `Settled` server-side. */
+  batchStatus?: BatchStatus;
+  /** UTC-millisecond bounds. */
+  fromTimestamp?: number;
+  toTimestamp?: number;
   page?: number;
   pageSize?: number;
 }
@@ -81,6 +99,22 @@ export class MarketDataApi {
   /** Every currently tradeable instrument name across all currencies. */
   getAllLiveInstruments(): Promise<string[]> {
     return this.ctx.send('public/get_all_live_instruments', null);
+  }
+
+  /** Anonymized public trade tape (settled trades), newest first. */
+  getPublicTradeHistory(query: PublicTradeHistoryQuery = {}): Promise<PublicTradesResult> {
+    return this.ctx.send('public/get_trade_history', {
+      trade_id: query.tradeId ?? null,
+      instrument_name: query.instrumentName ?? null,
+      instrument_type: query.instrumentType ?? null,
+      currency: query.currency ?? null,
+      subaccount_id: query.subaccountId ?? null,
+      batch_status: query.batchStatus ?? null,
+      from_timestamp: query.fromTimestamp ?? null,
+      to_timestamp: query.toTimestamp ?? null,
+      page: query.page ?? null,
+      page_size: query.pageSize ?? null,
+    });
   }
 
   /**

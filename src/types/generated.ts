@@ -231,6 +231,21 @@ export type JSONRPCResponseFor_QuotePrivateWireResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BatchStatus".
+ */
+export type BatchStatus =
+  | 'Batching'
+  | 'Executing'
+  | 'Proving'
+  | 'Settling'
+  | 'Settled'
+  | 'BatchingError'
+  | 'ExecutingError'
+  | 'ProvingError'
+  | 'SettlingError'
+  | 'SettledError';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "RFQCancelReason".
  */
 export type RFQCancelReason =
@@ -254,16 +269,6 @@ export type LiquidityRole = 'maker' | 'taker';
  * via the `definition` "RFQStatus".
  */
 export type RFQStatus = 'open' | 'filled' | 'cancelled' | 'expired';
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "TxStatus".
- */
-export type TxStatus =
-  | ('requested' | 'pending' | 'settled' | 'reverted' | 'ignored' | 'timed_out')
-  | 'applied'
-  | 'in_batch'
-  | 'proving'
-  | 'submitted';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_CancelRfqResponse".
@@ -415,6 +420,11 @@ export type JSONRPCResponseFor_ArrayOf_PrivateGetSubaccountRPCResponseFor_OrderW
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicAssetType".
+ */
+export type PublicAssetType = 'option' | 'perp' | 'erc20';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_PrivateGetCollateralsRPCResponse".
  */
 export type JSONRPCResponseFor_PrivateGetCollateralsRPCResponse =
@@ -456,21 +466,6 @@ export type JSONRPCResponseFor_DepositHistoryResult1 =
   | {
       error: RPCError;
     };
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "BatchStatus".
- */
-export type BatchStatus =
-  | 'Batching'
-  | 'Executing'
-  | 'Proving'
-  | 'Settling'
-  | 'Settled'
-  | 'BatchingError'
-  | 'ExecutingError'
-  | 'ProvingError'
-  | 'SettlingError'
-  | 'SettledError';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_TransferHistoryResult".
@@ -1059,11 +1054,6 @@ export type JSONRPCResponseFor_ArrayOf_CurrencyResponse1 =
  * via the `definition` "MarketType".
  */
 export type MarketType = 'ALL' | 'SRM_BASE_ONLY' | 'SRM_OPTION_ONLY' | 'SRM_PERP_ONLY' | 'CASH';
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicAssetType".
- */
-export type PublicAssetType = 'option' | 'perp' | 'erc20';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_GetAllInstrumentsResponse".
@@ -2450,6 +2440,7 @@ export interface CancelQuoteEdgeRpcParams {
  * via the `definition` "QuotePrivateWireResponse".
  */
 export interface QuotePrivateWireResponse {
+  batch_status?: BatchStatus | null;
   cancel_reason: RFQCancelReason;
   creation_timestamp: number;
   direction: Direction;
@@ -2471,7 +2462,6 @@ export interface QuotePrivateWireResponse {
   status: RFQStatus;
   subaccount_id: number;
   tx_hash?: string | null;
-  tx_status?: TxStatus | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -2924,7 +2914,7 @@ export interface PositionResponse {
   index_price: string;
   initial_margin: string;
   instrument_name: string;
-  instrument_type: string;
+  instrument_type: PublicAssetType;
   leverage?: string | null;
   liquidation_price?: string | null;
   maintenance_margin: string;
@@ -3680,6 +3670,7 @@ export interface PaginatedTradesResult {
  * via the `definition` "TradeHistoryResponse".
  */
 export interface TradeHistoryResponse {
+  batch_status?: BatchStatus | null;
   direction: Direction;
   expected_rebate: string;
   extra_fee: string;
@@ -3702,7 +3693,6 @@ export interface TradeHistoryResponse {
   trade_id: string;
   trade_price: string;
   tx_hash?: string | null;
-  tx_status?: BatchStatus | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -3993,6 +3983,7 @@ export interface OrderCreatedWireResponse {
  * via the `definition` "TradeWireResponse".
  */
 export interface TradeWireResponse {
+  batch_status?: BatchStatus | null;
   direction: Direction;
   expected_rebate: string;
   extra_fee: string;
@@ -4015,7 +4006,6 @@ export interface TradeWireResponse {
   trade_id: string;
   trade_price: string;
   tx_hash?: string | null;
-  tx_status: TxStatus;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5775,16 +5765,16 @@ export interface JsonRpcRequestFor_GetPublicTradeHistoryEdgeRpcParams {
  * via the `definition` "GetPublicTradeHistoryEdgeRpcParams".
  */
 export interface GetPublicTradeHistoryEdgeRpcParams {
+  batch_status?: BatchStatus | null;
   currency?: string | null;
   from_timestamp?: number | null;
   instrument_name?: string | null;
-  instrument_type?: string | null;
+  instrument_type?: PublicAssetType | null;
   page?: number | null;
   page_size?: number | null;
   subaccount_id?: number | null;
   to_timestamp?: number | null;
   trade_id?: string | null;
-  tx_status?: string | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5799,6 +5789,7 @@ export interface PublicTradesResult {
  * via the `definition` "TradeSettledPublicResponse".
  */
 export interface TradeSettledPublicResponse {
+  batch_status?: BatchStatus | null;
   direction: Direction;
   expected_rebate: string;
   extra_fee: string;
@@ -5817,7 +5808,6 @@ export interface TradeSettledPublicResponse {
   trade_id: string;
   trade_price: string;
   tx_hash: string;
-  tx_status?: BatchStatus | null;
   wallet: string;
 }
 /**
@@ -6290,10 +6280,20 @@ export interface ChannelSchemaMap {
     };
     data: TradeWireResponse[];
   };
-  '{subaccount_id}.trades.{tx_status}': {
+  '{subaccount_id}.trades.{batch_status}': {
     params: {
       subaccount_id: string;
-      tx_status: 'settled' | 'reverted' | 'timed_out';
+      batch_status:
+        | 'Batching'
+        | 'Executing'
+        | 'Proving'
+        | 'Settling'
+        | 'Settled'
+        | 'BatchingError'
+        | 'ExecutingError'
+        | 'ProvingError'
+        | 'SettlingError'
+        | 'SettledError';
     };
     data: TradeWireResponse[];
   };
@@ -6345,11 +6345,21 @@ export interface ChannelSchemaMap {
     };
     data: TradePublicResponseDoc[];
   };
-  'trades.{instrument_type}.{currency}.{tx_status}': {
+  'trades.{instrument_type}.{currency}.{batch_status}': {
     params: {
       instrument_type: 'erc20' | 'option' | 'perp';
       currency: string;
-      tx_status: 'settled' | 'reverted' | 'timed_out';
+      batch_status:
+        | 'Batching'
+        | 'Executing'
+        | 'Proving'
+        | 'Settling'
+        | 'Settled'
+        | 'BatchingError'
+        | 'ExecutingError'
+        | 'ProvingError'
+        | 'SettlingError'
+        | 'SettledError';
     };
     data: TradeSettledPublicResponse[];
   };
@@ -6378,6 +6388,7 @@ export interface BestQuoteChannelResult {
  * via the `definition` "QuotePublishResult".
  */
 export interface QuotePublishResult {
+  batch_status?: BatchStatus | null;
   cancel_reason?: RFQCancelReason | null;
   creation_timestamp: number;
   direction: Direction;
@@ -6401,7 +6412,6 @@ export interface QuotePublishResult {
   status: RFQStatus;
   subaccount_id: number;
   tx_hash?: string | null;
-  tx_status?: TxStatus | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
