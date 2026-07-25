@@ -115,7 +115,9 @@ export class SessionKeysApi {
    * Patches a key's OFF-CHAIN attributes. Protocol scopes, subaccounts,
    * and expiry are committed in the signed registration and cannot be
    * edited — register a replacement key instead. The public API has no
-   * revoke endpoint: a key stops working at its signed `expiry_sec`.
+   * revoke endpoint: a key stops working at its signed `expiry_sec`, and
+   * re-registering (using private/create_session_key) with a nearer expiry is
+   * subject to the 5-minute minimum validity (e.g. cooldown).
    */
   async edit(params: EditSessionKeyParams): Promise<SessionKeyResponse> {
     return this.ctx.send('private/edit_session_key', {

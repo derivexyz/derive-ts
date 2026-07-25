@@ -6,8 +6,17 @@ export interface CreateSessionKeyData {
   sessionKey: string;
   /**
    * The KEY's lifetime as a unix-seconds timestamp — distinct from the
-   * envelope's signature expiry. The key stops working once `expirySec <= now`;
-   * pass 0 to deactivate an existing key of this address.
+   * envelope's signature expiry. The key stops working once `expirySec <= now`.
+   *
+   * Over `private/create_session_key` this must be at least 5 minutes in the
+   * future (error 14039): order and quote entry require the signing key to
+   * outlive the signature, so a shorter-lived key could leave orders resting
+   * that nothing has time to clear. Consequently retiring a key by re-writing
+   * a nearer expiry takes at least that long to take effect, and `0` is
+   * rejected rather than deactivating the key immediately.
+   *
+   * The L1 `SetSessionKey` action has no such floor — there, a past expiry
+   * (including 0) deletes the key outright.
    */
   expirySec: number;
   /**
