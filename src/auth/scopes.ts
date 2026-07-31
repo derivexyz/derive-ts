@@ -2,7 +2,7 @@
  * Session-key scopes.
  *
  * Protocol scopes exist in two encodings that must stay in sync: the
- * numeric byte codes below are packed into the SIGNED create-session-key
+ * numeric byte codes below are packed into the SIGNED set-session-key
  * action data (codecs/sessionKey.ts), while the colon-delimited wire
  * strings travel in RPC params.
  *
@@ -37,7 +37,7 @@ export const ProtocolScopeCode = {
   TransferDifferentOwnerSubaccount: 14,
 
   /** Create child session keys; the child must be a subset of this key. */
-  CreateSessionKey: 15,
+  SetSessionKey: 15,
   Liquidate: 16,
 
   VaultAll: 17,
@@ -67,7 +67,7 @@ export const ProtocolScopeWireString = {
   [ProtocolScopeCode.TransferExistingSubaccount]: 'transfer:existing_subaccount',
   [ProtocolScopeCode.TransferNewSubaccount]: 'transfer:new_subaccount',
   [ProtocolScopeCode.TransferDifferentOwnerSubaccount]: 'transfer:different_owner_subaccount',
-  [ProtocolScopeCode.CreateSessionKey]: 'create_session_key',
+  [ProtocolScopeCode.SetSessionKey]: 'set_session_key',
   [ProtocolScopeCode.Liquidate]: 'liquidate',
   [ProtocolScopeCode.VaultAll]: 'vault:all',
   [ProtocolScopeCode.VaultCuratorCreate]: 'vault:curator_create',
@@ -86,7 +86,6 @@ export type ProtocolScope = (typeof ProtocolScopeWireString)[ProtocolScopeCode];
  */
 export const OffchainScope = {
   AccountInfo: 'account_info',
-  DeleteSessionKey: 'delete_session_key',
 } as const;
 
 export type OffchainScope = (typeof OffchainScope)[keyof typeof OffchainScope];

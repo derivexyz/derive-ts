@@ -62,7 +62,7 @@ const sessionKey = Wallet.createRandom();
 const owner = new DeriveClient({ network: 'testnet', wallet: process.env.PRIVATE_KEY });
 await owner.connect();
 await owner.login();
-await owner.sessionKeys.create({
+await owner.sessionKeys.set({
   publicSessionKey: sessionKey,
   expirySec: Math.floor(Date.now() / 1000) + 7 * 24 * 3600,
   protocolScopes: [ProtocolScopeCode.Trade], // least privilege — never Admin for a bot

@@ -1,7 +1,7 @@
 import { Contract, getAddress, type Signer } from 'ethers';
 import { ONCHAIN_ACTION_MANAGER_ABI } from '../abis/onchainActionManager';
 import type { ProtocolScopeCode } from '../auth/scopes';
-import { encodeCreateSessionKeyActionData } from '../codecs/sessionKey';
+import { encodeSetSessionKeyActionData } from '../codecs/sessionKey';
 import { toOnchainWithdrawalStruct } from '../codecs/withdrawal';
 import type { DecimalLike } from '../signing/encoding';
 import type { ClientContext } from './context';
@@ -18,7 +18,7 @@ export const ONCHAIN_ACTION_TYPE = {
   Withdrawal: 52,
 } as const;
 
-export interface SetSessionKeyParams {
+export interface OnchainSetSessionKeyParams {
   /** Caller-provided ethers signer connected to the chain RPC (the SDK holds no provider). */
   signer: Signer;
   /** The key being authorized. */
@@ -88,8 +88,8 @@ export class OnchainActionsApi {
    * ignores the action otherwise, and it cannot replace or delete a key
    * that belongs to a different wallet.
    */
-  async setSessionKey(params: SetSessionKeyParams): Promise<{ txHash: string }> {
-    const data = encodeCreateSessionKeyActionData({
+  async setSessionKey(params: OnchainSetSessionKeyParams): Promise<{ txHash: string }> {
+    const data = encodeSetSessionKeyActionData({
       sessionKey: getAddress(params.sessionKey),
       expirySec: params.expirySec,
       scopes: params.scopes ?? [],

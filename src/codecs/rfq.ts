@@ -48,10 +48,8 @@ const LEGS_ABI = '(address,uint256,uint256,int256)[]';
 
 /**
  * Maker quote data: `abi.encode(RfqOrder{ maxFee, trades[] })` —
- * `[0x20][maxFee][0x40][N][4 words per leg]`. Unlike the trade codec's
- * low-16-byte i128 amount words, a negative leg amount here is a full
- * sign-extended int256 (high 16 bytes 0xff), which is standard AbiCoder
- * output.
+ * `[0x20][maxFee][0x40][N][4 words per leg]`. A negative leg amount is a
+ * full sign-extended int256 (high 16 bytes 0xff), standard AbiCoder output.
  */
 export function encodeRfqQuote(fields: RfqQuoteFields): string {
   return AbiCoder.defaultAbiCoder().encode(

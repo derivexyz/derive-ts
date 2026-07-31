@@ -31,5 +31,5 @@ export {
   type VaultMintSharesFields,
   type VaultBurnSharesFields,
 } from './vault';
-export { encodeCreateSessionKeyActionData, type CreateSessionKeyData } from './sessionKey';
+export { encodeSetSessionKeyActionData, type SetSessionKeyData } from './sessionKey';
 export { encodeUpdateWhitelistedRecipients, type WhitelistedRecipientsFields } from './whitelistedRecipients';

@@ -36,17 +36,15 @@ function assertE12Precision(e18: bigint, field: string): void {
 }
 
 /**
- * The exchange reads limit price and amount as an i128 from the LOW 16
- * bytes of the word; the high 16 bytes stay zero even for negative
- * values. Standard ABI int256 encoding would sign-extend the high half
- * and produce bytes the exchange rejects.
+ * Canonical int256 word (full 32-byte two's complement, sign-extended).
+ * The exchange stores these values as i128, so anything outside that
+ * range can never produce a valid signature and is rejected here.
  */
-function i128LowHalfWord(e18: bigint, field: string): string {
+function int256Word(e18: bigint, field: string): string {
   if (e18 < I128_MIN || e18 > I128_MAX) {
     throw new Error(`${field} out of range: e18-scaled value must fit in an i128`);
   }
-  const twosComplement = e18 < 0n ? e18 + 2n ** 128n : e18;
-  return zeroPadValue(toBeHex(twosComplement, 16), 32);
+  return toBeHex(BigInt.asUintN(256, e18), 32);
 }
 
 function uintWord(value: bigint, max: bigint, field: string): string {
@@ -71,8 +69,8 @@ export function encodeTradeData(fields: TradeActionFields): string {
   return concat([
     zeroPadValue(getAddress(fields.assetAddress), 32),
     uintWord(BigInt(fields.subId), U128_MAX, 'subId'),
-    i128LowHalfWord(limitPrice, 'limitPrice'),
-    i128LowHalfWord(amount, 'amount'),
+    int256Word(limitPrice, 'limitPrice'),
+    int256Word(amount, 'amount'),
     uintWord(maxFee, U128_MAX, 'maxFee'),
     uintWord(BigInt(fields.recipientSubaccountId), U64_MAX, 'recipientSubaccountId'),
     zeroPadValue(fields.isBid ? '0x01' : '0x00', 32),

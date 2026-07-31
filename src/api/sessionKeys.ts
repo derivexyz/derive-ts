@@ -1,13 +1,13 @@
 import { getAddress, type BaseWallet } from 'ethers';
 import { OffchainScope, ProtocolScopeWireString, type ProtocolScopeCode } from '../auth/scopes';
-import { encodeCreateSessionKeyActionData } from '../codecs/sessionKey';
+import { encodeSetSessionKeyActionData } from '../codecs/sessionKey';
 import { SignedAction } from '../signing/action';
 import { domainSeparator } from '../signing/eip712';
 import { expiresIn, randomNonce } from '../signing/encoding';
-import type { PrivateCreateSessionKeyEdgeRPCResponse, SessionKeyResponse } from '../types';
+import type { PrivateSetSessionKeyEdgeRPCResponse, SessionKeyResponse } from '../types';
 import type { ClientContext } from './context';
 
-export interface CreateSessionKeyParams {
+export interface SetSessionKeyParams {
   /** The key being authorized: an address, or an ethers wallet (e.g. `Wallet.createRandom()`). */
   publicSessionKey: string | BaseWallet;
   /**
@@ -56,12 +56,12 @@ export class SessionKeysApi {
   /**
    * Registers a scoped session key. The action must be authorized by the
    * account owner or by a registered session key holding the
-   * `create_session_key` scope — a child key must then be a subset of its
+   * `set_session_key` scope — a child key must then be a subset of its
    * creator (scopes, subaccounts, and expiry no later than the creator's).
    * Signs with the client's action signer, so a client configured with an
    * unscoped session key will be rejected server-side.
    */
-  async create(params: CreateSessionKeyParams): Promise<PrivateCreateSessionKeyEdgeRPCResponse> {
+  async set(params: SetSessionKeyParams): Promise<PrivateSetSessionKeyEdgeRPCResponse> {
     const publicSessionKey = getAddress(
       typeof params.publicSessionKey === 'string' ? params.publicSessionKey : params.publicSessionKey.address,
     );
@@ -72,8 +72,8 @@ export class SessionKeysApi {
       {
         subaccountId: 0,
         nonce: params.nonce ?? randomNonce(),
-        module: this.ctx.network.modules.createSessionKey,
-        data: encodeCreateSessionKeyActionData({
+        module: this.ctx.network.modules.setSessionKey,
+        data: encodeSetSessionKeyActionData({
           sessionKey: publicSessionKey,
           expirySec: params.expirySec,
           scopes,
@@ -86,7 +86,7 @@ export class SessionKeysApi {
       domainSeparator(this.ctx.network),
     ).sign(signer);
 
-    return this.ctx.send('private/create_session_key', {
+    return this.ctx.send('private/set_session_key', {
       wallet: ownerAddress,
       public_session_key: publicSessionKey,
       expiry_sec: params.expirySec,
@@ -116,7 +116,7 @@ export class SessionKeysApi {
    * and expiry are committed in the signed registration and cannot be
    * edited — register a replacement key instead. The public API has no
    * revoke endpoint: a key stops working at its signed `expiry_sec`, and
-   * re-registering (using private/create_session_key) with a nearer expiry is
+   * re-registering (using private/set_session_key) with a nearer expiry is
    * subject to the 5-minute minimum validity (e.g. cooldown).
    */
   async edit(params: EditSessionKeyParams): Promise<SessionKeyResponse> {

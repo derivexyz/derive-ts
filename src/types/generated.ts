@@ -306,21 +306,6 @@ export type JSONRPCResponseFor_PrivateChangeSubaccountLabelRPCResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JSONRPCResponse_for_PrivateCreateSessionKeyEdgeRPCResponse".
- */
-export type JSONRPCResponseFor_PrivateCreateSessionKeyEdgeRPCResponse =
-  JSONRPCResponseFor_PrivateCreateSessionKeyEdgeRPCResponse1 & {
-    id: JsonRpcId;
-  };
-export type JSONRPCResponseFor_PrivateCreateSessionKeyEdgeRPCResponse1 =
-  | {
-      result: PrivateCreateSessionKeyEdgeRPCResponse;
-    }
-  | {
-      error: RPCError;
-    };
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_VaultCreateWireResponse".
  */
 export type JSONRPCResponseFor_VaultCreateWireResponse = JSONRPCResponseFor_VaultCreateWireResponse1 & {
@@ -946,6 +931,21 @@ export type JSONRPCResponseFor_SetMmpConfigResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_PrivateSetSessionKeyEdgeRPCResponse".
+ */
+export type JSONRPCResponseFor_PrivateSetSessionKeyEdgeRPCResponse =
+  JSONRPCResponseFor_PrivateSetSessionKeyEdgeRPCResponse1 & {
+    id: JsonRpcId;
+  };
+export type JSONRPCResponseFor_PrivateSetSessionKeyEdgeRPCResponse1 =
+  | {
+      result: PrivateSetSessionKeyEdgeRPCResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_TransferPositionsWireResponse".
  */
 export type JSONRPCResponseFor_TransferPositionsWireResponse = JSONRPCResponseFor_TransferPositionsWireResponse1 & {
@@ -1433,7 +1433,7 @@ export type JSONRPCResponseFor_VaultsWireResponse1 =
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "OffchainKeyScope".
  */
-export type OffchainKeyScope = 'account_info' | 'delete_session_key';
+export type OffchainKeyScope = 'account_info';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_PublicGetWalletsFromSessionKeyRPCResponse".
@@ -1688,10 +1688,6 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_ChangeSubaccountLabelEdgeRpcParams;
     response: JSONRPCResponseFor_PrivateChangeSubaccountLabelRPCResponse;
   };
-  'private/create_session_key': {
-    request: JsonRpcRequestFor_CreateSessionKeyEdgeRpcParams;
-    response: JSONRPCResponseFor_PrivateCreateSessionKeyEdgeRPCResponse;
-  };
   'private/create_vault': {
     request: JsonRpcRequestFor_CreateVaultEdgeRpcParams;
     response: JSONRPCResponseFor_VaultCreateWireResponse;
@@ -1895,6 +1891,10 @@ export interface EndpointMap {
   'private/set_mmp_config': {
     request: JsonRpcRequestFor_SetMmpConfigEdgeRpcParams;
     response: JSONRPCResponseFor_SetMmpConfigResponse;
+  };
+  'private/set_session_key': {
+    request: JsonRpcRequestFor_SetSessionKeyEdgeRpcParams;
+    response: JSONRPCResponseFor_PrivateSetSessionKeyEdgeRPCResponse;
   };
   'private/transfer_positions': {
     request: JsonRpcRequestFor_TransferPositionsEdgeRpcParams;
@@ -2578,49 +2578,6 @@ export interface ChangeSubaccountLabelEdgeRpcParams {
 export interface PrivateChangeSubaccountLabelRPCResponse {
   label: string;
   subaccount_id: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_CreateSessionKeyEdgeRpcParams".
- */
-export interface JsonRpcRequestFor_CreateSessionKeyEdgeRpcParams {
-  headers?: {
-    [k: string]: unknown;
-  } | null;
-  id: JsonRpcId;
-  method: 'private/create_session_key';
-  params: CreateSessionKeyEdgeRpcParams;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "CreateSessionKeyEdgeRpcParams".
- */
-export interface CreateSessionKeyEdgeRpcParams {
-  expiry_sec: number;
-  ip_whitelist?: string[] | null;
-  label?: string | null;
-  nonce: string;
-  offchain_scopes: string[];
-  protocol_scopes: string[];
-  public_session_key: string;
-  signature: string;
-  signature_expiry_sec: number;
-  signer: string;
-  subaccount_ids?: number[] | null;
-  wallet: string;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PrivateCreateSessionKeyEdgeRPCResponse".
- */
-export interface PrivateCreateSessionKeyEdgeRPCResponse {
-  expiry_sec: number;
-  ip_whitelist: string[];
-  label?: string | null;
-  offchain_scopes: string[];
-  protocol_scopes: string[];
-  public_session_key: string;
-  subaccount_ids: number[];
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -4661,6 +4618,49 @@ export interface SetMmpConfigResponse {
   mmp_frozen_time: number;
   mmp_interval: number;
   subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_SetSessionKeyEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_SetSessionKeyEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/set_session_key';
+  params: SetSessionKeyEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SetSessionKeyEdgeRpcParams".
+ */
+export interface SetSessionKeyEdgeRpcParams {
+  expiry_sec: number;
+  ip_whitelist?: string[] | null;
+  label?: string | null;
+  nonce: string;
+  offchain_scopes: string[];
+  protocol_scopes: string[];
+  public_session_key: string;
+  signature: string;
+  signature_expiry_sec: number;
+  signer: string;
+  subaccount_ids?: number[] | null;
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PrivateSetSessionKeyEdgeRPCResponse".
+ */
+export interface PrivateSetSessionKeyEdgeRPCResponse {
+  expiry_sec: number;
+  ip_whitelist: string[];
+  label?: string | null;
+  offchain_scopes: string[];
+  protocol_scopes: string[];
+  public_session_key: string;
+  subaccount_ids: number[];
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema

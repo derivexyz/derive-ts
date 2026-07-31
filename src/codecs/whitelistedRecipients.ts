@@ -1,4 +1,4 @@
-import { concat, getAddress, toBeHex, zeroPadValue } from 'ethers';
+import { AbiCoder, getAddress } from 'ethers';
 
 /**
  * Whitelisted-recipient delta, verified by the whitelisted-recipient
@@ -9,20 +9,10 @@ export interface WhitelistedRecipientsFields {
   remove: string[];
 }
 
-/**
- * Hand-packed layout (2 + A + R words), NOT standard ABI dynamic arrays:
- *   word 0     : add count A
- *   word 1     : remove count R
- *   word 2+i   : add[i]     (address, left-padded)
- *   word 2+A+j : remove[j]  (address, left-padded)
- */
+/** Encodes the delta: canonical `abi.encode(address[] add, address[] remove)`. */
 export function encodeUpdateWhitelistedRecipients(fields: WhitelistedRecipientsFields): string {
-  const add = fields.add.map((a) => getAddress(a));
-  const remove = fields.remove.map((a) => getAddress(a));
-  return concat([
-    zeroPadValue(toBeHex(add.length), 32),
-    zeroPadValue(toBeHex(remove.length), 32),
-    ...add.map((a) => zeroPadValue(a, 32)),
-    ...remove.map((a) => zeroPadValue(a, 32)),
-  ]);
+  return AbiCoder.defaultAbiCoder().encode(
+    ['address[]', 'address[]'],
+    [fields.add.map((a) => getAddress(a)), fields.remove.map((a) => getAddress(a))],
+  );
 }

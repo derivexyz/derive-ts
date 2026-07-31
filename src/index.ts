@@ -27,13 +27,13 @@ export {
   type VaultDepositRequest,
   type VaultWithdrawRequest,
 } from './api/vaults';
-export { SessionKeysApi, type CreateSessionKeyParams } from './api/sessionKeys';
+export { SessionKeysApi, type SetSessionKeyParams } from './api/sessionKeys';
 export {
   OnchainActionsApi,
   ONCHAIN_ACTION_TYPE,
   type OnchainWithdrawalParams,
   type RevokeSessionKeyParams,
-  type SetSessionKeyParams,
+  type OnchainSetSessionKeyParams,
 } from './api/onchainActions';
 export { OffchainScope, ProtocolScopeCode, ProtocolScopeWireString } from './auth/scopes';
 export { authHeaders, loginParams, type AuthCredentials, type AuthSigner } from './auth/auth';

@@ -12,5 +12,5 @@ export const V3_MODULE_ADDRESSES = {
   whitelistedRecipient: '0xB86D6DE1b76c9839e4BA860848CD98A1dABd6B54',
   vault: '0x2885c174ebf5524aED9c721d60c12b1537685186',
   liquidation: '0x66d23e59DaEEF13904eFA2D4B8658aeD05f59a92',
-  createSessionKey: '0xe330CF64ff6EbF41699aad344Cb21d78db1D2bb6',
+  setSessionKey: '0xe330CF64ff6EbF41699aad344Cb21d78db1D2bb6',
 } as const;

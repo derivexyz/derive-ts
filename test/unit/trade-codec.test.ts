@@ -75,18 +75,14 @@ describe('trade codec', () => {
     isBid: false,
   };
 
-  it('writes negative values as i128 in the low 16 bytes with a ZERO high half (no sign extension)', () => {
+  it('writes negative values as full sign-extended int256 words (standard ABI)', () => {
     const data = encodeTradeData({ ...sample, limitPrice: '-1.5' });
-    // -1.5e18 as 16-byte two's complement, high 16 bytes untouched.
-    expect(word(data, 2)).toBe('00000000000000000000000000000000ffffffffffffffffeb2eedf284ea0000');
-    // -3e18 amount likewise (computed: 2^128 + (-3e18)).
-    const amountTwosComplement = ((1n << 128n) - 3_000_000_000_000_000_000n).toString(16);
-    expect(word(data, 3)).toBe(`${'0'.repeat(32)}${amountTwosComplement}`);
-
-    // Standard ABI int256 encoding sign-extends the high half — the exchange rejects those bytes.
+    // Byte-identical to standard AbiCoder int256 output: high 16 bytes 0xff.
     const int256 = AbiCoder.defaultAbiCoder().encode(['int256'], [-1_500_000_000_000_000_000n]).slice(2);
-    expect(word(data, 2)).not.toBe(int256);
-    expect(word(data, 2).slice(32)).toBe(int256.slice(32));
+    expect(word(data, 2)).toBe(int256);
+    expect(word(data, 2).slice(0, 32)).toBe('f'.repeat(32));
+    const amount256 = AbiCoder.defaultAbiCoder().encode(['int256'], [-3_000_000_000_000_000_000n]).slice(2);
+    expect(word(data, 3)).toBe(amount256);
   });
 
   it('lays out all seven words in wire order', () => {

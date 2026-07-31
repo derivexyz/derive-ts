@@ -46,7 +46,7 @@ run(async () => {
   //     withdrawals, no transfers, no creating further keys.
   //   - A short expiry bounds the blast radius of a leak. Rotate keys instead
   //     of minting long-lived ones.
-  const created = await client.sessionKeys.create({
+  const created = await client.sessionKeys.set({
     publicSessionKey: sessionWallet,
     expirySec: expiresIn(24 * 60 * 60), // unix seconds: valid for 24h
     protocolScopes: [ProtocolScopeCode.TradeAll],

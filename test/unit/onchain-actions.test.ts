@@ -1,7 +1,7 @@
 import { AbiCoder } from 'ethers';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProtocolScopeCode } from '../../src/auth/scopes';
-import { encodeCreateSessionKeyActionData } from '../../src/codecs/sessionKey';
+import { encodeSetSessionKeyActionData } from '../../src/codecs/sessionKey';
 import { encodeOnchainWithdrawal, type OnchainWithdrawalStruct } from '../../src/codecs/withdrawal';
 import { ONCHAIN_ACTION_TYPE, OnchainActionsApi } from '../../src/api/onchainActions';
 
@@ -79,7 +79,7 @@ describe('OnchainActionsApi', () => {
     expect(call.actionType).toBe(ONCHAIN_ACTION_TYPE.SetSessionKey);
     expect(call.actionType).toBe(51);
     expect(call.data).toBe(
-      encodeCreateSessionKeyActionData({
+      encodeSetSessionKeyActionData({
         sessionKey: KEY,
         expirySec: 1_700_000_000,
         scopes: [ProtocolScopeCode.Admin],
@@ -95,7 +95,7 @@ describe('OnchainActionsApi', () => {
     const call = submitCalls[0]!;
     expect(call.actionType).toBe(51);
     expect(call.data).toBe(
-      encodeCreateSessionKeyActionData({ sessionKey: KEY, expirySec: 0, scopes: [], subaccountIds: [] }),
+      encodeSetSessionKeyActionData({ sessionKey: KEY, expirySec: 0, scopes: [], subaccountIds: [] }),
     );
   });
 
@@ -153,7 +153,7 @@ describe('OnchainActionsApi', () => {
     await makeApi().setSessionKey({ signer: {} as never, sessionKey: KEY, expirySec: 123 });
 
     expect(submitCalls[0]!.data).toBe(
-      encodeCreateSessionKeyActionData({ sessionKey: KEY, expirySec: 123, scopes: [], subaccountIds: [] }),
+      encodeSetSessionKeyActionData({ sessionKey: KEY, expirySec: 123, scopes: [], subaccountIds: [] }),
     );
   });
 

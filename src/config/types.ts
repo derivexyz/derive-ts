@@ -27,7 +27,7 @@ export interface ModuleAddresses {
   whitelistedRecipient: string;
   vault: string;
   liquidation: string;
-  createSessionKey: string;
+  setSessionKey: string;
   deposit?: string;
 }
 
