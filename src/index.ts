@@ -31,6 +31,7 @@ export { SessionKeysApi, type CreateSessionKeyParams } from './api/sessionKeys';
 export {
   OnchainActionsApi,
   ONCHAIN_ACTION_TYPE,
+  type OnchainWithdrawalParams,
   type RevokeSessionKeyParams,
   type SetSessionKeyParams,
 } from './api/onchainActions';

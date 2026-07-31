@@ -14,9 +14,14 @@
  * `actionType` carrying opaque `data` (see api/onchainActions.ts), authorized
  * by `msg.sender`. Public action types (51–9999) and admin types (>=10000)
  * land on separate accumulators.
+ *
+ * `withdraw` is typed sugar over `submit(WITHDRAWAL_TYPE, abi.encode(params))`
+ * that validates the recipient and asset up front; like `deposit`, its asset
+ * is the protocol label.
  */
 export const ONCHAIN_ACTION_MANAGER_ABI = [
   'function deposit(address asset, uint256 amount, uint64 subaccountId, address fallbackRecipient) returns (uint256 actionId)',
   'function depositToNewSubaccount(address asset, uint256 amount, uint32 managerId, address owner) returns (uint256 actionId)',
   'function submit(uint256 actionType, bytes data) payable returns (uint256 actionId)',
+  'function withdraw(tuple(uint64 subaccountId, address protocolAsset, uint128 maxFeeUsdE18, address recipient, uint128 amountInUnderlying, bool forceBatch) params) returns (uint256 actionId)',
 ];

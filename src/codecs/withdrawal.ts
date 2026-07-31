@@ -20,20 +20,82 @@ export interface WithdrawalFields {
   forceBatch: boolean;
 }
 
+export interface OnchainWithdrawalFields extends WithdrawalFields {
+  /** Source protocol subaccount. Encoded as an ABI uint64 word. */
+  subaccountId: number | bigint;
+}
+
+/**
+ * The `OnchainActionManager.WithdrawalParams` struct
+ * (contracts/src/OnchainActionManager.sol): validated, scaled values ready
+ * for the typed `withdraw` entrypoint. `abi.encode` of this tuple is the
+ * wire payload — see `encodeOnchainWithdrawal`.
+ */
+export interface OnchainWithdrawalStruct {
+  subaccountId: bigint;
+  protocolAsset: string;
+  maxFeeUsdE18: bigint;
+  recipient: string;
+  amountInUnderlying: bigint;
+  forceBatch: boolean;
+}
+
 const WITHDRAWAL_ABI = ['address', 'uint256', 'address', 'uint256', 'bool'];
 
-/** ABI-encodes withdrawal action data: five static 32-byte words. */
-export function encodeWithdrawal(fields: WithdrawalFields): string {
+function scaledAmount(fields: WithdrawalFields): bigint {
   if (!Number.isInteger(fields.decimals) || fields.decimals < 0 || fields.decimals > 255) {
     throw new Error('decimals must be an integer between 0 and 255');
   }
   const amount = toScaled(fields.amount, fields.decimals);
   if (amount <= 0n) throw new Error('withdrawal amount must be strictly positive');
+  return amount;
+}
+
+/** ABI-encodes withdrawal action data: five static 32-byte words. */
+export function encodeWithdrawal(fields: WithdrawalFields): string {
   return AbiCoder.defaultAbiCoder().encode(WITHDRAWAL_ABI, [
     getAddress(fields.protocolAsset),
     unsignedE18(fields.maxFeeUsd, 'maxFeeUsd'),
     getAddress(fields.recipient),
-    amount,
+    scaledAmount(fields),
     fields.forceBatch,
   ]);
+}
+
+/** Validates and scales the fields into the `WithdrawalParams` struct shape. */
+export function toOnchainWithdrawalStruct(fields: OnchainWithdrawalFields): OnchainWithdrawalStruct {
+  const subaccountId = BigInt(fields.subaccountId);
+  if (subaccountId < 0n || subaccountId > 0xffff_ffff_ffff_ffffn) {
+    throw new Error('subaccountId must fit in uint64');
+  }
+  if (typeof fields.subaccountId === 'number' && !Number.isSafeInteger(fields.subaccountId)) {
+    throw new Error('subaccountId must be a safe integer or bigint');
+  }
+  return {
+    subaccountId,
+    protocolAsset: getAddress(fields.protocolAsset),
+    maxFeeUsdE18: unsignedE18(fields.maxFeeUsd, 'maxFeeUsd'),
+    recipient: getAddress(fields.recipient),
+    amountInUnderlying: scaledAmount(fields),
+    forceBatch: fields.forceBatch,
+  };
+}
+
+/**
+ * ABI-encodes `[uint64 subaccountId][WithdrawalActionData]` (six static
+ * words) — byte-identical to `abi.encode(OnchainActionManager.WithdrawalParams)`.
+ */
+export function encodeOnchainWithdrawal(fields: OnchainWithdrawalFields): string {
+  const params = toOnchainWithdrawalStruct(fields);
+  return AbiCoder.defaultAbiCoder().encode(
+    ['uint64', ...WITHDRAWAL_ABI],
+    [
+      params.subaccountId,
+      params.protocolAsset,
+      params.maxFeeUsdE18,
+      params.recipient,
+      params.amountInUnderlying,
+      params.forceBatch,
+    ],
+  );
 }

@@ -2,7 +2,7 @@ import { Wallet, dataLength, dataSlice, parseUnits } from 'ethers';
 import { describe, expect, it } from 'vitest';
 import { encodeExternalTransfer } from '../../src/codecs/externalTransfer';
 import { encodeTransfer } from '../../src/codecs/transfer';
-import { encodeWithdrawal } from '../../src/codecs/withdrawal';
+import { encodeOnchainWithdrawal, encodeWithdrawal } from '../../src/codecs/withdrawal';
 import { SignedAction } from '../../src/signing/action';
 import vectors from './fixtures/golden-vectors.json';
 
@@ -172,5 +172,17 @@ describe('withdrawal codec', () => {
     expect(() => encodeWithdrawal({ ...fields, amount: '1.2345678', decimals: 6 })).toThrow();
     expect(() => encodeWithdrawal({ ...fields, amount: '0' })).toThrow(/strictly positive/);
     expect(() => encodeWithdrawal({ ...fields, decimals: 6.5 })).toThrow(/decimals/);
+  });
+
+  it('prefixes the existing withdrawal encoding with a uint64 subaccount word', () => {
+    const data = encodeOnchainWithdrawal({ subaccountId: 42, ...fields });
+    expect(dataLength(data)).toBe(192);
+    expect(BigInt(dataSlice(data, 0, 32))).toBe(42n);
+    expect(dataSlice(data, 32, 192)).toBe(encodeWithdrawal(fields));
+  });
+
+  it('rejects onchain subaccount ids outside uint64', () => {
+    expect(() => encodeOnchainWithdrawal({ subaccountId: -1, ...fields })).toThrow(/uint64/);
+    expect(() => encodeOnchainWithdrawal({ subaccountId: 1n << 64n, ...fields })).toThrow(/uint64/);
   });
 });

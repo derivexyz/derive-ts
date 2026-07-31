@@ -8,7 +8,14 @@
 export { encodeTradeData, type TradeActionFields } from './trade';
 export { encodeTransfer, type TransferFields } from './transfer';
 export { encodeExternalTransfer, type ExternalTransferFields } from './externalTransfer';
-export { encodeWithdrawal, type WithdrawalFields } from './withdrawal';
+export {
+  encodeWithdrawal,
+  encodeOnchainWithdrawal,
+  toOnchainWithdrawalStruct,
+  type WithdrawalFields,
+  type OnchainWithdrawalFields,
+  type OnchainWithdrawalStruct,
+} from './withdrawal';
 export { encodeRfqQuote, encodeRfqExecute, sortRfqLegs, type RfqSignedLeg, type RfqQuoteFields } from './rfq';
 export {
   VAULT_ACTION_KIND,

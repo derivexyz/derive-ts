@@ -2,6 +2,8 @@ import { Contract, getAddress, type Signer } from 'ethers';
 import { ONCHAIN_ACTION_MANAGER_ABI } from '../abis/onchainActionManager';
 import type { ProtocolScopeCode } from '../auth/scopes';
 import { encodeCreateSessionKeyActionData } from '../codecs/sessionKey';
+import { toOnchainWithdrawalStruct } from '../codecs/withdrawal';
+import type { DecimalLike } from '../signing/encoding';
 import type { ClientContext } from './context';
 
 /**
@@ -12,6 +14,8 @@ import type { ClientContext } from './context';
 export const ONCHAIN_ACTION_TYPE = {
   /** Register / refresh / delete a session key from L1. */
   SetSessionKey: 51,
+  /** Withdraw from a subaccount, authorized by the submitting L1 wallet. */
+  Withdrawal: 52,
 } as const;
 
 export interface SetSessionKeyParams {
@@ -38,9 +42,28 @@ export interface RevokeSessionKeyParams {
   sessionKey: string;
 }
 
+export interface OnchainWithdrawalParams {
+  /** Caller-provided ethers signer; its address must own `subaccountId`. */
+  signer: Signer;
+  subaccountId: number | bigint;
+  /** Protocol spot-asset address, not the underlying ERC-20 address. */
+  protocolAsset: string;
+  /** Withdrawal amount in human units, or already-scaled raw units as bigint. */
+  amount: DecimalLike;
+  /** Underlying ERC-20 decimals used to scale `amount`. */
+  decimals: number;
+  /** L1 payout recipient. Defaults to the submitting signer. */
+  recipient?: string;
+  /** User-authorized fee ceiling. L1 withdrawals are currently charged zero. */
+  maxFeeUsd?: DecimalLike;
+  /** Request immediate batch proving. */
+  forceBatch?: boolean;
+}
+
 /**
  * Actions submitted on the Ethereum L1 through
- * `OnchainActionManager.submit(actionType, data)` — the path a smart
+ * `OnchainActionManager.submit(actionType, data)` (withdrawals via the typed
+ * `withdraw(params)` wrapper over the same queue) — the path a smart
  * contract or multisig owner uses to operate its account, since it cannot
  * produce the single-key EIP-712 signature the offchain action envelope
  * needs. Unlike signed actions, an onchain action carries no signature,
@@ -84,6 +107,30 @@ export class OnchainActionsApi {
    */
   async revokeSessionKey(params: RevokeSessionKeyParams): Promise<{ txHash: string }> {
     return this.setSessionKey({ signer: params.signer, sessionKey: params.sessionKey, expirySec: 0 });
+  }
+
+  /**
+   * Submits an L1-authorized withdrawal through the typed
+   * `OnchainActionManager.withdraw(params)` entrypoint — sugar over
+   * `submit(52, abi.encode(params))` that rejects unknown assets and zero
+   * recipients at transaction time instead of failing silently offchain.
+   * The transaction only queues the request; payout occurs asynchronously
+   * after the containing batch is proven.
+   */
+  async withdraw(params: OnchainWithdrawalParams): Promise<{ txHash: string }> {
+    const recipient = getAddress(params.recipient ?? (await params.signer.getAddress()));
+    const withdrawal = toOnchainWithdrawalStruct({
+      subaccountId: params.subaccountId,
+      protocolAsset: getAddress(params.protocolAsset),
+      maxFeeUsd: params.maxFeeUsd ?? 0,
+      recipient,
+      amount: params.amount,
+      decimals: params.decimals,
+      forceBatch: params.forceBatch ?? false,
+    });
+    const tx = await this.actionManager(params.signer).getFunction('withdraw')(withdrawal);
+    await tx.wait();
+    return { txHash: tx.hash as string };
   }
 
   private actionManager(signer: Signer): Contract {

@@ -258,7 +258,8 @@ export type RFQCancelReason =
   | 'session_key_deregistered'
   | 'subaccount_withdrawn'
   | 'rfq_no_longer_open'
-  | 'compliance';
+  | 'compliance'
+  | 'validation_failed';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "LiquidityRole".
@@ -718,6 +719,20 @@ export type JSONRPCResponseFor_WithdrawalHistoryResult = JSONRPCResponseFor_With
 export type JSONRPCResponseFor_WithdrawalHistoryResult1 =
   | {
       result: WithdrawalHistoryResult;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_PrivateLiquidateEdgeRpcResponse".
+ */
+export type JSONRPCResponseFor_PrivateLiquidateEdgeRpcResponse = JSONRPCResponseFor_PrivateLiquidateEdgeRpcResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_PrivateLiquidateEdgeRpcResponse1 =
+  | {
+      result: PrivateLiquidateEdgeRpcResponse;
     }
   | {
       error: RPCError;
@@ -1497,6 +1512,21 @@ export type JSONRPCResponseFor_QuoteSendDebugResult1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_PublicStartAuctionEdgeRpcResponse".
+ */
+export type JSONRPCResponseFor_PublicStartAuctionEdgeRpcResponse =
+  JSONRPCResponseFor_PublicStartAuctionEdgeRpcResponse1 & {
+    id: JsonRpcId;
+  };
+export type JSONRPCResponseFor_PublicStartAuctionEdgeRpcResponse1 =
+  | {
+      result: PublicStartAuctionEdgeRpcResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_AnyValue".
  */
 export type JSONRPCResponseFor_AnyValue = JSONRPCResponseFor_AnyValue1 & {
@@ -1790,6 +1820,10 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_GetWithdrawalHistoryEdgeRpcParams;
     response: JSONRPCResponseFor_WithdrawalHistoryResult;
   };
+  'private/liquidate': {
+    request: JsonRpcRequestFor_PrivateLiquidateEdgeRpcParams;
+    response: JSONRPCResponseFor_PrivateLiquidateEdgeRpcResponse;
+  };
   'private/mint_vault_shares': {
     request: JsonRpcRequestFor_MintSharesEdgeRpcParams;
     response: JSONRPCResponseFor_VaultSettleWireResponse;
@@ -2017,6 +2051,10 @@ export interface EndpointMap {
   'public/send_quote_debug': {
     request: JsonRpcRequestFor_PublicSendQuoteDebugEdgeRpcParams;
     response: JSONRPCResponseFor_QuoteSendDebugResult;
+  };
+  'public/start_auction': {
+    request: JsonRpcRequestFor_PublicStartAuctionEdgeRpcParams;
+    response: JSONRPCResponseFor_PublicStartAuctionEdgeRpcResponse;
   };
   'public/withdraw_debug': {
     request: JsonRpcRequestFor_PublicWithdrawDebugEdgeRpcParams;
@@ -2787,6 +2825,7 @@ export interface PrivateGetAccountEdgeRPCResponse {
   websocket_non_matching_tps: number;
   websocket_option_tps: number;
   websocket_perp_tps: number;
+  whitelisted_recipients: string[];
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -3898,6 +3937,43 @@ export interface WithdrawalEntry {
   timestamp: number;
   tx_hash?: string | null;
   wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PrivateLiquidateEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_PrivateLiquidateEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/liquidate';
+  params: PrivateLiquidateEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PrivateLiquidateEdgeRpcParams".
+ */
+export interface PrivateLiquidateEdgeRpcParams {
+  cash_transfer: string;
+  last_seen_trade_id: number;
+  liquidated_account_id: number;
+  merge_account: boolean;
+  nonce: number;
+  percent_of_acc: string;
+  price_limit: string;
+  signature: string;
+  signature_expiry_sec: number;
+  signer: string;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PrivateLiquidateEdgeRpcResponse".
+ */
+export interface PrivateLiquidateEdgeRpcResponse {
+  op_uuid: string;
+  operation_id: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6160,6 +6236,33 @@ export interface QuoteSendDebugResult {
   encoded_data: string;
   encoded_data_hashed: string;
   typed_data_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicStartAuctionEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_PublicStartAuctionEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/start_auction';
+  params: PublicStartAuctionEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicStartAuctionEdgeRpcParams".
+ */
+export interface PublicStartAuctionEdgeRpcParams {
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicStartAuctionEdgeRpcResponse".
+ */
+export interface PublicStartAuctionEdgeRpcResponse {
+  op_uuid: string;
+  operation_id: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
