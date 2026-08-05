@@ -2770,6 +2770,7 @@ export interface GetAccountEdgeRpcParams {
 export interface PrivateGetAccountEdgeRPCResponse {
   cancel_on_disconnect: boolean;
   creation_timestamp_sec?: number | null;
+  fallback_subaccount_id: number;
   fee_info: AccountFeeInfo;
   is_rfq_maker: boolean;
   per_endpoint_tps: {
