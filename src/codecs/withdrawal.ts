@@ -7,7 +7,7 @@ export interface WithdrawalFields {
   protocolAsset: string;
   /** Maximum fee the signer authorises, in USD; signed at e18 like every other action value. */
   maxFeeUsd: DecimalLike;
-  /** L1 payout recipient. The exchange only constructs withdrawals paying out to the action signer. */
+  /** L1 payout recipient. */
   recipient: string;
   /**
    * Withdrawal amount in the ERC-20's NATIVE decimals (USDC = 6) — the

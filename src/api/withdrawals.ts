@@ -21,10 +21,7 @@ export interface WithdrawParams {
   decimals?: number;
   /** Fee cap in USD. Defaults to the standard withdrawal fee: 1 USD, or 10 USD with `forceBatch`. */
   maxFeeUsd?: DecimalLike;
-  /**
-   * Guard for the L1 payout address. The exchange always pays out to the
-   * action signer, so any other value is rejected client-side.
-   */
+  /** L1 payout address. Defaults to the owner wallet. */
   recipient?: string;
   /** Pay the higher fee to have the batch proven immediately. */
   forceBatch?: boolean;
@@ -35,10 +32,10 @@ export interface WithdrawParams {
 /**
  * Withdrawals to L1 (`private/withdraw`).
  *
- * The exchange reconstructs the signed payload with the payout recipient
- * fixed to the action signer's address — withdrawals always pay out to
- * the key that signs them. NOTE: when a session key signs, funds go to
- * the session key's address, not the owner's.
+ * The payout address is part of the signed payload and defaults to the owner
+ * wallet. A session key may only pay out to an address on the owner's
+ * whitelisted recipients — including the owner wallet itself — unless the key
+ * holds `Admin`. Add entries with `private/update_whitelisted_recipients`.
  */
 export class WithdrawalsApi {
   constructor(private readonly ctx: ClientContext) {}
@@ -46,12 +43,7 @@ export class WithdrawalsApi {
   /** Builds the signed wire payload shared by `withdraw` and `withdrawDebug`. */
   private async buildWithdrawPayload(params: WithdrawParams) {
     const { ownerAddress, signer } = this.ctx.credentials();
-    const recipient = getAddress(params.recipient ?? signer.address);
-    if (recipient !== getAddress(signer.address)) {
-      throw new Error(
-        `the exchange pays withdrawals out to the action signer (${signer.address}); recipient ${recipient} cannot be honored`,
-      );
-    }
+    const recipient = getAddress(params.recipient ?? ownerAddress);
     const asset = await resolveSpotAsset(this.ctx, params.asset);
     if (params.decimals !== undefined && params.decimals !== asset.decimals) {
       throw new Error(
@@ -86,6 +78,7 @@ export class WithdrawalsApi {
       amount_in_underlying: decimalString(params.amount, asset.decimals),
       max_fee_usd: decimalString(maxFeeUsd),
       force_batch: forceBatch,
+      recipient,
       // Nonces are UTC-nanosecond decimal strings beyond 2^53; the API accepts string-or-number despite the generated `number`.
       nonce: action.fields.nonce as unknown as number,
       signer: action.fields.signer,

@@ -8,7 +8,8 @@
  *
  *   1. The amount is signed at the ERC-20's NATIVE decimals (USDC = 6),
  *      not the protocol's usual e18 fixed-point.
- *   2. The exchange pays out to whichever address SIGNED the action.
+ *   2. The L1 payout address is part of the signed payload, and defaults
+ *      to the owner wallet rather than the subaccount.
  *
  * Prerequisites: a subaccount holding USDC (see 03-deposit for funding).
  *
@@ -45,13 +46,13 @@ run(async () => {
     return;
   }
 
-  // WHERE THE MONEY GOES: the exchange reconstructs the withdrawal payload
-  // with the payout recipient hard-fixed to the action signer. We built this
-  // client with the owner key, so funds land at the owner's L1 address. If a
-  // SESSION KEY had signed instead, the USDC would be paid to the session
-  // key's address — never hand withdrawal scope to a throwaway key.
-  const signerAddress = new Wallet(requireEnv('PRIVATE_KEY')).address;
-  console.log(`Payout recipient (the signer): ${signerAddress}`);
+  // WHERE THE MONEY GOES: `recipient` is part of the signed payload and
+  // defaults to the owner wallet — not the signer, and not the subaccount.
+  // Pass `recipient` to send elsewhere. A SESSION KEY may only pay out to an
+  // address on the owner's whitelist (add one with
+  // client.spotTransfers.updateWhitelistedRecipients), unless it holds `Admin`.
+  const ownerAddress = new Wallet(requireEnv('PRIVATE_KEY')).address;
+  console.log(`Payout recipient (the owner wallet, by default): ${ownerAddress}`);
 
   const result = await client.withdrawals.withdraw({
     subaccountId,

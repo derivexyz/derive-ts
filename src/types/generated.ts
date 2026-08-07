@@ -4867,6 +4867,7 @@ export interface PrivateWithdrawEdgeRpcParams {
   force_batch: boolean;
   max_fee_usd: string;
   nonce: number;
+  recipient?: string | null;
   signature: string;
   signature_expiry_sec: number;
   signer: string;
@@ -6287,6 +6288,7 @@ export interface PublicWithdrawDebugEdgeRpcParams {
   force_batch: boolean;
   max_fee_usd: string;
   nonce: number;
+  recipient?: string | null;
   signature_expiry_sec: number;
   signer: string;
   subaccount_id: number;
