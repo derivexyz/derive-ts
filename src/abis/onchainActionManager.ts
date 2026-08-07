@@ -1,7 +1,6 @@
 /**
- * Entrypoints of the protocol's OnchainActionManager
- * (contracts/src/OnchainActionManager.sol) — the single L1 contract for both
- * deposits and generic onchain actions.
+ * Entrypoints of the protocol's OnchainActionManager — the single L1
+ * contract for both deposits and generic onchain actions.
  *
  * The `deposit` calls take a PROTOCOL asset label registered on the
  * WithdrawalOutbox, not an ERC-20 — the contract resolves the underlying

@@ -8,8 +8,9 @@ import type { ClientContext } from './context';
 
 /**
  * Public onchain action types the OnchainActionManager routes through
- * `submit(actionType, data)`. Mirrors `OnchainActionType` in
- * crates/types/src/operations/onchain_action.rs — keep the values in sync.
+ * `submit(actionType, data)`. These discriminants are part of the onchain
+ * ABI — the protocol matches on them, so they can be added to but never
+ * renumbered.
  */
 export const ONCHAIN_ACTION_TYPE = {
   /** Register / refresh / delete a session key from L1. */

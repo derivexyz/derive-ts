@@ -26,10 +26,9 @@ export interface OnchainWithdrawalFields extends WithdrawalFields {
 }
 
 /**
- * The `OnchainActionManager.WithdrawalParams` struct
- * (contracts/src/OnchainActionManager.sol): validated, scaled values ready
- * for the typed `withdraw` entrypoint. `abi.encode` of this tuple is the
- * wire payload — see `encodeOnchainWithdrawal`.
+ * The `OnchainActionManager.WithdrawalParams` struct: validated, scaled
+ * values ready for the typed `withdraw` entrypoint. `abi.encode` of this
+ * tuple is the wire payload — see `encodeOnchainWithdrawal`.
  */
 export interface OnchainWithdrawalStruct {
   subaccountId: bigint;
