@@ -5117,7 +5117,6 @@ export interface PerpPublicDetails {
   index: string;
   max_rate_per_hour: string;
   min_rate_per_hour: string;
-  static_interest_rate: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5384,6 +5383,9 @@ export interface GetLatestSignedFeedsEdgeRpcParams {
  * via the `definition` "GetLatestSignedFeedsResponse".
  */
 export interface GetLatestSignedFeedsResponse {
+  funding_data: {
+    [k: string]: FundingFeedDataResponse;
+  };
   fwd_data: {
     [k: string]: {
       [k: string]: ForwardFeedDataResponse;
@@ -5410,6 +5412,26 @@ export interface GetLatestSignedFeedsResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "FundingFeedDataResponse".
+ */
+export interface FundingFeedDataResponse {
+  confidence: string;
+  currency: string;
+  deadline: number;
+  funding_rate: string;
+  signatures: OracleSignatureDataResponse;
+  timestamp: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OracleSignatureDataResponse".
+ */
+export interface OracleSignatureDataResponse {
+  signatures: string[];
+  signers: Address[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "ForwardFeedDataResponse".
  */
 export interface ForwardFeedDataResponse {
@@ -5422,14 +5444,6 @@ export interface ForwardFeedDataResponse {
   spot_aggregate_latest: string;
   spot_aggregate_start: string;
   timestamp: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "OracleSignatureDataResponse".
- */
-export interface OracleSignatureDataResponse {
-  signatures: string[];
-  signers: Address[];
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
