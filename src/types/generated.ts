@@ -1614,6 +1614,123 @@ export type CancelReason =
   | 'trigger_failed'
   | 'validation_failed'
   | 'algo_completed';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RpcErrorCatalog".
+ */
+export type RpcErrorCatalog =
+  | ParseError
+  | InternalError
+  | InvalidParams
+  | MethodNotFound
+  | InvalidRequest
+  | ConcurrentWsClientExceeded
+  | RateLimitExceeded
+  | Unauthorized
+  | Forbidden
+  | RestrictedRegion
+  | FeedsNotFound
+  | CounterpartyInsufficientFunds
+  | CounterpartyMaxFeeTooLow
+  | OrderConfirmationTimeout
+  | EngineConfirmationTimeout
+  | AssetNotErc20
+  | SameAccountTransfer
+  | MultipleCurrenciesNotSupported
+  | MaxSessionKeysPerWallet
+  | MaxAssetsPerSubaccountExceeded
+  | PmrmOnlySupportsQuoteAsset
+  | Pm2OnlySupportSingleCurrencyOptionsAndPerps
+  | Pm2DoesNotSupportThisCollateral
+  | InsufficientFunds
+  | OrderDoesNotExist
+  | SelfCrossingDisallowed
+  | PostOnlyReject
+  | ZeroLiquidityForTakerOrder
+  | OrderInvalidSignatureExpiry
+  | InvalidAmount
+  | OrderInvalidLimitPrice
+  | FokNotFilled
+  | MmpFrozen
+  | NonUniqueNonce
+  | OrderInvalidNonce
+  | TooManyOrders
+  | NegativeErc20Balance
+  | InstrumentNotLive
+  | RejectTimestampExceeded
+  | MaxFeeTooLow
+  | ReduceOnlyNotSupported
+  | ReduceOnlyReject
+  | UndergoingLiquidation
+  | ReplaceOrderFilledAmountMismatch
+  | OiCapExceeded
+  | FeeConsumesAmount
+  | WithdrawalRoundsToZero
+  | TransferBelowMin
+  | TransferNotWhitelisted
+  | WithdrawalsBlockedInsolventAuction
+  | NonIncreasingNonce
+  | NonceOutsideWindow
+  | TriggerOrderAlreadyCancelledOrExpired
+  | InvalidTriggerPrice
+  | TooManyTriggerOrders
+  | TriggerPriceTypeNotSupported
+  | CannotReplaceOrBeReplacedByTriggerOrders
+  | UnfillableMarketTriggerOrder
+  | LegInstrumentsNotUnique
+  | RfqNotFound
+  | QuoteNotFound
+  | QuoteLegMismatchVsRfq
+  | QuoteRfqNotOpen
+  | QuoteRfqIdMismatch
+  | RfqInvalidCounterparty
+  | QuoteMakerCostTooHigh
+  | RfqPartialFillPctTooHigh
+  | RfqFilledDirectionCannotBeChanged
+  | QuoteTakerCostTooHigh
+  | RfqDisabledForAccount
+  | RfqTooManyLegs
+  | RfqTooManyCounterparties
+  | InstrumentNotFound
+  | CurrencyNotFound
+  | AssetNotFound
+  | InvalidChannels
+  | AccountNotFound
+  | SubaccountNotFound
+  | StringIsNotEthereumAddress
+  | InvalidSignature
+  | AuthHeaderMismatch
+  | IpNotWhitelisted
+  | InvalidSigner
+  | SessionKeyNotFound
+  | UnauthorizedAsRfqMaker
+  | CrossCurrencyRfqNotSupported
+  | SessionKeyExpired
+  | UnauthorizedKeyScope
+  | AccountNotAtomicWhitelisted
+  | SessionKeyAlreadyRegistered
+  | MalformedSignature
+  | ModuleMismatch
+  | ActionOutlivesSessionKey
+  | SessionKeyValidityTooShort
+  | AccountDisabled
+  | OfacBlocked
+  | CrossUniverseTrade
+  | UnknownRiskUniverse
+  | VaultNotFound
+  | ExceededMaxUserRequests
+  | MaxShareholderVaultsReached
+  | VaultClosed
+  | VaultCooldownActive
+  | VaultCreationDepositBelowMin
+  | VaultCuratorStakeBelowMin
+  | VaultSlippageExceeded
+  | VaultAmountBelowMin
+  | VaultSignatureExpiryTooLong
+  | VaultBenchmarkPriceUnavailable
+  | VaultInitialSharePriceTooFarFromBenchmark
+  | VaultDepositExceedsMargin
+  | ProtocolReject;
 
 export interface DeriveApi {
   methods: EndpointMap;
@@ -2855,6 +2972,7 @@ export interface PrivateGetSubaccountRPCResponseFor_OrderWireResponseAnd_VaultDe
   maintenance_margin: string;
   manager_id: number;
   margin_type: string;
+  mm_credits: string;
   open_orders: OrderWireResponse[];
   open_orders_margin: string;
   positions: PositionResponse[];
@@ -3915,7 +4033,7 @@ export interface JsonRpcRequestFor_PrivateLiquidateEdgeRpcParams {
 export interface PrivateLiquidateEdgeRpcParams {
   cash_transfer: string;
   last_seen_trade_id: number;
-  liquidated_account_id: number;
+  liquidate_subaccount_id: number;
   merge_account: boolean;
   nonce: number;
   percent_of_acc: string;
@@ -6557,7 +6675,9 @@ export interface AuctionDetails {
   margin_type: string;
   min_cash_transfer: string;
   min_price_limit: string;
-  subaccount_balances: string;
+  subaccount_balances: {
+    [k: string]: string;
+  };
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6637,4 +6757,1012 @@ export interface TradePublicResponseDoc {
   trade_amount: string;
   trade_id: string;
   trade_price: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ParseError".
+ */
+export interface ParseError {
+  code: -32700;
+  data?: string | null;
+  message: 'Error parsing message';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InternalError".
+ */
+export interface InternalError {
+  code: -32603;
+  data?: string | null;
+  message: 'Internal error';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InvalidParams".
+ */
+export interface InvalidParams {
+  code: -32602;
+  data?: string | null;
+  message: 'Invalid params';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MethodNotFound".
+ */
+export interface MethodNotFound {
+  code: -32601;
+  data?: string | null;
+  message: 'Method not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InvalidRequest".
+ */
+export interface InvalidRequest {
+  code: -32600;
+  data?: string | null;
+  message: 'Invalid Request';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ConcurrentWsClientExceeded".
+ */
+export interface ConcurrentWsClientExceeded {
+  code: -32100;
+  data?: string | null;
+  message: 'Number of concurrent websocket clients limit exceeded';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RateLimitExceeded".
+ */
+export interface RateLimitExceeded {
+  code: -32000;
+  data?: string | null;
+  message: 'Rate limit exceeded';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "Unauthorized".
+ */
+export interface Unauthorized {
+  code: 401;
+  data?: string | null;
+  message: 'Unauthorized';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "Forbidden".
+ */
+export interface Forbidden {
+  code: 403;
+  data?: string | null;
+  message: 'Forbidden';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RestrictedRegion".
+ */
+export interface RestrictedRegion {
+  code: 403;
+  data?: string | null;
+  message: 'You are in a restricted region that violates our terms of service.';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "FeedsNotFound".
+ */
+export interface FeedsNotFound {
+  code: 8200;
+  data?: string | null;
+  message: 'Feeds not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "CounterpartyInsufficientFunds".
+ */
+export interface CounterpartyInsufficientFunds {
+  code: 8500;
+  data?: string | null;
+  message: 'Counterparty insufficient funds';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "CounterpartyMaxFeeTooLow".
+ */
+export interface CounterpartyMaxFeeTooLow {
+  code: 8501;
+  data?: string | null;
+  message: 'Max fee for one or more counterparties is too low';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OrderConfirmationTimeout".
+ */
+export interface OrderConfirmationTimeout {
+  code: 9000;
+  data?: string | null;
+  message: 'Order confirmation timeout';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "EngineConfirmationTimeout".
+ */
+export interface EngineConfirmationTimeout {
+  code: 9001;
+  data?: string | null;
+  message: 'Engine confirmation timeout';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AssetNotErc20".
+ */
+export interface AssetNotErc20 {
+  code: 10001;
+  data?: string | null;
+  message: 'Asset is not an ERC20 token';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SameAccountTransfer".
+ */
+export interface SameAccountTransfer {
+  code: 10003;
+  data?: string | null;
+  message: 'Sender and recipient subaccount IDs are the same';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MultipleCurrenciesNotSupported".
+ */
+export interface MultipleCurrenciesNotSupported {
+  code: 10004;
+  data?: string | null;
+  message: 'Multiple currencies not supported';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MaxSessionKeysPerWallet".
+ */
+export interface MaxSessionKeysPerWallet {
+  code: 10006;
+  data?: string | null;
+  message: 'Maximum number of session keys per wallet reached';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MaxAssetsPerSubaccountExceeded".
+ */
+export interface MaxAssetsPerSubaccountExceeded {
+  code: 10007;
+  data?: string | null;
+  message: 'Maximum number of assets per subaccount reached';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PmrmOnlySupportsQuoteAsset".
+ */
+export interface PmrmOnlySupportsQuoteAsset {
+  code: 10010;
+  data?: string | null;
+  message: 'PMRM only supports USDC asset collateral. Cannot trade spot markets.';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "Pm2OnlySupportSingleCurrencyOptionsAndPerps".
+ */
+export interface Pm2OnlySupportSingleCurrencyOptionsAndPerps {
+  code: 10015;
+  data?: string | null;
+  message: 'PortfolioMargin2 supports multiple collaterals but only options and perps of the same currency';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "Pm2DoesNotSupportThisCollateral".
+ */
+export interface Pm2DoesNotSupportThisCollateral {
+  code: 10016;
+  data?: string | null;
+  message: 'PortfolioMargin2 does not support this collateral. Please use a subaccount with Portfolio Manager that supports this currency or Standard Manager.';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InsufficientFunds".
+ */
+export interface InsufficientFunds {
+  code: 11000;
+  data?: string | null;
+  message: 'Insufficient funds';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OrderDoesNotExist".
+ */
+export interface OrderDoesNotExist {
+  code: 11006;
+  data?: string | null;
+  message: 'Does not exist';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SelfCrossingDisallowed".
+ */
+export interface SelfCrossingDisallowed {
+  code: 11007;
+  data?: string | null;
+  message: 'Self-crossing disallowed';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PostOnlyReject".
+ */
+export interface PostOnlyReject {
+  code: 11008;
+  data?: string | null;
+  message: 'Post only order cannot cross the market';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ZeroLiquidityForTakerOrder".
+ */
+export interface ZeroLiquidityForTakerOrder {
+  code: 11009;
+  data?: string | null;
+  message: 'Zero liquidity for market or IOC/FOK order';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OrderInvalidSignatureExpiry".
+ */
+export interface OrderInvalidSignatureExpiry {
+  code: 11011;
+  data?: string | null;
+  message: 'Invalid signature expiry';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InvalidAmount".
+ */
+export interface InvalidAmount {
+  code: 11012;
+  data?: string | null;
+  message: 'Invalid amount';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OrderInvalidLimitPrice".
+ */
+export interface OrderInvalidLimitPrice {
+  code: 11013;
+  data?: string | null;
+  message: 'Invalid limit price';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "FokNotFilled".
+ */
+export interface FokNotFilled {
+  code: 11014;
+  data?: string | null;
+  message: 'Fill-or-kill not filled';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MmpFrozen".
+ */
+export interface MmpFrozen {
+  code: 11015;
+  data?: string | null;
+  message: 'MMP frozen';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "NonUniqueNonce".
+ */
+export interface NonUniqueNonce {
+  code: 11017;
+  data?: string | null;
+  message: 'Non unique nonce';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OrderInvalidNonce".
+ */
+export interface OrderInvalidNonce {
+  code: 11018;
+  data?: string | null;
+  message: 'Invalid nonce date';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "TooManyOrders".
+ */
+export interface TooManyOrders {
+  code: 11019;
+  data?: string | null;
+  message: 'Open orders limit exceeded';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "NegativeErc20Balance".
+ */
+export interface NegativeErc20Balance {
+  code: 11020;
+  data?: string | null;
+  message: 'Negative ERC20 balance';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InstrumentNotLive".
+ */
+export interface InstrumentNotLive {
+  code: 11021;
+  data?: string | null;
+  message: 'Instrument is not live';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RejectTimestampExceeded".
+ */
+export interface RejectTimestampExceeded {
+  code: 11022;
+  data?: string | null;
+  message: 'Reject timestamp exceeded';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MaxFeeTooLow".
+ */
+export interface MaxFeeTooLow {
+  code: 11023;
+  data?: string | null;
+  message: 'Max fee order param is too low';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ReduceOnlyNotSupported".
+ */
+export interface ReduceOnlyNotSupported {
+  code: 11024;
+  data?: string | null;
+  message: 'Reduce only not supported with this time in force';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ReduceOnlyReject".
+ */
+export interface ReduceOnlyReject {
+  code: 11025;
+  data?: string | null;
+  message: 'Reduce only reject';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "UndergoingLiquidation".
+ */
+export interface UndergoingLiquidation {
+  code: 11027;
+  data?: string | null;
+  message: 'Subaccount undergoing liquidation';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ReplaceOrderFilledAmountMismatch".
+ */
+export interface ReplaceOrderFilledAmountMismatch {
+  code: 11028;
+  data?: string | null;
+  message: 'Replaced order filled amount does not match expected state.';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OiCapExceeded".
+ */
+export interface OiCapExceeded {
+  code: 11029;
+  data?: string | null;
+  message: 'Trade or transfer rejected: open interest cap would be exceeded';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "FeeConsumesAmount".
+ */
+export interface FeeConsumesAmount {
+  code: 11030;
+  data?: string | null;
+  message: 'Fee consumes entire amount';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "WithdrawalRoundsToZero".
+ */
+export interface WithdrawalRoundsToZero {
+  code: 11031;
+  data?: string | null;
+  message: 'Withdrawal rounds to zero';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "TransferBelowMin".
+ */
+export interface TransferBelowMin {
+  code: 11032;
+  data?: string | null;
+  message: 'Transfer below minimum';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "TransferNotWhitelisted".
+ */
+export interface TransferNotWhitelisted {
+  code: 11033;
+  data?: string | null;
+  message: 'Transfer recipient not whitelisted';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "WithdrawalsBlockedInsolventAuction".
+ */
+export interface WithdrawalsBlockedInsolventAuction {
+  code: 11034;
+  data?: string | null;
+  message: 'Withdrawals blocked by insolvent auction';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "NonIncreasingNonce".
+ */
+export interface NonIncreasingNonce {
+  code: 11035;
+  data?: string | null;
+  message: 'Non increasing nonce';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "NonceOutsideWindow".
+ */
+export interface NonceOutsideWindow {
+  code: 11036;
+  data?: string | null;
+  message: 'Nonce outside valid window';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "TriggerOrderAlreadyCancelledOrExpired".
+ */
+export interface TriggerOrderAlreadyCancelledOrExpired {
+  code: 11050;
+  data?: string | null;
+  message: 'Trigger order was cancelled between the time worker sent order and engine processed order';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InvalidTriggerPrice".
+ */
+export interface InvalidTriggerPrice {
+  code: 11051;
+  data?: string | null;
+  message: 'Trigger price must be higher than the current price for stop orders and vice versa for take orders';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "TooManyTriggerOrders".
+ */
+export interface TooManyTriggerOrders {
+  code: 11052;
+  data?: string | null;
+  message: 'Trigger order limit exceeded (separate limit from regular orders)';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "TriggerPriceTypeNotSupported".
+ */
+export interface TriggerPriceTypeNotSupported {
+  code: 11053;
+  data?: string | null;
+  message: 'Index and last-trade trigger price types not supported yet';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "CannotReplaceOrBeReplacedByTriggerOrders".
+ */
+export interface CannotReplaceOrBeReplacedByTriggerOrders {
+  code: 11054;
+  data?: string | null;
+  message: 'Trigger orders cannot replace or be replaced';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "UnfillableMarketTriggerOrder".
+ */
+export interface UnfillableMarketTriggerOrder {
+  code: 11055;
+  data?: string | null;
+  message: 'Market order limit_price is unfillable at the given trigger price';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "LegInstrumentsNotUnique".
+ */
+export interface LegInstrumentsNotUnique {
+  code: 11100;
+  data?: string | null;
+  message: 'Leg instruments are not unique';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RfqNotFound".
+ */
+export interface RfqNotFound {
+  code: 11101;
+  data?: string | null;
+  message: 'RFQ not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "QuoteNotFound".
+ */
+export interface QuoteNotFound {
+  code: 11102;
+  data?: string | null;
+  message: 'Quote not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "QuoteLegMismatchVsRfq".
+ */
+export interface QuoteLegMismatchVsRfq {
+  code: 11103;
+  data?: string | null;
+  message: 'Quote leg does not match RFQ leg';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "QuoteRfqNotOpen".
+ */
+export interface QuoteRfqNotOpen {
+  code: 11104;
+  data?: string | null;
+  message: 'Requested quote or RFQ is not open';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "QuoteRfqIdMismatch".
+ */
+export interface QuoteRfqIdMismatch {
+  code: 11105;
+  data?: string | null;
+  message: 'Quote references a different RFQ than requested';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RfqInvalidCounterparty".
+ */
+export interface RfqInvalidCounterparty {
+  code: 11106;
+  data?: string | null;
+  message: 'Invalid RFQ counterparty';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "QuoteMakerCostTooHigh".
+ */
+export interface QuoteMakerCostTooHigh {
+  code: 11107;
+  data?: string | null;
+  message: 'Quote maker total cost too high';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RfqPartialFillPctTooHigh".
+ */
+export interface RfqPartialFillPctTooHigh {
+  code: 11108;
+  data?: string | null;
+  message: 'RFQ partial fill percentage too high';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RfqFilledDirectionCannotBeChanged".
+ */
+export interface RfqFilledDirectionCannotBeChanged {
+  code: 11109;
+  data?: string | null;
+  message: 'RFQ filled direction cannot be changed';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "QuoteTakerCostTooHigh".
+ */
+export interface QuoteTakerCostTooHigh {
+  code: 11110;
+  data?: string | null;
+  message: 'Quote taker total cost too high';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RfqDisabledForAccount".
+ */
+export interface RfqDisabledForAccount {
+  code: 11111;
+  data?: string | null;
+  message: 'RFQ functionality is disabled for this account';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RfqTooManyLegs".
+ */
+export interface RfqTooManyLegs {
+  code: 11112;
+  data?: string | null;
+  message: 'RFQ has too many legs';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RfqTooManyCounterparties".
+ */
+export interface RfqTooManyCounterparties {
+  code: 11113;
+  data?: string | null;
+  message: 'RFQ has too many counterparties';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InstrumentNotFound".
+ */
+export interface InstrumentNotFound {
+  code: 12001;
+  data?: string | null;
+  message: 'Instrument not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "CurrencyNotFound".
+ */
+export interface CurrencyNotFound {
+  code: 12002;
+  data?: string | null;
+  message: 'Currency not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AssetNotFound".
+ */
+export interface AssetNotFound {
+  code: 12003;
+  data?: string | null;
+  message: 'Asset not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InvalidChannels".
+ */
+export interface InvalidChannels {
+  code: 13000;
+  data?: string | null;
+  message: 'Invalid channels';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AccountNotFound".
+ */
+export interface AccountNotFound {
+  code: 14000;
+  data?: string | null;
+  message: 'Account not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SubaccountNotFound".
+ */
+export interface SubaccountNotFound {
+  code: 14001;
+  data?: string | null;
+  message: 'Subaccount not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "StringIsNotEthereumAddress".
+ */
+export interface StringIsNotEthereumAddress {
+  code: 14013;
+  data?: string | null;
+  message: 'String is not a valid ethereum address';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InvalidSignature".
+ */
+export interface InvalidSignature {
+  code: 14014;
+  data?: string | null;
+  message: 'Signature invalid for message or transaction';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuthHeaderMismatch".
+ */
+export interface AuthHeaderMismatch {
+  code: 14020;
+  data?: string | null;
+  message: 'The X-DeriveWallet header does not match the requested subaccount_id or wallet';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "IpNotWhitelisted".
+ */
+export interface IpNotWhitelisted {
+  code: 14021;
+  data?: string | null;
+  message: 'IP not whitelisted';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InvalidSigner".
+ */
+export interface InvalidSigner {
+  code: 14023;
+  data?: string | null;
+  message: 'Signer in on-chain related request is not wallet owner or registered session key';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SessionKeyNotFound".
+ */
+export interface SessionKeyNotFound {
+  code: 14026;
+  data?: string | null;
+  message: 'Session key not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "UnauthorizedAsRfqMaker".
+ */
+export interface UnauthorizedAsRfqMaker {
+  code: 14027;
+  data?: string | null;
+  message: 'Unauthorized as RFQ maker';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "CrossCurrencyRfqNotSupported".
+ */
+export interface CrossCurrencyRfqNotSupported {
+  code: 14028;
+  data?: string | null;
+  message: 'Cross currency RFQ not supported';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SessionKeyExpired".
+ */
+export interface SessionKeyExpired {
+  code: 14030;
+  data?: string | null;
+  message: 'Session key expired';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "UnauthorizedKeyScope".
+ */
+export interface UnauthorizedKeyScope {
+  code: 14031;
+  data?: string | null;
+  message: 'Unauthorized Key Scope';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AccountNotAtomicWhitelisted".
+ */
+export interface AccountNotAtomicWhitelisted {
+  code: 14033;
+  data?: string | null;
+  message: 'Account not whitelisted for atomic orders';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SessionKeyAlreadyRegistered".
+ */
+export interface SessionKeyAlreadyRegistered {
+  code: 14035;
+  data?: string | null;
+  message: 'Session key already registered';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MalformedSignature".
+ */
+export interface MalformedSignature {
+  code: 14036;
+  data?: string | null;
+  message: 'Signature is malformed';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ModuleMismatch".
+ */
+export interface ModuleMismatch {
+  code: 14037;
+  data?: string | null;
+  message: 'Action signed for the wrong module';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ActionOutlivesSessionKey".
+ */
+export interface ActionOutlivesSessionKey {
+  code: 14038;
+  data?: string | null;
+  message: 'Action expiry exceeds session key expiry';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SessionKeyValidityTooShort".
+ */
+export interface SessionKeyValidityTooShort {
+  code: 14039;
+  data?: string | null;
+  message: 'Session key expires too soon';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AccountDisabled".
+ */
+export interface AccountDisabled {
+  code: 16001;
+  data?: string | null;
+  message: 'Account is disabled due to compliance violations, please contact support to enable it.';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OfacBlocked".
+ */
+export interface OfacBlocked {
+  code: 16002;
+  data?: string | null;
+  message: 'Account is blocked due to OFAC compliance violations.';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "CrossUniverseTrade".
+ */
+export interface CrossUniverseTrade {
+  code: 17000;
+  data?: string | null;
+  message: 'Instrument not supported by this manager / risk universe';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "UnknownRiskUniverse".
+ */
+export interface UnknownRiskUniverse {
+  code: 17001;
+  data?: string | null;
+  message: 'Unknown risk universe';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultNotFound".
+ */
+export interface VaultNotFound {
+  code: 18007;
+  data?: string | null;
+  message: 'Vault not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ExceededMaxUserRequests".
+ */
+export interface ExceededMaxUserRequests {
+  code: 18008;
+  data?: string | null;
+  message: 'Exceeded maximum number of pending vault requests';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MaxShareholderVaultsReached".
+ */
+export interface MaxShareholderVaultsReached {
+  code: 18009;
+  data?: string | null;
+  message: 'Exceeded maximum number of shareholder vaults';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultClosed".
+ */
+export interface VaultClosed {
+  code: 18010;
+  data?: string | null;
+  message: 'Vault is closed';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultCooldownActive".
+ */
+export interface VaultCooldownActive {
+  code: 18011;
+  data?: string | null;
+  message: 'Vault withdrawal cooldown active';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultCreationDepositBelowMin".
+ */
+export interface VaultCreationDepositBelowMin {
+  code: 18012;
+  data?: string | null;
+  message: 'Vault creation deposit below minimum';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultCuratorStakeBelowMin".
+ */
+export interface VaultCuratorStakeBelowMin {
+  code: 18013;
+  data?: string | null;
+  message: 'Curator stake below minimum';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultSlippageExceeded".
+ */
+export interface VaultSlippageExceeded {
+  code: 18014;
+  data?: string | null;
+  message: 'Vault quote outside slippage band';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultAmountBelowMin".
+ */
+export interface VaultAmountBelowMin {
+  code: 18015;
+  data?: string | null;
+  message: 'Vault amount below minimum';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultSignatureExpiryTooLong".
+ */
+export interface VaultSignatureExpiryTooLong {
+  code: 18016;
+  data?: string | null;
+  message: 'Vault signature expiry too far out';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultBenchmarkPriceUnavailable".
+ */
+export interface VaultBenchmarkPriceUnavailable {
+  code: 18017;
+  data?: string | null;
+  message: 'Vault HWM benchmark price unavailable';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultInitialSharePriceTooFarFromBenchmark".
+ */
+export interface VaultInitialSharePriceTooFarFromBenchmark {
+  code: 18018;
+  data?: string | null;
+  message: 'Vault initial share price too far from benchmark';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultDepositExceedsMargin".
+ */
+export interface VaultDepositExceedsMargin {
+  code: 18019;
+  data?: string | null;
+  message: 'Insufficient margin for vault deposit';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ProtocolReject".
+ */
+export interface ProtocolReject {
+  code: 20000;
+  data?: string | null;
+  message: 'Protocol rejected operation';
 }
