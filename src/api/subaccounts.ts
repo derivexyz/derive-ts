@@ -6,6 +6,7 @@ import type {
   PrivateGetAccountEdgeRPCResponse,
   PrivateGetPositionsRPCResponse,
   PrivateGetSubaccountRPCResponseFor_OrderWireResponseAnd_VaultDepositHoldResponse as SubaccountPortfolio,
+  SubaccountValueHistoryResult,
   RpcMethod,
   TransferHistoryResult,
 } from '../types';
@@ -95,6 +96,38 @@ export class SubaccountsApi {
   getAllPortfolios(): Promise<SubaccountPortfolio[]> {
     return this.ctx.send('private/get_all_portfolios', {
       wallet: this.ctx.credentials().ownerAddress,
+    });
+  }
+
+  /**
+   * Mark-to-market value over time, sampled at `period`-second buckets.
+   *
+   * Each entry's `timestamp` is the bucket's *close* — every change it reflects
+   * happened at or before that instant. Value moves between buckets even with
+   * no trading, because it is recomputed against the feeds as of each bucket;
+   * conversely a bucket in which the subaccount held nothing produces no entry
+   * rather than a zero.
+   *
+   * `period` must be one of 900, 3600, 86400, 604800. An over-long window is
+   * clamped forward to the most recent buckets rather than rejected.
+   */
+  valueHistory(params: {
+    subaccountId?: number;
+    wallet?: string;
+    period?: number;
+    startTimestamp?: number;
+    endTimestamp?: number;
+    page?: number;
+    pageSize?: number;
+  }): Promise<SubaccountValueHistoryResult> {
+    return this.ctx.send('private/get_subaccount_value_history', {
+      subaccount_id: params.subaccountId,
+      wallet: params.wallet,
+      period: params.period,
+      start_timestamp: params.startTimestamp,
+      end_timestamp: params.endTimestamp,
+      page: params.page,
+      page_size: params.pageSize,
     });
   }
 

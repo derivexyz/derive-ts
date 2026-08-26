@@ -625,6 +625,20 @@ export type JSONRPCResponseFor_PrivateGetSubaccountRPCResponseFor_OrderWireRespo
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_SubaccountValueHistoryResult".
+ */
+export type JSONRPCResponseFor_SubaccountValueHistoryResult = JSONRPCResponseFor_SubaccountValueHistoryResult1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_SubaccountValueHistoryResult1 =
+  | {
+      result: SubaccountValueHistoryResult;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_PrivateGetSubaccountsRPCResponse".
  */
 export type JSONRPCResponseFor_PrivateGetSubaccountsRPCResponse =
@@ -1696,6 +1710,7 @@ export type RpcErrorCatalog =
   | NonIncreasingNonce
   | NonceOutsideWindow
   | NewSubaccountInFallbackUniverse
+  | DepositBelowSubaccountCreationFee
   | TriggerOrderAlreadyCancelledOrExpired
   | InvalidTriggerPrice
   | TooManyTriggerOrders
@@ -1935,6 +1950,10 @@ export interface EndpointMap {
   'private/get_subaccount': {
     request: JsonRpcRequestFor_GetSubaccountEdgeRpcParams;
     response: JSONRPCResponseFor_PrivateGetSubaccountRPCResponseFor_OrderWireResponseAnd_VaultDepositHoldResponse;
+  };
+  'private/get_subaccount_value_history': {
+    request: JsonRpcRequestFor_GetSubaccountValueHistoryEdgeRpcParams;
+    response: JSONRPCResponseFor_SubaccountValueHistoryResult;
   };
   'private/get_subaccounts': {
     request: JsonRpcRequestFor_GetSubaccountsEdgeRpcParams;
@@ -3747,6 +3766,52 @@ export interface JsonRpcRequestFor_GetSubaccountEdgeRpcParams {
  */
 export interface GetSubaccountEdgeRpcParams {
   subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetSubaccountValueHistoryEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_GetSubaccountValueHistoryEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/get_subaccount_value_history';
+  params: GetSubaccountValueHistoryEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetSubaccountValueHistoryEdgeRpcParams".
+ */
+export interface GetSubaccountValueHistoryEdgeRpcParams {
+  end_timestamp?: number | null;
+  page?: number | null;
+  page_size?: number | null;
+  period?: number | null;
+  start_timestamp?: number | null;
+  subaccount_id?: number | null;
+  wallet?: string | null;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SubaccountValueHistoryResult".
+ */
+export interface SubaccountValueHistoryResult {
+  pagination: PaginationInfo;
+  subaccount_value_history: SubaccountValueEntry[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SubaccountValueEntry".
+ */
+export interface SubaccountValueEntry {
+  currency: string;
+  initial_margin: string;
+  maintenance_margin: string;
+  margin_type: string;
+  subaccount_id: number;
+  subaccount_value: string;
+  timestamp: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -7292,6 +7357,15 @@ export interface NewSubaccountInFallbackUniverse {
   code: 11037;
   data?: string | null;
   message: 'Cannot create a new subaccount in the fallback risk universe';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DepositBelowSubaccountCreationFee".
+ */
+export interface DepositBelowSubaccountCreationFee {
+  code: 11038;
+  data?: string | null;
+  message: 'Deposit does not cover the subaccount creation fee';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
