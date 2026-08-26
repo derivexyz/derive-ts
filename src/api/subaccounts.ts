@@ -2,7 +2,6 @@ import type {
   InterestHistoryResult,
   OptionSettlementHistoryResponse,
   PaginatedTradesResult,
-  PaginationInfo,
   PrivateChangeSubaccountLabelRPCResponse,
   PrivateGetAccountEdgeRPCResponse,
   PrivateGetPositionsRPCResponse,
@@ -35,15 +34,6 @@ export interface WalletHistoryQuery {
   endTimestamp?: number;
 }
 
-export interface LiquidatorHistoryQuery {
-  subaccountId: number;
-  /** UTC-millisecond bounds. */
-  startTimestamp?: number;
-  endTimestamp?: number;
-  page?: number;
-  pageSize?: number;
-}
-
 /** A single simulated perp/option position change for `getMargin`. Amounts are decimal strings. */
 export interface SimulatedPositionChange {
   instrumentName: string;
@@ -72,38 +62,6 @@ export interface MarginResult {
   pre_initial_margin: string;
   pre_maintenance_margin: string;
   subaccount_id: number;
-}
-
-/** One liquidator bid within an auction. Amounts/PnL are decimal strings keyed by asset. */
-export interface AuctionBidEvent {
-  amounts_liquidated: Record<string, string>;
-  cash_received: string;
-  discount_pnl: string;
-  percent_liquidated: string;
-  positions_realized_pnl: Record<string, string>;
-  positions_realized_pnl_excl_fees: Record<string, string>;
-  realized_pnl: string;
-  realized_pnl_excl_fees: string;
-  timestamp: number;
-  tx_hash: string;
-}
-
-/** One auction a subaccount was liquidated in, with the bids that filled it. */
-export interface AuctionHistory {
-  auction_id: string;
-  auction_type: 'solvent' | 'insolvent';
-  bids: AuctionBidEvent[];
-  /** Auction end, UTC milliseconds; `null` while still live. */
-  end_timestamp: number | null;
-  fee: string;
-  start_timestamp: number;
-  subaccount_id: number;
-  tx_hash: string;
-}
-
-export interface LiquidatorHistoryResult {
-  bids: AuctionBidEvent[];
-  pagination: PaginationInfo;
 }
 
 /** Subaccount portfolio and history endpoints — authenticated, no signing. */
@@ -219,38 +177,5 @@ export class SubaccountsApi {
           })) ?? null,
       } as never,
     ) as Promise<MarginResult>;
-  }
-
-  /**
-   * Auctions in which a subaccount (or the whole wallet) was liquidated.
-   * Predates the schema, so it is absent from the generated EndpointMap and sent untyped.
-   */
-  getLiquidationHistory(query: WalletHistoryQuery = {}): Promise<AuctionHistory[]> {
-    return this.ctx.send(
-      'private/get_liquidation_history' as RpcMethod,
-      {
-        wallet: query.subaccountId == null ? this.ctx.credentials().ownerAddress : undefined,
-        subaccount_id: query.subaccountId ?? undefined,
-        start_timestamp: query.startTimestamp ?? undefined,
-        end_timestamp: query.endTimestamp ?? undefined,
-      } as never,
-    ) as Promise<AuctionHistory[]>;
-  }
-
-  /**
-   * Paginated auctions a subaccount participated in as the liquidator.
-   * Predates the schema, so it is absent from the generated EndpointMap and sent untyped.
-   */
-  getLiquidatorHistory(query: LiquidatorHistoryQuery): Promise<LiquidatorHistoryResult> {
-    return this.ctx.send(
-      'private/get_liquidator_history' as RpcMethod,
-      {
-        subaccount_id: query.subaccountId,
-        start_timestamp: query.startTimestamp ?? null,
-        end_timestamp: query.endTimestamp ?? null,
-        page: query.page ?? null,
-        page_size: query.pageSize ?? null,
-      } as never,
-    ) as Promise<LiquidatorHistoryResult>;
   }
 }

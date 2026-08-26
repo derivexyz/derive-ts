@@ -1211,6 +1211,25 @@ export type JSONRPCResponseFor_GetLatestSignedFeedsResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_LiquidationHistoryResult".
+ */
+export type JSONRPCResponseFor_LiquidationHistoryResult = JSONRPCResponseFor_LiquidationHistoryResult1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_LiquidationHistoryResult1 =
+  | {
+      result: LiquidationHistoryResult;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuctionType".
+ */
+export type AuctionType = 'solvent' | 'insolvent';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_GetOnchainActionHistoryResponse".
  */
 export type JSONRPCResponseFor_GetOnchainActionHistoryResponse = JSONRPCResponseFor_GetOnchainActionHistoryResponse1 & {
@@ -1598,6 +1617,11 @@ export type AuctionStateType = 'ongoing' | 'ended';
 export type Direction2 = 'buy' | 'sell';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "LiquidityRole2".
+ */
+export type LiquidityRole2 = 'maker' | 'taker';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "CancelReason".
  */
 export type CancelReason =
@@ -1671,6 +1695,7 @@ export type RpcErrorCatalog =
   | WithdrawalsBlockedInsolventAuction
   | NonIncreasingNonce
   | NonceOutsideWindow
+  | NewSubaccountInFallbackUniverse
   | TriggerOrderAlreadyCancelledOrExpired
   | InvalidTriggerPrice
   | TooManyTriggerOrders
@@ -1717,6 +1742,8 @@ export type RpcErrorCatalog =
   | OfacBlocked
   | CrossUniverseTrade
   | UnknownRiskUniverse
+  | ManagerCannotRiskCurrency
+  | AssetNotInRiskUniverse
   | VaultNotFound
   | ExceededMaxUserRequests
   | MaxShareholderVaultsReached
@@ -2084,6 +2111,10 @@ export interface EndpointMap {
   'public/get_latest_signed_feeds': {
     request: JsonRpcRequestFor_GetLatestSignedFeedsEdgeRpcParams;
     response: JSONRPCResponseFor_GetLatestSignedFeedsResponse;
+  };
+  'public/get_liquidation_history': {
+    request: JsonRpcRequestFor_GetLiquidationHistoryEdgeRpcParams;
+    response: JSONRPCResponseFor_LiquidationHistoryResult;
   };
   'public/get_onchain_action_history': {
     request: JsonRpcRequestFor_GetOnchainActionHistoryParams;
@@ -4031,10 +4062,7 @@ export interface JsonRpcRequestFor_PrivateLiquidateEdgeRpcParams {
  * via the `definition` "PrivateLiquidateEdgeRpcParams".
  */
 export interface PrivateLiquidateEdgeRpcParams {
-  cash_transfer: string;
-  last_seen_trade_id: number;
   liquidate_subaccount_id: number;
-  merge_account: boolean;
   nonce: number;
   percent_of_acc: string;
   price_limit: string;
@@ -5630,6 +5658,73 @@ export interface VolSVIParamDataResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetLiquidationHistoryEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_GetLiquidationHistoryEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_liquidation_history';
+  params: GetLiquidationHistoryEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetLiquidationHistoryEdgeRpcParams".
+ */
+export interface GetLiquidationHistoryEdgeRpcParams {
+  end_timestamp?: number | null;
+  page?: number | null;
+  page_size?: number | null;
+  start_timestamp?: number | null;
+  subaccount_id?: number | null;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "LiquidationHistoryResult".
+ */
+export interface LiquidationHistoryResult {
+  auctions: AuctionHistory[];
+  pagination: PaginationInfo;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuctionHistory".
+ */
+export interface AuctionHistory {
+  auction_id: string;
+  auction_type: AuctionType;
+  bids: AuctionBidEvent[];
+  end_timestamp?: number | null;
+  fee: string;
+  start_timestamp: number;
+  subaccount_id: number;
+  tx_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuctionBidEvent".
+ */
+export interface AuctionBidEvent {
+  amounts_liquidated: {
+    [k: string]: string;
+  };
+  cash_received: string;
+  discount_pnl: string;
+  percent_liquidated: string;
+  positions_realized_pnl: {
+    [k: string]: string;
+  };
+  positions_realized_pnl_excl_fees: {
+    [k: string]: string;
+  };
+  realized_pnl: string;
+  realized_pnl_excl_fees: string;
+  timestamp: number;
+  tx_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_GetOnchainActionHistoryParams".
  */
 export interface JsonRpcRequestFor_GetOnchainActionHistoryParams {
@@ -6518,23 +6613,6 @@ export interface ChannelSchemaMap {
     };
     data: TradeWireResponse[];
   };
-  '{subaccount_id}.trades.{batch_status}': {
-    params: {
-      subaccount_id: string;
-      batch_status:
-        | 'Batching'
-        | 'Executing'
-        | 'Proving'
-        | 'Settling'
-        | 'Settled'
-        | 'BatchingError'
-        | 'ExecutingError'
-        | 'ProvingError'
-        | 'SettlingError'
-        | 'SettledError';
-    };
-    data: TradeWireResponse[];
-  };
   '{wallet}.rfqs': {
     params: {
       wallet: string;
@@ -6555,7 +6633,7 @@ export interface ChannelSchemaMap {
       group: '1' | '10' | '100';
       depth: '1' | '10' | '20' | '100';
     };
-    data: OrderbookSnapshot;
+    data: OrderbookPayloadDoc;
   };
   'spot_feed.{currency}': {
     params: {
@@ -6582,24 +6660,6 @@ export interface ChannelSchemaMap {
       currency: string;
     };
     data: TradePublicResponseDoc[];
-  };
-  'trades.{instrument_type}.{currency}.{batch_status}': {
-    params: {
-      instrument_type: 'erc20' | 'option' | 'perp';
-      currency: string;
-      batch_status:
-        | 'Batching'
-        | 'Executing'
-        | 'Proving'
-        | 'Settling'
-        | 'Settled'
-        | 'BatchingError'
-        | 'ExecutingError'
-        | 'ProvingError'
-        | 'SettlingError'
-        | 'SettledError';
-    };
-    data: TradeSettledPublicResponse[];
   };
 }
 /**
@@ -6671,9 +6731,7 @@ export interface AuctionDetails {
   estimated_discount_pnl: string;
   estimated_mtm: string;
   estimated_percent_bid: string;
-  last_seen_trade_id: number;
   margin_type: string;
-  min_cash_transfer: string;
   min_price_limit: string;
   subaccount_balances: {
     [k: string]: string;
@@ -6696,22 +6754,14 @@ export interface MarginWatchResult {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "OrderbookSnapshot".
+ * via the `definition` "OrderbookPayloadDoc".
  */
-export interface OrderbookSnapshot {
-  asks: OrderSnapshot[];
-  bids: OrderSnapshot[];
+export interface OrderbookPayloadDoc {
+  asks: [string, string][];
+  bids: [string, string][];
   instrument_name: string;
   publish_id: number;
   timestamp: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "OrderSnapshot".
- */
-export interface OrderSnapshot {
-  amount: string;
-  price: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6748,15 +6798,23 @@ export interface TickerSlimPayload {
  */
 export interface TradePublicResponseDoc {
   direction: Direction2;
+  expected_rebate: string;
+  extra_fee: string;
   index_price: string;
   instrument_name: string;
+  liquidity_role: LiquidityRole2;
   mark_price: string;
   quote_id?: string | null;
+  realized_pnl: string;
+  realized_pnl_excl_fees: string;
   rfq_id?: string | null;
+  subaccount_id: number;
   timestamp: number;
   trade_amount: string;
+  trade_fee: string;
   trade_id: string;
   trade_price: string;
+  wallet: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -7228,6 +7286,15 @@ export interface NonceOutsideWindow {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "NewSubaccountInFallbackUniverse".
+ */
+export interface NewSubaccountInFallbackUniverse {
+  code: 11037;
+  data?: string | null;
+  message: 'Cannot create a new subaccount in the fallback risk universe';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "TriggerOrderAlreadyCancelledOrExpired".
  */
 export interface TriggerOrderAlreadyCancelledOrExpired {
@@ -7639,6 +7706,24 @@ export interface UnknownRiskUniverse {
   code: 17001;
   data?: string | null;
   message: 'Unknown risk universe';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ManagerCannotRiskCurrency".
+ */
+export interface ManagerCannotRiskCurrency {
+  code: 17002;
+  data?: string | null;
+  message: "The subaccount's risk manager has no configuration for this currency and cannot margin a position in it";
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AssetNotInRiskUniverse".
+ */
+export interface AssetNotInRiskUniverse {
+  code: 17003;
+  data?: string | null;
+  message: 'Asset is not registered in the destination risk universe';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema

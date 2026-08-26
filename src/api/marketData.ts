@@ -10,6 +10,7 @@ import type {
   IndexCandle,
   InstrumentPublicResponse,
   InterestRateHistoryResult,
+  LiquidationHistoryResult,
   MarginWatchResult,
   OptionSettlementPricesResult,
   PublicAssetType,
@@ -287,17 +288,14 @@ export class MarketDataApi {
       page?: number;
       pageSize?: number;
     } = {},
-  ): Promise<unknown> {
-    return this.ctx.send(
-      'public/get_liquidation_history' as never,
-      {
-        subaccount_id: params.subaccountId ?? null,
-        start_timestamp: params.fromTimestamp,
-        end_timestamp: params.toTimestamp,
-        page: params.page,
-        page_size: params.pageSize,
-      } as never,
-    );
+  ): Promise<LiquidationHistoryResult> {
+    return this.ctx.send('public/get_liquidation_history', {
+      subaccount_id: params.subaccountId ?? null,
+      start_timestamp: params.fromTimestamp,
+      end_timestamp: params.toTimestamp,
+      page: params.page,
+      page_size: params.pageSize,
+    });
   }
 
   /** Mark-to-market value and maintenance margin for a subaccount. */

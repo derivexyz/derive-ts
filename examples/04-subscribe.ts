@@ -47,12 +47,13 @@ run(async () => {
     // Each notification is a full top-of-book snapshot, not a diff.
     // Prices/amounts are decimal strings; the book can be one-sided on
     // a quiet testnet market, hence the fallbacks.
+    // Each level is a `[price, amount]` pair, not an object.
     const bestBid = snapshot.bids[0];
     const bestAsk = snapshot.asks[0];
     console.log(
       `book #${snapshot.publish_id}: ` +
-        `bid ${bestBid ? `${bestBid.amount} @ ${bestBid.price}` : '(empty)'} | ` +
-        `ask ${bestAsk ? `${bestAsk.amount} @ ${bestAsk.price}` : '(empty)'}`,
+        `bid ${bestBid ? `${bestBid[1]} @ ${bestBid[0]}` : '(empty)'} | ` +
+        `ask ${bestAsk ? `${bestAsk[1]} @ ${bestAsk[0]}` : '(empty)'}`,
     );
     updates += 1;
     if (updates >= UPDATES_TO_SHOW) resolveDone();
