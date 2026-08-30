@@ -9,7 +9,8 @@ import { ONCHAIN_ACTION_TYPE, OnchainActionsApi } from '../../src/api/onchainAct
 // so the tests can assert the action type and calldata without a live chain.
 // Real ethers is kept for getAddress / the codec's encoding helpers.
 const submitCalls = vi.hoisted(() => [] as Array<{ actionType: number | bigint; data: string }>);
-const withdrawCalls = vi.hoisted(() => [] as OnchainWithdrawalStruct[]);
+const withdrawCalls = vi.hoisted(() => [] as Array<{ params: OnchainWithdrawalStruct; value: bigint }>);
+const WITHDRAWAL_FEE = vi.hoisted(() => 500_000_000_000_000n);
 
 vi.mock('ethers', async (importOriginal) => {
   const actual = await importOriginal<typeof import('ethers')>();
@@ -27,10 +28,13 @@ vi.mock('ethers', async (importOriginal) => {
         };
       }
       if (name === 'withdraw') {
-        return async (params: OnchainWithdrawalStruct) => {
-          withdrawCalls.push(params);
+        return async (params: OnchainWithdrawalStruct, overrides: { value: bigint }) => {
+          withdrawCalls.push({ params, value: overrides.value });
           return { hash: '0xabc', wait: async () => ({}) };
         };
+      }
+      if (name === 'WITHDRAWAL_FEE') {
+        return async () => WITHDRAWAL_FEE;
       }
       throw new Error(`unexpected function ${name}`);
     }
@@ -112,7 +116,10 @@ describe('OnchainActionsApi', () => {
     expect(txHash).toBe('0xabc');
     expect(submitCalls).toHaveLength(0);
     expect(withdrawCalls).toHaveLength(1);
-    const params = withdrawCalls[0]!;
+    const { params, value } = withdrawCalls[0]!;
+    // The contract reverts unless msg.value is exactly WITHDRAWAL_FEE, so the
+    // fee must come from the contract rather than a constant the SDK guesses.
+    expect(value).toBe(WITHDRAWAL_FEE);
     expect(params).toEqual({
       subaccountId: 42n,
       protocolAsset: ASSET,
@@ -122,9 +129,8 @@ describe('OnchainActionsApi', () => {
       forceBatch: false,
     });
 
-    // The typed call must carry the exact bytes the raw
-    // submit(52, encodeOnchainWithdrawal(...)) path would have queued —
-    // the sequencer decodes both identically.
+    // The typed call must carry the exact bytes `encodeOnchainWithdrawal`
+    // produces — the sequencer decodes the queued action from them.
     const flatEncoded = AbiCoder.defaultAbiCoder().encode(
       ['uint64', 'address', 'uint128', 'address', 'uint128', 'bool'],
       [

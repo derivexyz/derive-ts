@@ -14,13 +14,14 @@
  * by `msg.sender`. Public action types (51–9999) and admin types (>=10000)
  * land on separate accumulators.
  *
- * `withdraw` is typed sugar over `submit(WITHDRAWAL_TYPE, abi.encode(params))`
- * that validates the recipient and asset up front; like `deposit`, its asset
- * is the protocol label.
+ * `withdraw` is the typed entrypoint for WITHDRAWAL_TYPE — it validates the
+ * recipient and asset up front and requires exactly `WITHDRAWAL_FEE` in native
+ * value; like `deposit`, its asset is the protocol label.
  */
 export const ONCHAIN_ACTION_MANAGER_ABI = [
   'function deposit(address asset, uint256 amount, uint64 subaccountId, address fallbackRecipient) returns (uint256 actionId)',
   'function depositToNewSubaccount(address asset, uint256 amount, uint32 managerId, address owner) returns (uint256 actionId)',
-  'function submit(uint256 actionType, bytes data) payable returns (uint256 actionId)',
-  'function withdraw(tuple(uint64 subaccountId, address protocolAsset, uint128 maxFeeUsdE18, address recipient, uint128 amountInUnderlying, bool forceBatch) params) returns (uint256 actionId)',
+  'function submit(uint64 actionType, bytes data) returns (uint256 actionId)',
+  'function withdraw(tuple(uint64 subaccountId, address protocolAsset, uint128 maxFeeUsdE18, address recipient, uint128 amountInUnderlying, bool forceBatch) params) payable returns (uint256 actionId)',
+  'function WITHDRAWAL_FEE() view returns (uint256)',
 ];

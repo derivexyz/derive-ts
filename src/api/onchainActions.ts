@@ -7,16 +7,19 @@ import type { DecimalLike } from '../signing/encoding';
 import type { ClientContext } from './context';
 
 /**
- * Public onchain action types the OnchainActionManager routes through
- * `submit(actionType, data)`. These discriminants are part of the onchain
- * ABI — the protocol matches on them, so they can be added to but never
- * renumbered.
+ * Public onchain action types the OnchainActionManager queues. These
+ * discriminants are part of the onchain ABI — the protocol matches on them, so
+ * they can be added to but never renumbered.
  */
 export const ONCHAIN_ACTION_TYPE = {
-  /** Register / refresh / delete a session key from L1. */
+  /** Register / refresh / delete a session key from L1. Queued via `submit`. */
   SetSessionKey: 51,
-  /** Withdraw from a subaccount, authorized by the submitting L1 wallet. */
-  Withdrawal: 52,
+  /**
+   * Withdraw from a subaccount, authorized by the submitting L1 wallet. Below
+   * `MAX_RESERVED_ACTION_ID`, so it is reachable only via `withdraw`, never
+   * `submit`.
+   */
+  Withdrawal: 3,
 } as const;
 
 export interface OnchainSetSessionKeyParams {
@@ -112,9 +115,10 @@ export class OnchainActionsApi {
 
   /**
    * Submits an L1-authorized withdrawal through the typed
-   * `OnchainActionManager.withdraw(params)` entrypoint — sugar over
-   * `submit(52, abi.encode(params))` that rejects unknown assets and zero
-   * recipients at transaction time instead of failing silently offchain.
+   * `OnchainActionManager.withdraw(params)` entrypoint, which rejects unknown
+   * assets and zero recipients at transaction time instead of failing silently
+   * offchain. It requires exactly `WITHDRAWAL_FEE` in native value, read from
+   * the contract so an upgrade that repriced it cannot silently revert callers.
    * The transaction only queues the request; payout occurs asynchronously
    * after the containing batch is proven.
    */
@@ -129,7 +133,10 @@ export class OnchainActionsApi {
       decimals: params.decimals,
       forceBatch: params.forceBatch ?? false,
     });
-    const tx = await this.actionManager(params.signer).getFunction('withdraw')(withdrawal);
+    const manager = this.actionManager(params.signer);
+    const tx = await manager.getFunction('withdraw')(withdrawal, {
+      value: await manager.getFunction('WITHDRAWAL_FEE')(),
+    });
     await tx.wait();
     return { txHash: tx.hash as string };
   }

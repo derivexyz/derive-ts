@@ -1711,6 +1711,7 @@ export type RpcErrorCatalog =
   | NonceOutsideWindow
   | NewSubaccountInFallbackUniverse
   | DepositBelowSubaccountCreationFee
+  | LendingBorrowsExceedSupply
   | TriggerOrderAlreadyCancelledOrExpired
   | InvalidTriggerPrice
   | TooManyTriggerOrders
@@ -5839,6 +5840,8 @@ export interface OnchainActionHistoryEntry {
   last_failed_at?: number | null;
   op_uuid?: string | null;
   queue: string;
+  skip_reason?: string | null;
+  skip_reason_code?: string | null;
   status: string;
   tx_hash?: string | null;
   updated_at: number;
@@ -7366,6 +7369,15 @@ export interface DepositBelowSubaccountCreationFee {
   code: 11038;
   data?: string | null;
   message: 'Deposit does not cover the subaccount creation fee';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "LendingBorrowsExceedSupply".
+ */
+export interface LendingBorrowsExceedSupply {
+  code: 11039;
+  data?: string | null;
+  message: 'Lending pool borrows exceed supply';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
