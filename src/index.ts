@@ -13,7 +13,7 @@ export {
   type InternalSpotTransferParams,
   type SpotAssetInfo,
 } from './api/spotTransfers';
-export { WithdrawalsApi } from './api/withdrawals';
+export { NATIVE_ETH, WithdrawalsApi } from './api/withdrawals';
 export { ContractCallDeposits, DepositAddressDeposits, DepositsApi } from './api/deposits';
 export {
   CuratorVaultsApi,

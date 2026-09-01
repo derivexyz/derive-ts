@@ -7,9 +7,17 @@ import type { PrivateWithdrawEdgeRpcResponse } from '../types';
 import type { ClientContext } from './context';
 import { decimalString, resolveSpotAsset } from './spotTransfers';
 
+/**
+ * ERC-7528 native-ETH sentinel. Withdrawing it pays out native ETH: the
+ * protocol debits the registered wrapped-ETH asset, and the L1 outbox unwraps
+ * on the way out. It is not a registered asset, so it resolves to fixed
+ * metadata rather than through the exchange's currency list.
+ */
+export const NATIVE_ETH = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+
 export interface WithdrawParams {
   subaccountId: number;
-  /** Currency name (e.g. "USDC") or protocol spot-asset address. */
+  /** Currency name (e.g. "USDC"), protocol spot-asset address, or {@link NATIVE_ETH}. */
   asset: string;
   /** Amount in human units. Signed at the ERC-20's native decimals — the protocol's only non-e18 amount. */
   amount: DecimalLike;
@@ -44,7 +52,11 @@ export class WithdrawalsApi {
   private async buildWithdrawPayload(params: WithdrawParams) {
     const { ownerAddress, signer } = this.ctx.credentials();
     const recipient = getAddress(params.recipient ?? ownerAddress);
-    const asset = await resolveSpotAsset(this.ctx, params.asset);
+    const wanted = params.asset.trim();
+    const isNativeEth = wanted.startsWith('0x') && getAddress(wanted) === getAddress(NATIVE_ETH);
+    const asset = isNativeEth
+      ? { name: NATIVE_ETH, address: NATIVE_ETH, decimals: 18 }
+      : await resolveSpotAsset(this.ctx, wanted);
     if (params.decimals !== undefined && params.decimals !== asset.decimals) {
       throw new Error(
         `decimals ${params.decimals} does not match the exchange's metadata for ${asset.name} (${asset.decimals}) — the signature would be rejected`,

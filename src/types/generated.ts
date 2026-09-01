@@ -1712,6 +1712,8 @@ export type RpcErrorCatalog =
   | NewSubaccountInFallbackUniverse
   | DepositBelowSubaccountCreationFee
   | LendingBorrowsExceedSupply
+  | SecurityModuleCashOutflowWhileInsolvent
+  | SecurityModuleCannotBorrow
   | TriggerOrderAlreadyCancelledOrExpired
   | InvalidTriggerPrice
   | TooManyTriggerOrders
@@ -7378,6 +7380,24 @@ export interface LendingBorrowsExceedSupply {
   code: 11039;
   data?: string | null;
   message: 'Lending pool borrows exceed supply';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SecurityModuleCashOutflowWhileInsolvent".
+ */
+export interface SecurityModuleCashOutflowWhileInsolvent {
+  code: 11040;
+  data?: string | null;
+  message: 'Security module cannot pay out cash while it reserves cash for an insolvent auction';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SecurityModuleCannotBorrow".
+ */
+export interface SecurityModuleCannotBorrow {
+  code: 11041;
+  data?: string | null;
+  message: 'Security module cannot borrow to fund an outflow';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
