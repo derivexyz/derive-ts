@@ -11,9 +11,9 @@ import type {
   InstrumentPublicResponse,
   InterestRateHistoryResult,
   LiquidationHistoryResult,
-  MarginWatchResult,
   OptionSettlementPricesResult,
   PublicAssetType,
+  PublicMarginWatchResponse,
   PublicTradesResult,
   RiskUniverseResponse,
   TickerSlimSnapshot,
@@ -298,20 +298,14 @@ export class MarketDataApi {
     });
   }
 
-  /** Mark-to-market value and maintenance margin for a subaccount. */
-  marginWatch(params: {
-    subaccountId: number;
-    forceOnchain?: boolean;
-    isDelayedLiquidation?: boolean;
-  }): Promise<MarginWatchResult> {
-    return this.ctx.send(
-      'public/margin_watch' as never,
-      {
-        subaccount_id: params.subaccountId,
-        force_onchain: params.forceOnchain,
-        is_delayed_liquidation: params.isDelayedLiquidation,
-      } as never,
-    );
+  /**
+   * Mark-to-market value and margin for a subaccount, computed on the margin
+   * basis actually in effect (see `is_delayed_liquidation` in the result).
+   */
+  marginWatch(params: { subaccountId: number }): Promise<PublicMarginWatchResponse> {
+    return this.ctx.send('public/margin_watch', {
+      subaccount_id: params.subaccountId,
+    });
   }
 
   /** Margin requirement for a simulated portfolio and optional trade deltas; ignores open-order margin. */

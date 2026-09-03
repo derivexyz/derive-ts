@@ -31,8 +31,8 @@ export const NETWORKS: Record<NetworkName, NetworkConfig> = {
     chainId: 11155111, // Sepolia
     modules: { ...V3_MODULE_ADDRESSES },
     contracts: {
-      actionManager: '0x1b4f369b585D40a27F66775844FC265151f278A4',
-      usdc: '0xE838B3Df801C1AE1d18f0f524A51783Ea30673C7',
+      actionManager: '0x842C2306A17354f58Cb00853Ce3B71fB27F83557',
+      usdc: '0x73Efab09362052D26FB93A730Be4F8a5EdC833af',
     },
   },
   local: {

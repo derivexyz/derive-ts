@@ -1512,6 +1512,20 @@ export type JSONRPCResponseFor_ArrayOfUint641 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_PublicMarginWatchResponse".
+ */
+export type JSONRPCResponseFor_PublicMarginWatchResponse = JSONRPCResponseFor_PublicMarginWatchResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_PublicMarginWatchResponse1 =
+  | {
+      result: PublicMarginWatchResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "DepositType".
  */
 export type DepositType = 'standard' | 'instant' | 'direct';
@@ -2209,6 +2223,10 @@ export interface EndpointMap {
   'public/login': {
     request: JsonRpcRequestFor_LoginEdgeRpcParams;
     response: JSONRPCResponseFor_ArrayOfUint64;
+  };
+  'public/margin_watch': {
+    request: JsonRpcRequestFor_MarginWatchEdgeRpcParams;
+    response: JSONRPCResponseFor_PublicMarginWatchResponse;
   };
   'public/order_quote': {
     request: JsonRpcRequestFor_OrderQuoteEdgeRpcParams;
@@ -6465,6 +6483,42 @@ export interface LoginEdgeRpcParams {
   signature?: string | null;
   timestamp?: number | null;
   wallet?: string | null;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_MarginWatchEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_MarginWatchEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/margin_watch';
+  params: MarginWatchEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MarginWatchEdgeRpcParams".
+ */
+export interface MarginWatchEdgeRpcParams {
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicMarginWatchResponse".
+ */
+export interface PublicMarginWatchResponse {
+  collaterals: CollateralResponse[];
+  currency: string[];
+  initial_margin: string;
+  is_delayed_liquidation: boolean;
+  maintenance_margin: string;
+  margin_type: string;
+  positions: PositionResponse[];
+  risk_universe_id: number;
+  subaccount_id: number;
+  subaccount_value: string;
+  valuation_timestamp: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
