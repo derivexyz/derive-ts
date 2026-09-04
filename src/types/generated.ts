@@ -1682,6 +1682,12 @@ export type RpcErrorCatalog =
   | Forbidden
   | RestrictedRegion
   | FeedsNotFound
+  | FeedNotEnoughSigners
+  | FeedSignerSignatureLengthMismatch
+  | FeedDuplicatedSigner
+  | FeedInvalidSignature
+  | FeedUnauthorizedSigner
+  | FeedTimestampInFuture
   | CounterpartyInsufficientFunds
   | CounterpartyMaxFeeTooLow
   | OrderConfirmationTimeout
@@ -1789,6 +1795,7 @@ export type RpcErrorCatalog =
   | VaultBenchmarkPriceUnavailable
   | VaultInitialSharePriceTooFarFromBenchmark
   | VaultDepositExceedsMargin
+  | VaultRequestAlreadyQueued
   | ProtocolReject;
 
 export interface DeriveApi {
@@ -2922,6 +2929,10 @@ export interface JsonRpcRequestFor_ForceBurnEdgeRpcParams {
  */
 export interface ForceBurnEdgeRpcParams {
   holder: Address;
+  nonce: number;
+  signature: string;
+  signature_expiry_sec: number;
+  signer: Address;
   subaccount_id: number;
 }
 /**
@@ -4504,6 +4515,7 @@ export interface JsonRpcRequestFor_RejectDepositRequestEdgeRpcParams {
 export interface RejectDepositRequestEdgeRpcParams {
   reason?: string | null;
   request_id: VaultRequestId;
+  subaccount_id: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -7041,6 +7053,60 @@ export interface FeedsNotFound {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "FeedNotEnoughSigners".
+ */
+export interface FeedNotEnoughSigners {
+  code: 8201;
+  data?: string | null;
+  message: 'Signed feed carries fewer signers than the currency requires';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "FeedSignerSignatureLengthMismatch".
+ */
+export interface FeedSignerSignatureLengthMismatch {
+  code: 8202;
+  data?: string | null;
+  message: 'Signed feed carries a different number of signers and signatures';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "FeedDuplicatedSigner".
+ */
+export interface FeedDuplicatedSigner {
+  code: 8203;
+  data?: string | null;
+  message: 'Signed feed carries the same signer twice';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "FeedInvalidSignature".
+ */
+export interface FeedInvalidSignature {
+  code: 8204;
+  data?: string | null;
+  message: 'Signed feed signature does not recover to its signer';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "FeedUnauthorizedSigner".
+ */
+export interface FeedUnauthorizedSigner {
+  code: 8205;
+  data?: string | null;
+  message: "Signed feed was signed by a key outside the currency's signer set";
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "FeedTimestampInFuture".
+ */
+export interface FeedTimestampInFuture {
+  code: 8207;
+  data?: string | null;
+  message: 'Signed feed timestamp is ahead of the operation timestamp';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "CounterpartyInsufficientFunds".
  */
 export interface CounterpartyInsufficientFunds {
@@ -8001,6 +8067,15 @@ export interface VaultDepositExceedsMargin {
   code: 18019;
   data?: string | null;
   message: 'Insufficient margin for vault deposit';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VaultRequestAlreadyQueued".
+ */
+export interface VaultRequestAlreadyQueued {
+  code: 18020;
+  data?: string | null;
+  message: 'A request with this vault nonce is already queued';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema

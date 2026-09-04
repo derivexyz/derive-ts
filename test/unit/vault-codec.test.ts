@@ -5,6 +5,7 @@ import {
   encodeVaultCancel,
   encodeVaultCreate,
   encodeVaultDeposit,
+  encodeVaultForceBurn,
   encodeVaultMintShares,
   encodeVaultWithdraw,
 } from '../../src/codecs/vault';
@@ -220,5 +221,19 @@ describe('vault burn-shares encoding (kind = 5, 3 words)', () => {
 
   it('rejects a withdraw hash that is not 32 bytes', () => {
     expect(() => encodeVaultBurnShares({ sharePrice: '1', withdrawHash: '0x00' })).toThrow(/32-byte/);
+  });
+});
+
+describe('vault force-burn encoding (kind = 6, 2 words)', () => {
+  const holder = '0x' + 'ab'.repeat(20);
+
+  it('lays out [kind, holder]', () => {
+    const encoded = encodeVaultForceBurn(holder);
+    expect(encoded).toBe('0x' + word(6) + addressWord(holder));
+  });
+
+  it('kind word is exactly 6 with clean high bytes', () => {
+    const encoded = encodeVaultForceBurn(holder);
+    expect(encoded.slice(2, 66)).toBe('00'.repeat(31) + '06');
   });
 });

@@ -25,6 +25,7 @@ export {
   encodeVaultCreate,
   encodeVaultMintShares,
   encodeVaultBurnShares,
+  encodeVaultForceBurn,
   type VaultDepositFields,
   type VaultWithdrawFields,
   type VaultCreateFields,

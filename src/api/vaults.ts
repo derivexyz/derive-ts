@@ -4,6 +4,7 @@ import {
   encodeVaultCancel,
   encodeVaultCreate,
   encodeVaultDeposit,
+  encodeVaultForceBurn,
   encodeVaultMintShares,
   encodeVaultWithdraw,
 } from '../codecs/vault';
@@ -99,6 +100,13 @@ export interface UpdateVaultInfoRequest {
   /** Advisory mark-to-market cap in USD. */
   mtmCap?: DecimalLike;
   whitelistOnly?: boolean;
+}
+
+export interface ForceBurnRequest extends VaultActionOverrides {
+  /** The vault subaccount the curator signs the force-burn on. */
+  vaultSubaccountId: number;
+  /** The shareholder being exited. */
+  holder: string;
 }
 
 function signVaultAction(
@@ -315,22 +323,24 @@ export class CuratorVaultsApi {
 
   /** Rejects a queued deposit intent, releasing the holder's funds without minting shares. */
   async rejectDepositRequest(requestId: VaultRequestId, reason?: string) {
-    // The API auth layer binds the call to the caller via a top-level `wallet`
-    // (the handler itself only reads request_id/reason); it is absent from the
-    // generated params type, so attach it explicitly.
     return this.ctx.send('private/reject_deposit_request', {
+      subaccount_id: requestId.vault_subaccount_id,
       request_id: requestId,
       reason,
-      wallet: this.ctx.credentials().ownerAddress,
-    } as { request_id: VaultRequestId; reason?: string });
+    });
   }
 
   /**
-   * Force-exits a holder at mark-to-market with no curator price quote (unsigned;
-   * an ownership check gates it to the curator of `vaultSubaccountId`).
+   * Force-exits a holder at mark-to-market with no curator price quote.
+   * The curator signs on the vault subaccount.
    */
-  async forceBurn(vaultSubaccountId: number, holder: string) {
-    return this.ctx.send('private/force_burn', { subaccount_id: vaultSubaccountId, holder });
+  async forceBurn(request: ForceBurnRequest) {
+    const data = encodeVaultForceBurn(request.holder);
+    const action = signVaultAction(this.ctx, request.vaultSubaccountId, data, request, DEFAULT_SIGNATURE_EXPIRY_SEC);
+    return this.ctx.send('private/force_burn', {
+      ...signedEnvelope(action),
+      holder: getAddress(request.holder),
+    });
   }
 }
 

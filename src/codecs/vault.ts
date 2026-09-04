@@ -22,6 +22,7 @@ export const VAULT_ACTION_KIND = {
   cancel: 3,
   mintShares: 4,
   burnShares: 5,
+  forceBurn: 6,
 } as const;
 
 /**
@@ -162,4 +163,9 @@ export function encodeVaultBurnShares(fields: VaultBurnSharesFields): string {
 function encodeSettleApproval(kind: number, sharePrice: DecimalLike, hashLabel: string, hash: string): string {
   if (!isHexString(hash, 32)) throw new Error(`${hashLabel} must be a 0x-prefixed 32-byte hex string`);
   return abi.encode(['uint256', 'uint256', 'bytes32'], [kind, unsignedE18(sharePrice, 'sharePrice'), hash]);
+}
+
+/** ForceBurnActionData (kind = 6, 2 words): [kind, holder]. */
+export function encodeVaultForceBurn(holder: string): string {
+  return abi.encode(['uint256', 'address'], [VAULT_ACTION_KIND.forceBurn, getAddress(holder)]);
 }
