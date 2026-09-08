@@ -3575,6 +3575,8 @@ export interface OptionSettlementResponse {
   amount: string;
   expiry: number;
   instrument_name: string;
+  option_settlement_pnl: string | null;
+  option_settlement_pnl_excl_fees: string | null;
   settlement_price: string;
   settlement_value: string;
   subaccount_id: number;
