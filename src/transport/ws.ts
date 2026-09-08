@@ -115,6 +115,7 @@ export class WsTransport {
         reject(new DeriveConnectionError('websocket send failed', { cause }));
       }
     });
+    this.options.logger('debug', `WS ${method} response`, raw);
     return unwrapResponse<ResultFor<M>>(method, raw);
   }
 

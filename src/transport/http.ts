@@ -61,6 +61,7 @@ export class HttpTransport {
     } catch {
       throw new Error(`${method}: non-JSON response with HTTP status ${response.status}`);
     }
+    logger('debug', `HTTP ${method} response (${response.status})`, body);
     return unwrapResponse<ResultFor<M>>(method, body);
   }
 }
