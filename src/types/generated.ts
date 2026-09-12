@@ -5308,7 +5308,7 @@ export interface JsonRpcRequestFor_DecodeActionEdgeRpcParams {
  */
 export interface DecodeActionEdgeRpcParams {
   action_type: DecodableActionType;
-  raw_data: string;
+  encoded_data: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema

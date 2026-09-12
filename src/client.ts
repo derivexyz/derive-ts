@@ -146,9 +146,12 @@ export class DeriveClient {
    */
   async decodeAction(
     actionType: ParamsOf<'public/decode_action'>['action_type'],
-    rawData: string,
+    encodedData: string,
   ): Promise<ResultFor<'public/decode_action'>> {
-    return this.send('public/decode_action', { action_type: actionType, raw_data: rawData });
+    return this.send('public/decode_action', {
+      action_type: actionType,
+      encoded_data: encodedData,
+    });
   }
 
   /**
