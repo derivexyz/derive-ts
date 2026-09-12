@@ -126,6 +126,32 @@ export class DeriveClient {
   }
 
   /**
+   * Runs your own ABI-encoded `Action.data` through the exchange's decoder and
+   * returns either the decoded fields or the exact reason the bytes were
+   * rejected — naming the 32-byte word and the field that broke, e.g.
+   * `word 2 (limit_price) is not e12-representable`.
+   *
+   * **Reach for this first when a request fails signature verification
+   * (14014).** Every other route takes structured parameters and encodes
+   * `Action.data` server-side, so if your encoder emits a bad word the server
+   * never decodes your bytes: it re-encodes its own, the EIP-712 hashes
+   * disagree, and you get a signature error that says nothing about which
+   * field is wrong. This is the only route your own bytes reach the decoder.
+   *
+   * Needs no auth and executes nothing.
+   *
+   * ```ts
+   * await client.decodeAction('order', '0x000...abab');
+   * ```
+   */
+  async decodeAction(
+    actionType: ParamsOf<'public/decode_action'>['action_type'],
+    rawData: string,
+  ): Promise<ResultFor<'public/decode_action'>> {
+    return this.send('public/decode_action', { action_type: actionType, raw_data: rawData });
+  }
+
+  /**
    * Typed escape hatch for any public RPC method: uses the websocket
    * when connected, REST otherwise.
    */

@@ -1075,6 +1075,42 @@ export type JSONRPCResponseFor_PrivateWithdrawEdgeRpcResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DecodableActionType".
+ */
+export type DecodableActionType =
+  | 'order'
+  | 'rfq_maker'
+  | 'rfq_taker'
+  | 'transfer'
+  | 'external_transfer'
+  | 'withdrawal'
+  | 'liquidation'
+  | 'set_session_key'
+  | 'update_whitelisted_recipients'
+  | 'delete_subaccount'
+  | 'vault_deposit'
+  | 'vault_withdraw'
+  | 'vault_cancel'
+  | 'vault_create'
+  | 'vault_mint_shares'
+  | 'vault_burn_shares'
+  | 'vault_force_burn';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_DecodeActionEdgeRpcResponse".
+ */
+export type JSONRPCResponseFor_DecodeActionEdgeRpcResponse = JSONRPCResponseFor_DecodeActionEdgeRpcResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_DecodeActionEdgeRpcResponse1 =
+  | {
+      result: DecodeActionEdgeRpcResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_QuoteExecuteDebugResult".
  */
 export type JSONRPCResponseFor_QuoteExecuteDebugResult = JSONRPCResponseFor_QuoteExecuteDebugResult1 & {
@@ -2144,6 +2180,10 @@ export interface EndpointMap {
   'private/withdraw': {
     request: JsonRpcRequestFor_PrivateWithdrawEdgeRpcParams;
     response: JSONRPCResponseFor_PrivateWithdrawEdgeRpcResponse;
+  };
+  'public/decode_action': {
+    request: JsonRpcRequestFor_DecodeActionEdgeRpcParams;
+    response: JSONRPCResponseFor_DecodeActionEdgeRpcResponse;
   };
   'public/execute_quote_debug': {
     request: JsonRpcRequestFor_PublicExecuteQuoteDebugEdgeRpcParams;
@@ -5249,6 +5289,34 @@ export interface PrivateWithdrawEdgeRpcParams {
 export interface PrivateWithdrawEdgeRpcResponse {
   op_uuid: string;
   operation_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_DecodeActionEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_DecodeActionEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/decode_action';
+  params: DecodeActionEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DecodeActionEdgeRpcParams".
+ */
+export interface DecodeActionEdgeRpcParams {
+  action_type: DecodableActionType;
+  raw_data: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DecodeActionEdgeRpcResponse".
+ */
+export interface DecodeActionEdgeRpcResponse {
+  action_type: DecodableActionType;
+  decoded: unknown;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
