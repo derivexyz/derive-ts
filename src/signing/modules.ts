@@ -13,4 +13,5 @@ export const V3_MODULE_ADDRESSES = {
   vault: '0x2885c174ebf5524aED9c721d60c12b1537685186',
   liquidation: '0x66d23e59DaEEF13904eFA2D4B8658aeD05f59a92',
   setSessionKey: '0xe330CF64ff6EbF41699aad344Cb21d78db1D2bb6',
+  deleteSubaccount: '0x1057cF9E6725a0db70932a4691f595068D9e7B30',
 } as const;

@@ -320,6 +320,20 @@ export type JSONRPCResponseFor_VaultCreateWireResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_DeleteSubaccountEdgeRpcResponse".
+ */
+export type JSONRPCResponseFor_DeleteSubaccountEdgeRpcResponse = JSONRPCResponseFor_DeleteSubaccountEdgeRpcResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_DeleteSubaccountEdgeRpcResponse1 =
+  | {
+      result: DeleteSubaccountEdgeRpcResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_SessionKeyResponse".
  */
 export type JSONRPCResponseFor_SessionKeyResponse = JSONRPCResponseFor_SessionKeyResponse1 & {
@@ -506,6 +520,20 @@ export type JSONRPCResponseFor_MultipleVaultRequestsWireResponse =
 export type JSONRPCResponseFor_MultipleVaultRequestsWireResponse1 =
   | {
       result: MultipleVaultRequestsWireResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_GetMarginRPCResponse".
+ */
+export type JSONRPCResponseFor_GetMarginRPCResponse = JSONRPCResponseFor_GetMarginRPCResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_GetMarginRPCResponse1 =
+  | {
+      result: GetMarginRPCResponse;
     }
   | {
       error: RPCError;
@@ -1734,6 +1762,8 @@ export type RpcErrorCatalog =
   | LendingBorrowsExceedSupply
   | SecurityModuleCashOutflowWhileInsolvent
   | SecurityModuleCannotBorrow
+  | SubaccountHasOpenOrders
+  | SubaccountNotDeletable
   | TriggerOrderAlreadyCancelledOrExpired
   | InvalidTriggerPrice
   | TooManyTriggerOrders
@@ -1875,6 +1905,10 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_CreateVaultEdgeRpcParams;
     response: JSONRPCResponseFor_VaultCreateWireResponse;
   };
+  'private/delete_subaccount': {
+    request: JsonRpcRequestFor_DeleteSubaccountEdgeRpcParams;
+    response: JSONRPCResponseFor_DeleteSubaccountEdgeRpcResponse;
+  };
   'private/edit_session_key': {
     request: JsonRpcRequestFor_EditSessionKeyEdgeRpcParams;
     response: JSONRPCResponseFor_SessionKeyResponse;
@@ -1934,6 +1968,10 @@ export interface EndpointMap {
   'private/get_live_vault_requests': {
     request: JsonRpcRequestFor_GetLiveVaultRequestsEdgeRpcParams;
     response: JSONRPCResponseFor_MultipleVaultRequestsWireResponse;
+  };
+  'private/get_margin': {
+    request: JsonRpcRequestFor_PrivateGetMarginEdgeRpcParams;
+    response: JSONRPCResponseFor_GetMarginRPCResponse;
   };
   'private/get_mmp_config': {
     request: JsonRpcRequestFor_MmpScopeEdgeRpcParams;
@@ -2158,6 +2196,10 @@ export interface EndpointMap {
   'public/get_liquidation_history': {
     request: JsonRpcRequestFor_GetLiquidationHistoryEdgeRpcParams;
     response: JSONRPCResponseFor_LiquidationHistoryResult;
+  };
+  'public/get_margin': {
+    request: JsonRpcRequestFor_PublicGetMarginEdgeRpcParams;
+    response: JSONRPCResponseFor_GetMarginRPCResponse;
   };
   'public/get_onchain_action_history': {
     request: JsonRpcRequestFor_GetOnchainActionHistoryParams;
@@ -2812,6 +2854,37 @@ export interface CreateVaultEdgeRpcParams {
  * via the `definition` "VaultCreateWireResponse".
  */
 export interface VaultCreateWireResponse {
+  op_uuid: string;
+  operation_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_DeleteSubaccountEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_DeleteSubaccountEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/delete_subaccount';
+  params: DeleteSubaccountEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DeleteSubaccountEdgeRpcParams".
+ */
+export interface DeleteSubaccountEdgeRpcParams {
+  nonce: number;
+  signature: string;
+  signature_expiry_sec: number;
+  signer: string;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DeleteSubaccountEdgeRpcResponse".
+ */
+export interface DeleteSubaccountEdgeRpcResponse {
   op_uuid: string;
   operation_id: number;
 }
@@ -3478,6 +3551,56 @@ export interface JsonRpcRequestFor_GetLiveVaultRequestsEdgeRpcParams {
  */
 export interface GetLiveVaultRequestsEdgeRpcParams {
   wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PrivateGetMarginEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_PrivateGetMarginEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/get_margin';
+  params: PrivateGetMarginEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PrivateGetMarginEdgeRpcParams".
+ */
+export interface PrivateGetMarginEdgeRpcParams {
+  simulated_collateral_changes?: SimulatedCollateralEdgeRpcParams[] | null;
+  simulated_position_changes?: SimulatedPositionEdgeRpcParams[] | null;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SimulatedCollateralEdgeRpcParams".
+ */
+export interface SimulatedCollateralEdgeRpcParams {
+  amount: string;
+  asset_name: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SimulatedPositionEdgeRpcParams".
+ */
+export interface SimulatedPositionEdgeRpcParams {
+  amount: string;
+  entry_price?: string | null;
+  instrument_name: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetMarginRPCResponse".
+ */
+export interface GetMarginRPCResponse {
+  is_valid_trade: boolean;
+  post_initial_margin: string;
+  post_maintenance_margin: string;
+  pre_initial_margin: string;
+  pre_maintenance_margin: string;
+  subaccount_id: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5825,6 +5948,30 @@ export interface AuctionBidEvent {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicGetMarginEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_PublicGetMarginEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_margin';
+  params: PublicGetMarginEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicGetMarginEdgeRpcParams".
+ */
+export interface PublicGetMarginEdgeRpcParams {
+  margin_type: string;
+  market?: string | null;
+  simulated_collateral_changes?: SimulatedCollateralEdgeRpcParams[] | null;
+  simulated_collaterals: SimulatedCollateralEdgeRpcParams[];
+  simulated_position_changes?: SimulatedPositionEdgeRpcParams[] | null;
+  simulated_positions: SimulatedPositionEdgeRpcParams[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_GetOnchainActionHistoryParams".
  */
 export interface JsonRpcRequestFor_GetOnchainActionHistoryParams {
@@ -7520,6 +7667,24 @@ export interface SecurityModuleCannotBorrow {
   code: 11041;
   data?: string | null;
   message: 'Security module cannot borrow to fund an outflow';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SubaccountHasOpenOrders".
+ */
+export interface SubaccountHasOpenOrders {
+  code: 11042;
+  data?: string | null;
+  message: 'Subaccount has open orders, RFQs, or quotes; cancel them before deletion';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SubaccountNotDeletable".
+ */
+export interface SubaccountNotDeletable {
+  code: 11043;
+  data?: string | null;
+  message: 'Subaccount cannot be deleted';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema

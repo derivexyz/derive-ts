@@ -3,6 +3,7 @@ import type {
   CurrencyResponse,
   GetAllInstrumentsResponse,
   GetLatestSignedFeedsResponse,
+  GetMarginRPCResponse,
   GetOnchainActionHistoryResponse,
   GetReferralPerformanceResult,
   GetTickersResponse,
@@ -60,7 +61,7 @@ export interface SimulatedPosition {
 }
 
 export interface SimulateMarginParams {
-  marginType: 'PM' | 'PM2' | 'SM';
+  marginType: 'SM' | 'PM2';
   /** Required for portfolio margin. */
   market?: string;
   simulatedCollaterals: SimulatedCollateral[];
@@ -308,18 +309,15 @@ export class MarketDataApi {
     });
   }
 
-  /** Margin requirement for a simulated portfolio and optional trade deltas; ignores open-order margin. */
-  simulateMargin(params: SimulateMarginParams): Promise<unknown> {
-    return this.ctx.send(
-      'public/get_margin' as never,
-      {
-        margin_type: params.marginType,
-        market: params.market ?? null,
-        simulated_collaterals: params.simulatedCollaterals.map(toWireCollateral),
-        simulated_positions: params.simulatedPositions.map(toWirePosition),
-        simulated_collateral_changes: params.simulatedCollateralChanges?.map(toWireCollateral) ?? null,
-        simulated_position_changes: params.simulatedPositionChanges?.map(toWirePosition) ?? null,
-      } as never,
-    );
+  /** Net margin for a simulated portfolio and optional trade deltas; ignores open-order margin. */
+  simulateMargin(params: SimulateMarginParams): Promise<GetMarginRPCResponse> {
+    return this.ctx.send('public/get_margin', {
+      margin_type: params.marginType,
+      market: params.market ?? null,
+      simulated_collaterals: params.simulatedCollaterals.map(toWireCollateral),
+      simulated_positions: params.simulatedPositions.map(toWirePosition),
+      simulated_collateral_changes: params.simulatedCollateralChanges?.map(toWireCollateral) ?? null,
+      simulated_position_changes: params.simulatedPositionChanges?.map(toWirePosition) ?? null,
+    });
   }
 }

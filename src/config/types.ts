@@ -28,6 +28,7 @@ export interface ModuleAddresses {
   vault: string;
   liquidation: string;
   setSessionKey: string;
+  deleteSubaccount: string;
   deposit?: string;
 }
 

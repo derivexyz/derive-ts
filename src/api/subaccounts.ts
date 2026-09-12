@@ -1,3 +1,6 @@
+import { SignedAction } from '../signing/action';
+import { DEFAULT_SIGNATURE_EXPIRY_SEC, expiresIn, randomNonce } from '../signing/encoding';
+import { domainSeparator } from '../signing/eip712';
 import type {
   InterestHistoryResult,
   OptionSettlementHistoryResponse,
@@ -7,7 +10,6 @@ import type {
   PrivateGetPositionsRPCResponse,
   PrivateGetSubaccountRPCResponseFor_OrderWireResponseAnd_VaultDepositHoldResponse as SubaccountPortfolio,
   SubaccountValueHistoryResult,
-  RpcMethod,
   TransferHistoryResult,
 } from '../types';
 import type { ClientContext } from './context';
@@ -65,7 +67,7 @@ export interface MarginResult {
   subaccount_id: number;
 }
 
-/** Subaccount portfolio and history endpoints — authenticated, no signing. */
+/** Subaccount portfolio, history, and lifecycle endpoints. */
 export class SubaccountsApi {
   constructor(private readonly ctx: ClientContext) {}
 
@@ -144,6 +146,39 @@ export class SubaccountsApi {
     });
   }
 
+  /**
+   * Permanently deletes an empty subaccount (`private/delete_subaccount`).
+   *
+   * The subaccount must be fully wound down: no balances or debt, no open
+   * orders, RFQs, or quotes, not a vault, not under auction, and not the
+   * wallet's fallback subaccount. Ids are never reused. Owner-or-admin:
+   * a session key needs the `Admin` scope.
+   */
+  async delete(params: { subaccountId: number; nonce?: string; signatureExpirySec?: number }) {
+    const { ownerAddress, signer } = this.ctx.credentials();
+    const action = new SignedAction(
+      {
+        subaccountId: params.subaccountId,
+        nonce: params.nonce ?? randomNonce(),
+        module: this.ctx.network.modules.deleteSubaccount,
+        // The action envelope alone identifies the delete; the payload is empty.
+        data: '0x',
+        expirySec: params.signatureExpirySec ?? expiresIn(DEFAULT_SIGNATURE_EXPIRY_SEC),
+        owner: ownerAddress,
+        signer: signer.address,
+      },
+      domainSeparator(this.ctx.network),
+    ).sign(signer);
+    return this.ctx.send('private/delete_subaccount', {
+      subaccount_id: params.subaccountId,
+      // Nonces are UTC-nanosecond decimal strings beyond 2^53; the API accepts string-or-number despite the generated `number`.
+      nonce: action.fields.nonce as unknown as number,
+      signer: action.fields.signer,
+      signature: action.signature!,
+      signature_expiry_sec: action.fields.expirySec,
+    });
+  }
+
   /** Filtered and paginated fills; defaults to all of the wallet's subaccounts. */
   getTradeHistory(query: TradeHistoryQuery = {}): Promise<PaginatedTradesResult> {
     return this.ctx.send('private/get_trade_history', {
@@ -188,27 +223,21 @@ export class SubaccountsApi {
     });
   }
 
-  /**
-   * Margin figures for a subaccount, optionally under simulated position/collateral changes.
-   * Predates the schema, so it is absent from the generated EndpointMap and sent untyped.
-   */
+  /** Margin figures for a subaccount, optionally under simulated position/collateral changes. */
   getMargin(query: MarginQuery): Promise<MarginResult> {
-    return this.ctx.send(
-      'private/get_margin' as RpcMethod,
-      {
-        subaccount_id: query.subaccountId,
-        simulated_position_changes:
-          query.simulatedPositionChanges?.map((p) => ({
-            instrument_name: p.instrumentName,
-            amount: p.amount,
-            entry_price: p.entryPrice ?? null,
-          })) ?? null,
-        simulated_collateral_changes:
-          query.simulatedCollateralChanges?.map((c) => ({
-            asset_name: c.assetName,
-            amount: c.amount,
-          })) ?? null,
-      } as never,
-    ) as Promise<MarginResult>;
+    return this.ctx.send('private/get_margin', {
+      subaccount_id: query.subaccountId,
+      simulated_position_changes:
+        query.simulatedPositionChanges?.map((p) => ({
+          instrument_name: p.instrumentName,
+          amount: p.amount,
+          entry_price: p.entryPrice ?? null,
+        })) ?? null,
+      simulated_collateral_changes:
+        query.simulatedCollateralChanges?.map((c) => ({
+          asset_name: c.assetName,
+          amount: c.amount,
+        })) ?? null,
+    });
   }
 }

@@ -37,8 +37,8 @@ export interface SetSessionKeyParams {
 
 export interface EditSessionKeyParams {
   publicSessionKey: string;
-  /** Omitted fields are left unchanged (the endpoint is a patch). */
-  label?: string;
+  /** Omitted fields are left unchanged (the endpoint is a patch); `null` clears the label. */
+  label?: string | null;
   /** Requires the request to be authorized by the owner or an admin-scoped key. */
   ipWhitelist?: string[];
   /** Requires the request to be authorized by the owner or an admin-scoped key. */

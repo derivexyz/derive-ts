@@ -97,8 +97,8 @@ export interface UpdateVaultInfoRequest {
   vaultSubaccountId: number;
   name?: string;
   description?: string;
-  /** Advisory mark-to-market cap in USD. */
-  mtmCap?: DecimalLike;
+  /** Advisory mark-to-market cap in USD. Pass `null` to remove the cap; omit to leave it unchanged. */
+  mtmCap?: DecimalLike | null;
   whitelistOnly?: boolean;
 }
 
@@ -306,7 +306,10 @@ export class CuratorVaultsApi {
       subaccount_id: request.vaultSubaccountId,
       name: request.name,
       description: request.description,
-      mtm_cap: request.mtmCap === undefined ? undefined : formatUnits(toE18(request.mtmCap), 18),
+      mtm_cap:
+        request.mtmCap === undefined || request.mtmCap === null
+          ? request.mtmCap
+          : formatUnits(toE18(request.mtmCap), 18),
       whitelist_only: request.whitelistOnly,
     });
   }
