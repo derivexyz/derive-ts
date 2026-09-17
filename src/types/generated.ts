@@ -1308,6 +1308,34 @@ export type JSONRPCResponseFor_LiquidationHistoryResult1 =
 export type AuctionType = 'solvent' | 'insolvent';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_GetMakerProgramScoresResponse".
+ */
+export type JSONRPCResponseFor_GetMakerProgramScoresResponse = JSONRPCResponseFor_GetMakerProgramScoresResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_GetMakerProgramScoresResponse1 =
+  | {
+      result: GetMakerProgramScoresResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_Array_of_ProgramResponse".
+ */
+export type JSONRPCResponseFor_ArrayOf_ProgramResponse = JSONRPCResponseFor_ArrayOf_ProgramResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_ArrayOf_ProgramResponse1 =
+  | {
+      result: ProgramResponse[];
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_GetOnchainActionHistoryResponse".
  */
 export type JSONRPCResponseFor_GetOnchainActionHistoryResponse = JSONRPCResponseFor_GetOnchainActionHistoryResponse1 & {
@@ -1617,6 +1645,20 @@ export type JSONRPCResponseFor_QuoteSendDebugResult = JSONRPCResponseFor_QuoteSe
 export type JSONRPCResponseFor_QuoteSendDebugResult1 =
   | {
       result: QuoteSendDebugResult;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_OperationAckWireResponse".
+ */
+export type JSONRPCResponseFor_OperationAckWireResponse = JSONRPCResponseFor_OperationAckWireResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_OperationAckWireResponse1 =
+  | {
+      result: OperationAckWireResponse;
     }
   | {
       error: RPCError;
@@ -2237,6 +2279,14 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_GetLiquidationHistoryEdgeRpcParams;
     response: JSONRPCResponseFor_LiquidationHistoryResult;
   };
+  'public/get_maker_program_scores': {
+    request: JsonRpcRequestFor_GetMakerProgramScoresParams;
+    response: JSONRPCResponseFor_GetMakerProgramScoresResponse;
+  };
+  'public/get_maker_programs': {
+    request: JsonRpcRequestFor_GetMakerProgramsParams;
+    response: JSONRPCResponseFor_ArrayOf_ProgramResponse;
+  };
   'public/get_margin': {
     request: JsonRpcRequestFor_PublicGetMarginEdgeRpcParams;
     response: JSONRPCResponseFor_GetMarginRPCResponse;
@@ -2328,6 +2378,10 @@ export interface EndpointMap {
   'public/send_quote_debug': {
     request: JsonRpcRequestFor_PublicSendQuoteDebugEdgeRpcParams;
     response: JSONRPCResponseFor_QuoteSendDebugResult;
+  };
+  'public/set_socialization_feed_data': {
+    request: JsonRpcRequestFor_PublicSetSocializationFeedDataEdgeRpcParams;
+    response: JSONRPCResponseFor_OperationAckWireResponse;
   };
   'public/start_auction': {
     request: JsonRpcRequestFor_PublicStartAuctionEdgeRpcParams;
@@ -3343,6 +3397,7 @@ export interface DepositEntry {
   asset: string;
   batch_status: BatchStatus;
   batch_uuid: string;
+  bridge_origin?: DepositBridgeOrigin | null;
   fee: string;
   new_subaccount: boolean;
   operation_id: string;
@@ -3350,6 +3405,15 @@ export interface DepositEntry {
   timestamp: number;
   tx_hash?: string | null;
   wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DepositBridgeOrigin".
+ */
+export interface DepositBridgeOrigin {
+  rail: string;
+  source_chain_id: number;
+  source_tx_hash: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6016,6 +6080,81 @@ export interface AuctionBidEvent {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetMakerProgramScoresParams".
+ */
+export interface JsonRpcRequestFor_GetMakerProgramScoresParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_maker_program_scores';
+  params: GetMakerProgramScoresParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetMakerProgramScoresParams".
+ */
+export interface GetMakerProgramScoresParams {
+  epoch_start_timestamp: number;
+  program_name: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetMakerProgramScoresResponse".
+ */
+export interface GetMakerProgramScoresResponse {
+  program: ProgramResponse;
+  scores: ScoreBreakdown[];
+  total_score: string;
+  total_volume: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ProgramResponse".
+ */
+export interface ProgramResponse {
+  asset_types: string[];
+  currencies: string[];
+  end_timestamp: number;
+  min_notional: string;
+  name: string;
+  rewards: {
+    [k: string]: string;
+  };
+  start_timestamp: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ScoreBreakdown".
+ */
+export interface ScoreBreakdown {
+  coverage_score: string;
+  holder_boost: string;
+  quality_score: string;
+  total_score: string;
+  volume: string;
+  volume_multiplier: string;
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetMakerProgramsParams".
+ */
+export interface JsonRpcRequestFor_GetMakerProgramsParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_maker_programs';
+  params: GetMakerProgramsParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetMakerProgramsParams".
+ */
+export interface GetMakerProgramsParams {}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_PublicGetMarginEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_PublicGetMarginEdgeRpcParams {
@@ -6154,8 +6293,36 @@ export interface GetPendingDepositsParams {
  * via the `definition` "GetPendingDepositsResult".
  */
 export interface GetPendingDepositsResult {
+  bridge_deposits: BridgeDepositEntry[];
   pending_deposits: PendingDepositEntry[];
   wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BridgeDepositEntry".
+ */
+export interface BridgeDepositEntry {
+  bridge_id: string;
+  delivered_at_ms?: number | null;
+  deposit_address: string;
+  deposit_type: string;
+  expected_amount: string;
+  expires_at_ms: number;
+  manager_id: number;
+  matched_log_index?: number | null;
+  matched_tx_hash?: string | null;
+  rail: string;
+  receiving_amount?: string | null;
+  receiving_token?: string | null;
+  receiving_tx_hash?: string | null;
+  source_chain_id: number;
+  source_tx_hash: string;
+  status: string;
+  subaccount_id: number;
+  submitted_at_ms: number;
+  substatus: string;
+  token: string;
+  updated_at_ms: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6167,6 +6334,7 @@ export interface PendingDepositEntry {
   amount: string;
   asset: string;
   block_number: number;
+  bridge?: PendingDepositBridgeOrigin | null;
   credit_nonce?: string | null;
   deposit_type: string;
   log_index: number;
@@ -6176,6 +6344,17 @@ export interface PendingDepositEntry {
   timestamp: number;
   tx_hash: string;
   updated_at_ms: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PendingDepositBridgeOrigin".
+ */
+export interface PendingDepositBridgeOrigin {
+  bridge_status: string;
+  rail: string;
+  receiving_tx_hash: string;
+  source_chain_id: number;
+  source_tx_hash: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6818,6 +6997,147 @@ export interface QuoteSendDebugResult {
   encoded_data: string;
   encoded_data_hashed: string;
   typed_data_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicSetSocializationFeedDataEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_PublicSetSocializationFeedDataEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/set_socialization_feed_data';
+  params: PublicSetSocializationFeedDataEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicSetSocializationFeedDataEdgeRpcParams".
+ */
+export interface PublicSetSocializationFeedDataEdgeRpcParams {
+  feeds: PublicSetFeedDataEdgeRpcParams;
+  universe_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicSetFeedDataEdgeRpcParams".
+ */
+export interface PublicSetFeedDataEdgeRpcParams {
+  forward: PublicForwardFeedDataParams[];
+  funding?: PublicFundingFeedDataParams[];
+  perp: PublicPerpFeedDataParams[];
+  rate: PublicRateFeedDataParams[];
+  spot: PublicSpotFeedDataParams[];
+  vol: PublicVolFeedDataParams[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicForwardFeedDataParams".
+ */
+export interface PublicForwardFeedDataParams {
+  confidence: string;
+  currency: string;
+  deadline?: number;
+  expiry: number;
+  fwd_diff: string;
+  signatures?: PublicOracleSignatureDataParams;
+  spot_aggregate_latest: string;
+  spot_aggregate_start: string;
+  timestamp: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicOracleSignatureDataParams".
+ */
+export interface PublicOracleSignatureDataParams {
+  signatures?: string[];
+  signers?: string[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicFundingFeedDataParams".
+ */
+export interface PublicFundingFeedDataParams {
+  confidence: string;
+  currency: string;
+  deadline?: number;
+  funding_rate: string;
+  signatures?: PublicOracleSignatureDataParams;
+  timestamp: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicPerpFeedDataParams".
+ */
+export interface PublicPerpFeedDataParams {
+  confidence: string;
+  currency: string;
+  deadline?: number;
+  signatures?: PublicOracleSignatureDataParams;
+  spot_diff_value: string;
+  timestamp: number;
+  type: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicRateFeedDataParams".
+ */
+export interface PublicRateFeedDataParams {
+  confidence: string;
+  currency: string;
+  deadline?: number;
+  expiry: number;
+  rate: string;
+  signatures?: PublicOracleSignatureDataParams;
+  timestamp: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicSpotFeedDataParams".
+ */
+export interface PublicSpotFeedDataParams {
+  confidence: string;
+  currency: string;
+  deadline?: number;
+  feed_source_type?: string | null;
+  price: string;
+  signatures?: PublicOracleSignatureDataParams;
+  timestamp: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicVolFeedDataParams".
+ */
+export interface PublicVolFeedDataParams {
+  confidence: string;
+  currency: string;
+  deadline?: number;
+  expiry: number;
+  signatures?: PublicOracleSignatureDataParams;
+  timestamp: number;
+  vol_data: PublicVolSVIParamDataParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicVolSVIParamDataParams".
+ */
+export interface PublicVolSVIParamDataParams {
+  SVI_a: string;
+  SVI_b: string;
+  SVI_fwd: string;
+  SVI_m: string;
+  SVI_refTau: string;
+  SVI_rho: string;
+  SVI_sigma: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "OperationAckWireResponse".
+ */
+export interface OperationAckWireResponse {
+  mmp_triggered: number[];
+  op_uuid: string;
+  operation_id: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
