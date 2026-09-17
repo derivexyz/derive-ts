@@ -1618,11 +1618,6 @@ export type JSONRPCResponseFor_PublicMarginWatchResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "DepositType".
- */
-export type DepositType = 'standard' | 'instant' | 'direct';
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_RegisterDepositAddressResult".
  */
 export type JSONRPCResponseFor_RegisterDepositAddressResult = JSONRPCResponseFor_RegisterDepositAddressResult1 & {
@@ -3397,7 +3392,6 @@ export interface DepositEntry {
   asset: string;
   batch_status: BatchStatus;
   batch_uuid: string;
-  bridge_origin?: DepositBridgeOrigin | null;
   fee: string;
   new_subaccount: boolean;
   operation_id: string;
@@ -3405,15 +3399,6 @@ export interface DepositEntry {
   timestamp: number;
   tx_hash?: string | null;
   wallet: string;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "DepositBridgeOrigin".
- */
-export interface DepositBridgeOrigin {
-  rail: string;
-  source_chain_id: number;
-  source_tx_hash: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6293,36 +6278,8 @@ export interface GetPendingDepositsParams {
  * via the `definition` "GetPendingDepositsResult".
  */
 export interface GetPendingDepositsResult {
-  bridge_deposits: BridgeDepositEntry[];
   pending_deposits: PendingDepositEntry[];
   wallet: string;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "BridgeDepositEntry".
- */
-export interface BridgeDepositEntry {
-  bridge_id: string;
-  delivered_at_ms?: number | null;
-  deposit_address: string;
-  deposit_type: string;
-  expected_amount: string;
-  expires_at_ms: number;
-  manager_id: number;
-  matched_log_index?: number | null;
-  matched_tx_hash?: string | null;
-  rail: string;
-  receiving_amount?: string | null;
-  receiving_token?: string | null;
-  receiving_tx_hash?: string | null;
-  source_chain_id: number;
-  source_tx_hash: string;
-  status: string;
-  subaccount_id: number;
-  submitted_at_ms: number;
-  substatus: string;
-  token: string;
-  updated_at_ms: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6334,7 +6291,6 @@ export interface PendingDepositEntry {
   amount: string;
   asset: string;
   block_number: number;
-  bridge?: PendingDepositBridgeOrigin | null;
   credit_nonce?: string | null;
   deposit_type: string;
   log_index: number;
@@ -6344,17 +6300,6 @@ export interface PendingDepositEntry {
   timestamp: number;
   tx_hash: string;
   updated_at_ms: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PendingDepositBridgeOrigin".
- */
-export interface PendingDepositBridgeOrigin {
-  bridge_status: string;
-  rail: string;
-  receiving_tx_hash: string;
-  source_chain_id: number;
-  source_tx_hash: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6945,7 +6890,6 @@ export interface JsonRpcRequestFor_RegisterDepositAddressParams {
  * via the `definition` "RegisterDepositAddressParams".
  */
 export interface RegisterDepositAddressParams {
-  deposit_type: DepositType;
   manager_id?: number | null;
   subaccount_id?: number;
   wallet: string;
@@ -6956,7 +6900,6 @@ export interface RegisterDepositAddressParams {
  */
 export interface RegisterDepositAddressResult {
   deposit_address: string;
-  deposit_type: DepositType;
   manager_id?: number | null;
   subaccount_id?: number | null;
   wallet: string;

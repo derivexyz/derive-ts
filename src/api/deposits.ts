@@ -3,32 +3,24 @@ import { ONCHAIN_ACTION_MANAGER_ABI } from '../abis/onchainActionManager';
 import { ERC20_ABI } from '../abis/erc20';
 import { DeriveTimeoutError } from '../errors';
 import { toScaled, type DecimalLike } from '../signing/encoding';
-import type { PendingDepositEntry } from '../types';
 import type { ClientContext } from './context';
 
 /**
- * Deposits are NOT signed actions in v3. Funds enter through one of three
+ * Deposits are NOT signed actions in v3. Funds enter through one of two
  * deliberately distinct flows — pick explicitly:
  *
  * - `deposits.contractCall.*` — self-custody (Direct): YOUR wallet sends
  *   the on-chain ActionManager transaction (approve + deposit); you
  *   provide an ethers Signer connected to the chain RPC.
- * - `deposits.depositAddress.register({ depositType: 'standard' })` — CEX-style
- *   (Standard): register a deterministic deposit address, send funds to it
- *   from anywhere, and the exchange sweeps and credits them asynchronously.
- * - `deposits.depositAddress.register({ depositType: 'instant' })` — CEX-style
- *   (Instant): same address mechanism, but the deposit is pooled and
- *   credited off-chain near-instantly up to a per-currency cap (larger
- *   amounts are credited in capped chunks).
+ * - `deposits.depositAddress.register(...)` — CEX-style (Standard):
+ *   register a deterministic deposit address, send funds to it from
+ *   anywhere, and the exchange sweeps and credits them asynchronously.
  *
- * Tracking: `getPending` gives the first feedback for every method — an
- * entry appears the moment the exchange picks the deposit up. From there,
- * instant deposits are processed straight off that feed (`awaitFastDeposit`
- * polls it to completion), while contract-call and standard deposits wait
- * ~2 minutes of confirmations before entering exchange state — poll
- * `awaitNewSubaccount` (or the subaccount balance) for those. `getHistory`
- * records credited contract-call and standard deposits only; instant deposits
- * are credited as transfers and never appear there.
+ * Tracking: `getPending` gives the first feedback for both methods — an
+ * entry appears the moment the exchange picks the deposit up. Both then
+ * wait ~2 minutes of confirmations before entering exchange state, so poll
+ * `awaitNewSubaccount` (or the subaccount balance) from there. `getHistory`
+ * records every credited deposit.
  */
 export class DepositsApi {
   readonly contractCall: ContractCallDeposits;
@@ -56,51 +48,15 @@ export class DepositsApi {
   /**
    * Every deposit the exchange has picked up but not yet applied
    * (`public/get_pending_deposits`) — the first feedback any deposit
-   * method gives. Contract-call and slow deposits appear as soon as
-   * their action lands in the OnchainActionManager (for slow, when the
-   * keeper sweeps the deposit address); fast deposits as soon as the
-   * keeper indexes the transfer, moving through the crediting lifecycle
-   * from there. Public call — usable before the account exists. `wallet`
-   * defaults to the client's owner. A fast deposit above the instant cap
-   * appears as several entries — one per credit chunk — summing to the
-   * on-chain amount.
+   * method gives. An entry appears as soon as the deposit's action lands
+   * in the OnchainActionManager — for a deposit address, when the keeper
+   * sweeps it. Public call — usable before the account exists. `wallet`
+   * defaults to the client's owner.
    */
   async getPending(options: { wallet?: string } = {}) {
     return this.ctx.send('public/get_pending_deposits', {
       wallet: getAddress(options.wallet ?? this.ctx.credentials().ownerAddress),
     });
-  }
-
-  /**
-   * Polls `public/get_pending_deposits` until the fast deposit funded by
-   * `txHash` (the transfer into the fast deposit address) is fully paid
-   * out — every entry `credited` — and returns the entries. Throws a
-   * plain Error if the deposit reverts, or `DeriveTimeoutError` on the
-   * deadline (chunked payouts of large deposits take multiple ticks, so
-   * the default timeout is generous).
-   */
-  async awaitFastDeposit(params: {
-    txHash: string;
-    wallet?: string;
-    timeoutMs?: number;
-    pollIntervalMs?: number;
-  }): Promise<PendingDepositEntry[]> {
-    const { txHash, wallet, timeoutMs = 300_000, pollIntervalMs = 2_000 } = params;
-    const target = txHash.toLowerCase();
-    const deadline = Date.now() + timeoutMs;
-    for (;;) {
-      const { pending_deposits } = await this.getPending({ wallet });
-      const entries = pending_deposits.filter((e) => e.tx_hash.toLowerCase() === target);
-      if (entries.some((e) => e.status === 'reverted' || e.status === 'partial_revert')) {
-        const statuses = entries.map((e) => `${e.amount} ${e.status}`).join(', ');
-        throw new Error(`fast deposit ${txHash} reverted (${statuses})`);
-      }
-      if (entries.length > 0 && entries.every((e) => e.status === 'credited')) return entries;
-      if (Date.now() >= deadline) {
-        throw new DeriveTimeoutError(`fast deposit ${txHash} not fully credited within ${timeoutMs}ms`);
-      }
-      await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
-    }
   }
 
   /**
@@ -242,20 +198,9 @@ export class DepositAddressDeposits {
    * subaccount/manager/factory) the deposit address the exchange watches
    * and sweeps, routing funds to an existing subaccount or, with
    * `managerId`, a new one. `wallet` defaults to the client's owner.
-   * `depositType` picks the flow, and each type has its own distinct
-   * address for the same identity:
-   * - `standard`: swept on-chain through the ActionManager.
-   * - `instant`: pooled and credited off-chain near-instantly up
-   *   to a per-currency cap; larger amounts are credited in capped
-   *   chunks. Track progress with `deposits.getPending` /
-   *   `deposits.awaitFastDeposit`.
+   * The address is swept on-chain through the ActionManager.
    */
-  async register(options: {
-    wallet?: string;
-    subaccountId?: number;
-    managerId?: number;
-    depositType: 'standard' | 'instant';
-  }) {
+  async register(options: { wallet?: string; subaccountId?: number; managerId?: number }) {
     // The address is deterministic per (wallet, subaccount, manager). The
     // server requires a non-zero managerId whenever a subaccount isn't
     // given (it would be creating one), so fail early rather than eat a
@@ -267,7 +212,6 @@ export class DepositAddressDeposits {
       wallet: getAddress(options.wallet ?? this.ctx.credentials().ownerAddress),
       subaccount_id: options.subaccountId,
       manager_id: options.managerId,
-      deposit_type: options.depositType,
     });
   }
 }

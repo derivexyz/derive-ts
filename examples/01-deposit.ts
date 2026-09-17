@@ -6,25 +6,20 @@
  * created on your first deposit. Session keys, trading,
  * and everything else come after (see example 02).
  *
- * Deposits are NOT signed API actions. Funds arrive through one of three
- * deliberately distinct methods, and this example walks all of them:
+ * Deposits are NOT signed API actions. Funds arrive through one of two
+ * deliberately distinct methods, and this example walks both of them:
  *
  *   Standard — deposit address (CEX-style): register a deterministic
  *       address the exchange watches. Send tokens to it from any wallet or
  *       exchange; they are swept and credited asynchronously, creating
  *       your subaccount. (~2 min).
- *   Instant — deposit address (fast): same mechanism with
- *       depositType 'instant' — a distinct address whose deposits are pooled
- *       and credited near-instantly up to a per-currency cap (larger
- *       amounts are credited in capped chunks). (~30 sec)
  *   Direct — contract call (self-custody): YOUR wallet submits the
  *       on-chain ActionManager transaction (ERC-20 approve + deposit).
  *       Requires an RPC endpoint for the chain the protocol is deployed on.
  *       (~2 min)
  *
  * Prerequisites: PRIVATE_KEY funded with the deposit token (and gas, for
- * the on-chain flows). Direct and the Instant send only run when RPC_URL
- * is set.
+ * the on-chain flows). Direct only runs when RPC_URL is set.
  *
  * For sepolia faucet: https://cloud.google.com/application/web3/faucet/ethereum/sepolia.
  * You can mint USDC on sepolia via https://testnet.app.derive.xyz/developers.
@@ -33,7 +28,7 @@
  *   DERIVE_NETWORK=testnet PRIVATE_KEY=0x... [RPC_URL=https://...] \
  *     npx tsx examples/01-deposit.ts
  */
-import { Contract, JsonRpcProvider, parseUnits, Wallet } from 'ethers';
+import { JsonRpcProvider, Wallet } from 'ethers';
 import { ownerClient, requireEnv, run } from './shared/env';
 
 run(async () => {
@@ -57,21 +52,13 @@ run(async () => {
   const managerId = manager.manager_id;
 
   // ── Standard: deposit address ──────────────────────────────────────────
-  // The address is deterministic per (wallet, manager, depositType) —
-  // calling register again returns the same one. Anything sent to it is
-  // swept and credited asynchronously; with managerId (no subaccountId)
-  // the sweep creates a subaccount under that manager.
-  const standard = await client.deposits.depositAddress.register({ managerId, depositType: 'standard' });
+  // The address is deterministic per (wallet, manager) — calling register
+  // again returns the same one. Anything sent to it is swept and credited
+  // asynchronously; with managerId (no subaccountId) the sweep creates a
+  // subaccount under that manager.
+  const standard = await client.deposits.depositAddress.register({ managerId });
   console.log(`[standard] deposit address for ${standard.wallet}: ${standard.deposit_address}`);
   console.log('[standard] send USDC there from any wallet/exchange; crediting is asynchronous.');
-
-  // ── Instant: deposit address (fast) ────────────────────────────────────
-  // Same mechanism, distinct address: deposits here are pooled and
-  // credited near-instantly up to a per-currency cap; larger amounts are
-  // credited in capped chunks. Track them with deposits.getPending /
-  // awaitFastDeposit (they never appear in the deposit history).
-  const instant = await client.deposits.depositAddress.register({ managerId, depositType: 'instant' });
-  console.log(`[instant] fast deposit address: ${instant.deposit_address}`);
 
   const rpcUrl = process.env.RPC_URL;
   if (!rpcUrl) {
@@ -110,23 +97,6 @@ run(async () => {
 
   const portfolio = await client.subaccounts.get(newSubaccountId);
   console.log('[direct] collaterals:', portfolio.collaterals);
-
-  // ── Instant in action: plain transfer to the fast address ──────────────
-  // No approve, no contract call — send the token to the fast address and
-  // watch public/get_pending_deposits until every entry reads 'credited'.
-  const erc20Address = spotAsset.erc20.underlying_erc20;
-  if (!erc20Address) {
-    console.log('[instant] no underlying ERC-20 for USDC on this network — skipping the send.');
-    return;
-  }
-  const token = new Contract(erc20Address, ['function transfer(address,uint256)'], signer);
-  const amount = parseUnits('5', spotAsset.erc20.decimals);
-  const sendTx = await token.getFunction('transfer')(instant.deposit_address, amount);
-  await sendTx.wait();
-  console.log(`[instant] sent 5 USDC to ${instant.deposit_address} (${sendTx.hash}) — awaiting crediting...`);
-
-  const credited = await client.deposits.awaitFastDeposit({ txHash: sendTx.hash as string });
-  for (const e of credited) console.log(`[instant] credited ${e.amount} ${e.asset} (native units) → subaccount`);
 
   // Now that the account exists, you can log in and register session keys —
   // see example 02.

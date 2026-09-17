@@ -10,6 +10,12 @@ export interface ContractAddresses {
   actionManager?: string;
   usdc?: string;
   cash?: string;
+  /**
+   * Depositable ERC-20s by currency name, as `public/get_all_currencies`
+   * reports them under `spot[].erc20.underlying_erc20`. These are the
+   * tokens a deposit approves and pulls; decimals are read on-chain.
+   */
+  tokens?: Record<string, string>;
 }
 
 /**
