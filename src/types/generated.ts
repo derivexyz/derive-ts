@@ -1191,20 +1191,6 @@ export type JSONRPCResponseFor_ArrayOf_Referrer1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JSONRPCResponse_for_Array_of_AssetResponsePublic".
- */
-export type JSONRPCResponseFor_ArrayOf_AssetResponsePublic = JSONRPCResponseFor_ArrayOf_AssetResponsePublic1 & {
-  id: JsonRpcId;
-};
-export type JSONRPCResponseFor_ArrayOf_AssetResponsePublic1 =
-  | {
-      result: AssetResponsePublic[];
-    }
-  | {
-      error: RPCError;
-    };
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_CurrencyResponse".
  */
 export type JSONRPCResponseFor_CurrencyResponse = JSONRPCResponseFor_CurrencyResponse1 & {
@@ -2241,10 +2227,6 @@ export interface EndpointMap {
   'public/get_all_referral_codes': {
     request: JsonRpcRequestFor_GetAllReferralCodesParams;
     response: JSONRPCResponseFor_ArrayOf_Referrer;
-  };
-  'public/get_assets': {
-    request: JsonRpcRequestFor_GetAssetsEdgeRpcParams;
-    response: JSONRPCResponseFor_ArrayOf_AssetResponsePublic;
   };
   'public/get_currency': {
     request: JsonRpcRequestFor_GetCurrencyEdgeRpcParams;
@@ -5460,6 +5442,7 @@ export interface AssetUniverse {
   oi: OpenInterestStats;
   risk_universe_id: number;
   risk_universe_name?: string | null;
+  srm_perp_margin_requirements?: SrmPerpMarginRequirements | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5468,6 +5451,15 @@ export interface AssetUniverse {
 export interface OpenInterestStats {
   current_open_interest: string;
   interest_cap: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SrmPerpMarginRequirements".
+ */
+export interface SrmPerpMarginRequirements {
+  im_perp_req: string;
+  max_leverage: string;
+  mm_perp_req: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5603,6 +5595,7 @@ export interface PerpPublicDetails {
   index: string;
   max_rate_per_hour: string;
   min_rate_per_hour: string;
+  srm_perp_margin_requirements?: SrmPerpMarginRequirements | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5637,44 +5630,6 @@ export interface Referrer {
   receiving_wallet?: string | null;
   referral_code: string;
   wallet: string;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_GetAssetsEdgeRpcParams".
- */
-export interface JsonRpcRequestFor_GetAssetsEdgeRpcParams {
-  headers?: {
-    [k: string]: unknown;
-  } | null;
-  id: JsonRpcId;
-  method: 'public/get_assets';
-  params: GetAssetsEdgeRpcParams;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "GetAssetsEdgeRpcParams".
- */
-export interface GetAssetsEdgeRpcParams {
-  asset_type: PublicAssetType;
-  currency: string;
-  expired: boolean;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "AssetResponsePublic".
- */
-export interface AssetResponsePublic {
-  address: string;
-  asset_id: string;
-  asset_name: string;
-  asset_type: PublicAssetType;
-  currency: string;
-  erc20_details?: SpotPublicDetails | null;
-  is_collateral: boolean;
-  is_position: boolean;
-  option_details?: OptionPublicDetails | null;
-  perp_details?: PerpPublicDetails | null;
-  sub_id: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
