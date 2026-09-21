@@ -236,11 +236,13 @@ export type JSONRPCResponseFor_QuotePrivateWireResponse1 =
 export type BatchStatus =
   | 'Batching'
   | 'Executing'
+  | 'Da'
   | 'Proving'
   | 'Settling'
   | 'Settled'
   | 'BatchingError'
   | 'ExecutingError'
+  | 'DaError'
   | 'ProvingError'
   | 'SettlingError'
   | 'SettledError';
