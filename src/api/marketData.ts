@@ -100,7 +100,7 @@ export class MarketDataApi {
 
   /** Every currently tradeable instrument name across all currencies. */
   getAllLiveInstruments(): Promise<string[]> {
-    return this.ctx.send('public/get_all_live_instruments', null);
+    return this.ctx.send('public/get_all_live_instruments', {});
   }
 
   /** Anonymized public trade tape (settled trades), newest first. */
@@ -142,7 +142,7 @@ export class MarketDataApi {
   }
 
   getAllCurrencies(): Promise<CurrencyResponse[]> {
-    return this.ctx.send('public/get_all_currencies', null);
+    return this.ctx.send('public/get_all_currencies', {});
   }
 
   /**
@@ -151,7 +151,7 @@ export class MarketDataApi {
    * and the collateral `address` to deposit.
    */
   getRiskUniverses(): Promise<RiskUniverseResponse[]> {
-    return this.ctx.send('public/get_risk_universes', null);
+    return this.ctx.send('public/get_risk_universes', {});
   }
 
   getCurrency(currency: string): Promise<CurrencyResponse> {

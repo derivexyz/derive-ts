@@ -1127,11 +1127,6 @@ export type JSONRPCResponseFor_QuoteExecuteDebugResult1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "NoParams".
- */
-export type NoParams = null;
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_Array_of_CurrencyResponse".
  */
 export type JSONRPCResponseFor_ArrayOf_CurrencyResponse = JSONRPCResponseFor_ArrayOf_CurrencyResponse1 & {
@@ -1294,6 +1289,20 @@ export type JSONRPCResponseFor_LiquidationHistoryResult1 =
  * via the `definition` "AuctionType".
  */
 export type AuctionType = 'solvent' | 'insolvent';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_PublicGetLiveAuctionsResponse".
+ */
+export type JSONRPCResponseFor_PublicGetLiveAuctionsResponse = JSONRPCResponseFor_PublicGetLiveAuctionsResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_PublicGetLiveAuctionsResponse1 =
+  | {
+      result: PublicGetLiveAuctionsResponse;
+    }
+  | {
+      error: RPCError;
+    };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_GetMakerProgramScoresResponse".
@@ -1781,11 +1790,13 @@ export type RpcErrorCatalog =
   | CounterpartyMaxFeeTooLow
   | OrderConfirmationTimeout
   | EngineConfirmationTimeout
+  | BackendUnavailable
   | AssetNotErc20
   | SameAccountTransfer
   | MultipleCurrenciesNotSupported
   | MaxSessionKeysPerWallet
   | MaxAssetsPerSubaccountExceeded
+  | MaxSubaccountsPerWallet
   | PmrmOnlySupportsQuoteAsset
   | Pm2OnlySupportSingleCurrencyOptionsAndPerps
   | Pm2DoesNotSupportThisCollateral
@@ -1867,12 +1878,17 @@ export type RpcErrorCatalog =
   | ModuleMismatch
   | ActionOutlivesSessionKey
   | SessionKeyValidityTooShort
+  | AccountAlreadyExists
+  | UndecodableActionData
+  | SessionKeySubaccountNotOwned
+  | DuplicateSessionKeySubaccount
   | AccountDisabled
   | OfacBlocked
   | CrossUniverseTrade
   | UnknownRiskUniverse
   | ManagerCannotRiskCurrency
   | AssetNotInRiskUniverse
+  | ManagerNotFound
   | VaultNotFound
   | ExceededMaxUserRequests
   | MaxShareholderVaultsReached
@@ -1887,6 +1903,7 @@ export type RpcErrorCatalog =
   | VaultInitialSharePriceTooFarFromBenchmark
   | VaultDepositExceedsMargin
   | VaultRequestAlreadyQueued
+  | DepositToVaultNotAllowed
   | ProtocolReject;
 
 export interface DeriveApi {
@@ -2257,6 +2274,10 @@ export interface EndpointMap {
   'public/get_liquidation_history': {
     request: JsonRpcRequestFor_GetLiquidationHistoryEdgeRpcParams;
     response: JSONRPCResponseFor_LiquidationHistoryResult;
+  };
+  'public/get_live_auctions': {
+    request: JsonRpcRequestFor_NoParams;
+    response: JSONRPCResponseFor_PublicGetLiveAuctionsResponse;
   };
   'public/get_maker_program_scores': {
     request: JsonRpcRequestFor_GetMakerProgramScoresParams;
@@ -3376,7 +3397,11 @@ export interface DepositEntry {
   asset: string;
   batch_status: BatchStatus;
   batch_uuid: string;
+  fallback_error_code?: number | null;
+  fallback_error_data?: string | null;
+  fallback_error_message?: string | null;
   fee: string;
+  is_fallback: boolean;
   new_subaccount: boolean;
   operation_id: string;
   subaccount_id: number;
@@ -5405,6 +5430,11 @@ export interface JsonRpcRequestFor_NoParams {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "NoParams".
+ */
+export interface NoParams {}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "CurrencyResponse".
  */
 export interface CurrencyResponse {
@@ -6022,6 +6052,31 @@ export interface AuctionBidEvent {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicGetLiveAuctionsResponse".
+ */
+export interface PublicGetLiveAuctionsResponse {
+  auctions: LiveAuction[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "LiveAuction".
+ */
+export interface LiveAuction {
+  currency?: string | null;
+  estimated_bid_price: string;
+  estimated_discount_pnl: string;
+  estimated_mtm: string;
+  estimated_percent_bid: string;
+  margin_type: string;
+  min_price_limit: string;
+  subaccount_balances: {
+    [k: string]: string;
+  };
+  subaccount_id: number;
+  timestamp: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_GetMakerProgramScoresParams".
  */
 export interface JsonRpcRequestFor_GetMakerProgramScoresParams {
@@ -6163,6 +6218,7 @@ export interface OnchainActionHistoryEntry {
   block_number: number;
   data: string;
   error_code?: number | null;
+  error_data?: string | null;
   error_message?: string | null;
   fallback_at?: number | null;
   first_failed_at?: number | null;
@@ -7580,6 +7636,15 @@ export interface EngineConfirmationTimeout {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BackendUnavailable".
+ */
+export interface BackendUnavailable {
+  code: 9002;
+  data?: string | null;
+  message: 'Backend temporarily unavailable, retry';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "AssetNotErc20".
  */
 export interface AssetNotErc20 {
@@ -7622,6 +7687,15 @@ export interface MaxAssetsPerSubaccountExceeded {
   code: 10007;
   data?: string | null;
   message: 'Maximum number of assets per subaccount reached';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MaxSubaccountsPerWallet".
+ */
+export interface MaxSubaccountsPerWallet {
+  code: 10008;
+  data?: string | null;
+  message: 'Maximum number of subaccounts per wallet reached';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -8354,6 +8428,42 @@ export interface SessionKeyValidityTooShort {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AccountAlreadyExists".
+ */
+export interface AccountAlreadyExists {
+  code: 14040;
+  data?: string | null;
+  message: 'Account already exists for wallet';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "UndecodableActionData".
+ */
+export interface UndecodableActionData {
+  code: 14041;
+  data?: string | null;
+  message: 'Action data could not be decoded';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SessionKeySubaccountNotOwned".
+ */
+export interface SessionKeySubaccountNotOwned {
+  code: 14042;
+  data?: string | null;
+  message: 'Session key names a subaccount the wallet does not own';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DuplicateSessionKeySubaccount".
+ */
+export interface DuplicateSessionKeySubaccount {
+  code: 14043;
+  data?: string | null;
+  message: 'Session key names the same subaccount more than once';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "AccountDisabled".
  */
 export interface AccountDisabled {
@@ -8405,6 +8515,15 @@ export interface AssetNotInRiskUniverse {
   code: 17003;
   data?: string | null;
   message: 'Asset is not registered in the destination risk universe';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ManagerNotFound".
+ */
+export interface ManagerNotFound {
+  code: 17004;
+  data?: string | null;
+  message: 'Manager not found';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -8531,6 +8650,15 @@ export interface VaultRequestAlreadyQueued {
   code: 18020;
   data?: string | null;
   message: 'A request with this vault nonce is already queued';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DepositToVaultNotAllowed".
+ */
+export interface DepositToVaultNotAllowed {
+  code: 18021;
+  data?: string | null;
+  message: 'Deposits to a vault subaccount are not allowed';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema

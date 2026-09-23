@@ -33,7 +33,7 @@ export interface SpotAssetInfo {
 export async function resolveSpotAsset(ctx: ClientContext, asset: string): Promise<SpotAssetInfo> {
   const wanted = asset.trim();
   const wantedAddress = wanted.startsWith('0x') ? getAddress(wanted) : undefined;
-  const currencies = await ctx.send('public/get_all_currencies', null);
+  const currencies = await ctx.send('public/get_all_currencies', {});
   for (const currency of currencies) {
     // ERC-20 metadata is only reported for assets with a deposit (spot) config.
     const enabled = currency.spot.filter((s) => s.erc20.underlying_erc20 != null || s.erc20.decimals > 0);
