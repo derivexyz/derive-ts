@@ -1836,6 +1836,7 @@ export type RpcErrorCatalog =
   | SecurityModuleCannotBorrow
   | SubaccountHasOpenOrders
   | SubaccountNotDeletable
+  | SecurityModuleCannotTrade
   | TriggerOrderAlreadyCancelledOrExpired
   | InvalidTriggerPrice
   | TooManyTriggerOrders
@@ -1904,7 +1905,20 @@ export type RpcErrorCatalog =
   | VaultDepositExceedsMargin
   | VaultRequestAlreadyQueued
   | DepositToVaultNotAllowed
-  | ProtocolReject;
+  | SubaccountNotLiquidatable
+  | AuctionAlreadyOngoing
+  | AuctionNotOngoing
+  | AuctionInvalidPortion
+  | AuctionSolventExpired
+  | AuctionSelfTransfer
+  | AuctionBidderInitialMarginBreached
+  | AuctionPriceLimitViolated
+  | MarginOverrideMissing
+  | MarginOverrideGraceNotElapsed
+  | MarginOverrideUniverseMismatch
+  | MarginOverrideManagerKindMismatch
+  | MarginOverrideCurrencyNotInManager
+  | MarginOverrideSpotAssetNotInManager;
 
 export interface DeriveApi {
   methods: EndpointMap;
@@ -8056,6 +8070,15 @@ export interface SubaccountNotDeletable {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SecurityModuleCannotTrade".
+ */
+export interface SecurityModuleCannotTrade {
+  code: 11044;
+  data?: string | null;
+  message: 'Security module cannot trade';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "TriggerOrderAlreadyCancelledOrExpired".
  */
 export interface TriggerOrderAlreadyCancelledOrExpired {
@@ -8668,10 +8691,127 @@ export interface DepositToVaultNotAllowed {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "ProtocolReject".
+ * via the `definition` "SubaccountNotLiquidatable".
  */
-export interface ProtocolReject {
-  code: 20000;
+export interface SubaccountNotLiquidatable {
+  code: 19000;
   data?: string | null;
-  message: 'Protocol rejected operation';
+  message: 'Subaccount is not liquidatable';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuctionAlreadyOngoing".
+ */
+export interface AuctionAlreadyOngoing {
+  code: 19001;
+  data?: string | null;
+  message: 'Auction already ongoing';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuctionNotOngoing".
+ */
+export interface AuctionNotOngoing {
+  code: 19002;
+  data?: string | null;
+  message: 'No ongoing auction';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuctionInvalidPortion".
+ */
+export interface AuctionInvalidPortion {
+  code: 19003;
+  data?: string | null;
+  message: 'Invalid liquidation portion';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuctionSolventExpired".
+ */
+export interface AuctionSolventExpired {
+  code: 19004;
+  data?: string | null;
+  message: 'Solvent auction expired';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuctionSelfTransfer".
+ */
+export interface AuctionSelfTransfer {
+  code: 19005;
+  data?: string | null;
+  message: 'Subaccount cannot bid on its own auction';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuctionBidderInitialMarginBreached".
+ */
+export interface AuctionBidderInitialMarginBreached {
+  code: 19006;
+  data?: string | null;
+  message: 'Bid would leave the bidder below initial margin';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuctionPriceLimitViolated".
+ */
+export interface AuctionPriceLimitViolated {
+  code: 19007;
+  data?: string | null;
+  message: 'Auction price limit violated';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MarginOverrideMissing".
+ */
+export interface MarginOverrideMissing {
+  code: 19008;
+  data?: string | null;
+  message: 'Subaccount has no margin override';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MarginOverrideGraceNotElapsed".
+ */
+export interface MarginOverrideGraceNotElapsed {
+  code: 19009;
+  data?: string | null;
+  message: 'Margin override grace period not elapsed';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MarginOverrideUniverseMismatch".
+ */
+export interface MarginOverrideUniverseMismatch {
+  code: 19010;
+  data?: string | null;
+  message: 'Margin override is for another risk universe';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MarginOverrideManagerKindMismatch".
+ */
+export interface MarginOverrideManagerKindMismatch {
+  code: 19011;
+  data?: string | null;
+  message: 'Margin override is for another manager kind';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MarginOverrideCurrencyNotInManager".
+ */
+export interface MarginOverrideCurrencyNotInManager {
+  code: 19012;
+  data?: string | null;
+  message: 'Margin override lists a currency the manager does not';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MarginOverrideSpotAssetNotInManager".
+ */
+export interface MarginOverrideSpotAssetNotInManager {
+  code: 19013;
+  data?: string | null;
+  message: 'Margin override lists a spot asset the manager does not';
 }
