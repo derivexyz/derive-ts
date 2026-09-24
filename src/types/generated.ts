@@ -1375,6 +1375,20 @@ export type JSONRPCResponseFor_GetPendingDepositsResult1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_PerpImpactTwapResult".
+ */
+export type JSONRPCResponseFor_PerpImpactTwapResult = JSONRPCResponseFor_PerpImpactTwapResult1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_PerpImpactTwapResult1 =
+  | {
+      result: PerpImpactTwapResult;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_GetReferralPerformanceResult".
  */
 export type JSONRPCResponseFor_GetReferralPerformanceResult = JSONRPCResponseFor_GetReferralPerformanceResult1 & {
@@ -2316,6 +2330,10 @@ export interface EndpointMap {
   'public/get_pending_deposits': {
     request: JsonRpcRequestFor_GetPendingDepositsParams;
     response: JSONRPCResponseFor_GetPendingDepositsResult;
+  };
+  'public/get_perp_impact_twap': {
+    request: JsonRpcRequestFor_GetPerpImpactTwapEdgeRpcParams;
+    response: JSONRPCResponseFor_PerpImpactTwapResult;
   };
   'public/get_referral_performance': {
     request: JsonRpcRequestFor_GetReferralPerformanceParams;
@@ -6332,6 +6350,37 @@ export interface PendingDepositEntry {
   timestamp: number;
   tx_hash: string;
   updated_at_ms: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetPerpImpactTwapEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_GetPerpImpactTwapEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_perp_impact_twap';
+  params: GetPerpImpactTwapEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetPerpImpactTwapEdgeRpcParams".
+ */
+export interface GetPerpImpactTwapEdgeRpcParams {
+  currency: string;
+  end_time: number;
+  start_time: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PerpImpactTwapResult".
+ */
+export interface PerpImpactTwapResult {
+  ask_impact_diff_twap: string;
+  bid_impact_diff_twap: string;
+  currency: string;
+  mid_price_diff_twap: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
