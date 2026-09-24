@@ -4,6 +4,7 @@ import { ERC20_ABI } from '../abis/erc20';
 import { DeriveTimeoutError } from '../errors';
 import { toScaled, type DecimalLike } from '../signing/encoding';
 import type { ClientContext } from './context';
+import type { SubaccountsApi } from './subaccounts';
 
 /**
  * Deposits are NOT signed actions in v3. Funds enter through one of two
@@ -26,7 +27,10 @@ export class DepositsApi {
   readonly contractCall: ContractCallDeposits;
   readonly depositAddress: DepositAddressDeposits;
 
-  constructor(private readonly ctx: ClientContext) {
+  constructor(
+    private readonly ctx: ClientContext,
+    private readonly subaccounts: SubaccountsApi,
+  ) {
     this.contractCall = new ContractCallDeposits(ctx);
     this.depositAddress = new DepositAddressDeposits(ctx);
   }
@@ -60,11 +64,12 @@ export class DepositsApi {
   }
 
   /**
-   * Polls `private/get_subaccounts` until a subaccount id outside
+   * Polls `subaccounts.list()` until a subaccount id outside
    * `knownSubaccountIds` appears — the signal that a deposit creating a
    * new subaccount (any method) was credited — and returns the new id.
-   * Snapshot the ids BEFORE initiating the deposit. For deposits into an
-   * EXISTING subaccount, watch its balance via `subaccounts.get` instead.
+   * Snapshot the ids with `subaccounts.list()` BEFORE initiating the
+   * deposit. For deposits into an EXISTING subaccount, watch its balance
+   * via `subaccounts.get` instead.
    */
   async awaitNewSubaccount(params: {
     knownSubaccountIds: number[];
@@ -76,8 +81,7 @@ export class DepositsApi {
     const wallet = this.ctx.credentials().ownerAddress;
     const deadline = Date.now() + timeoutMs;
     for (;;) {
-      const { subaccount_ids } = await this.ctx.send('private/get_subaccounts', { wallet });
-      const credited = subaccount_ids.find((id) => !known.has(id));
+      const credited = (await this.subaccounts.list()).find((id) => !known.has(id));
       if (credited !== undefined) return credited;
       if (Date.now() >= deadline) {
         throw new DeriveTimeoutError(`deposit not credited within ${timeoutMs}ms — no new subaccount for ${wallet}`);

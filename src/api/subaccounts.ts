@@ -1,7 +1,9 @@
+import { DeriveRpcError } from '../errors';
 import { SignedAction } from '../signing/action';
 import { DEFAULT_SIGNATURE_EXPIRY_SEC, expiresIn, randomNonce } from '../signing/encoding';
 import { domainSeparator } from '../signing/eip712';
 import type {
+  AccountNotFound,
   InterestHistoryResult,
   OptionSettlementHistoryResponse,
   PaginatedTradesResult,
@@ -13,6 +15,8 @@ import type {
   TransferHistoryResult,
 } from '../types';
 import type { ClientContext } from './context';
+
+const ACCOUNT_NOT_FOUND: AccountNotFound['code'] = 14000;
 
 export interface TradeHistoryQuery {
   subaccountId?: number;
@@ -71,11 +75,15 @@ export interface MarginResult {
 export class SubaccountsApi {
   constructor(private readonly ctx: ClientContext) {}
 
-  /** Ids of all subaccounts owned by the authenticated wallet. */
+  /** Ids of all subaccounts owned by the authenticated wallet — `[]` before its first deposit is credited. */
   async list(): Promise<number[]> {
-    const result = await this.ctx.send('private/get_subaccounts', {
-      wallet: this.ctx.credentials().ownerAddress,
-    });
+    const result = await this.ctx
+      .send('private/get_subaccounts', { wallet: this.ctx.credentials().ownerAddress })
+      .catch((err: unknown) => {
+        // The account does not exist until its first deposit is credited.
+        if (err instanceof DeriveRpcError && err.code === ACCOUNT_NOT_FOUND) return { subaccount_ids: [] };
+        throw err;
+      });
     return result.subaccount_ids;
   }
 

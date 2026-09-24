@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { ClientContext } from '../../src/api/context';
 import { DepositsApi } from '../../src/api/deposits';
+import { SubaccountsApi } from '../../src/api/subaccounts';
+import { DeriveRpcError } from '../../src/errors';
 
 const WALLET = '0x1111111111111111111111111111111111111111';
 
@@ -14,7 +16,7 @@ function makeDeposits() {
       return { wallet: WALLET, deposit_address: '0xdeadbeef' };
     },
   } as unknown as ClientContext;
-  return { deposits: new DepositsApi(ctx), calls };
+  return { deposits: new DepositsApi(ctx, new SubaccountsApi(ctx)), calls };
 }
 
 describe('DepositAddressDeposits.register', () => {
@@ -37,5 +39,42 @@ describe('DepositAddressDeposits.register', () => {
 
     await expect(deposits.depositAddress.register({})).rejects.toThrow(/subaccountId/);
     expect(calls).toHaveLength(0);
+  });
+});
+
+/** DepositsApi double answering `private/get_subaccounts` from a queue of responses. */
+function makePollingDeposits(responses: Array<number[] | DeriveRpcError>) {
+  const ctx = {
+    credentials: () => ({ ownerAddress: WALLET }),
+    send: async () => {
+      const next = responses.shift();
+      if (next instanceof DeriveRpcError) throw next;
+      return { wallet: WALLET, subaccount_ids: next };
+    },
+  } as unknown as ClientContext;
+  return new DepositsApi(ctx, new SubaccountsApi(ctx));
+}
+
+const rpcError = (code: number, message: string) => new DeriveRpcError('private/get_subaccounts', { code, message });
+
+describe('DepositsApi.awaitNewSubaccount', () => {
+  it('keeps polling while a first deposit has not created the account yet', async () => {
+    // The wallet has no account until the deposit is credited, so the
+    // server answers 14000 rather than an empty list.
+    const deposits = makePollingDeposits([
+      rpcError(14000, 'Account not found'),
+      rpcError(14000, 'Account not found'),
+      [7],
+    ]);
+
+    await expect(deposits.awaitNewSubaccount({ knownSubaccountIds: [], pollIntervalMs: 0 })).resolves.toBe(7);
+  });
+
+  it('propagates any other RPC error instead of polling until timeout', async () => {
+    const deposits = makePollingDeposits([rpcError(14014, 'Signature invalid for message or transaction'), [7]]);
+
+    await expect(deposits.awaitNewSubaccount({ knownSubaccountIds: [], pollIntervalMs: 0 })).rejects.toMatchObject({
+      code: 14014,
+    });
   });
 });

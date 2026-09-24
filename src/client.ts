@@ -83,7 +83,7 @@ export class DeriveClient {
     this.spotTransfers = new SpotTransfersApi(this);
     this.positionTransfers = new PositionTransfersApi(this);
     this.withdrawals = new WithdrawalsApi(this);
-    this.deposits = new DepositsApi(this);
+    this.deposits = new DepositsApi(this, this.subaccounts);
     this.vaults = new VaultsApi(this);
     this.sessionKeys = new SessionKeysApi(this);
     this.onchainActions = new OnchainActionsApi(this);
