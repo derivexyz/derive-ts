@@ -6024,6 +6024,7 @@ export interface AuctionHistory {
   bids: AuctionBidEvent[];
   end_timestamp?: number | null;
   fee: string;
+  risk_universe_id: number;
   start_timestamp: number;
   subaccount_id: number;
   tx_hash: string;
@@ -6036,6 +6037,7 @@ export interface AuctionBidEvent {
   amounts_liquidated: {
     [k: string]: string;
   };
+  bidder_id: number;
   cash_received: string;
   discount_pnl: string;
   percent_liquidated: string;
@@ -6047,8 +6049,10 @@ export interface AuctionBidEvent {
   };
   realized_pnl: string;
   realized_pnl_excl_fees: string;
+  risk_universe_id: number;
   timestamp: number;
   tx_hash: string;
+  unit_price: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6069,6 +6073,7 @@ export interface LiveAuction {
   estimated_percent_bid: string;
   margin_type: string;
   min_price_limit: string;
+  risk_universe_id: number;
   subaccount_balances: {
     [k: string]: string;
   };
@@ -7362,6 +7367,7 @@ export interface AuctionDetails {
   estimated_percent_bid: string;
   margin_type: string;
   min_price_limit: string;
+  risk_universe_id: number;
   subaccount_balances: {
     [k: string]: string;
   };
