@@ -165,7 +165,7 @@ export class SpotTransfersApi {
       amount: decimalString(params.amount),
       max_fee_usd: decimalString(maxFeeUsd),
       // Nonces are UTC-nanosecond decimal strings beyond 2^53; the API accepts string-or-number despite the generated `number`.
-      nonce: action.fields.nonce as unknown as number,
+      nonce: action.fields.nonce,
       signer: action.fields.signer,
       signature: action.signature!,
       signature_expiry_sec: action.fields.expirySec,
@@ -202,7 +202,7 @@ export class SpotTransfersApi {
       add: add.map((a) => getAddress(a)),
       remove: remove.map((a) => getAddress(a)),
       // Nonces are UTC-nanosecond decimal strings beyond 2^53; the API accepts string-or-number despite the generated `number`.
-      nonce: action.fields.nonce as unknown as number,
+      nonce: action.fields.nonce,
       signer: action.fields.signer,
       signature: action.signature!,
       signature_expiry_sec: action.fields.expirySec,
@@ -249,7 +249,7 @@ export class SpotTransfersApi {
       amount: decimalString(params.amount),
       max_fee_usd: decimalString(params.maxFeeUsd),
       // Nonces are UTC-nanosecond decimal strings beyond 2^53; the API accepts string-or-number despite the generated `number`.
-      nonce: action.fields.nonce as unknown as number,
+      nonce: action.fields.nonce,
       signer: action.fields.signer,
       signature: action.signature!,
       signature_expiry_sec: action.fields.expirySec,

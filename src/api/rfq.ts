@@ -272,7 +272,7 @@ export class RfqApi {
       legs: legs.map(pricedWireLeg),
       max_fee: formatUnits(maxFee, 18),
       // The generated stub types nonce as number; the wire value is the decimal-string nanosecond nonce (> 2^53).
-      nonce: nonce as unknown as number,
+      nonce: nonce,
       signer: signed.signer,
       signature: signed.signature,
       signature_expiry_sec: expirySec,
@@ -366,12 +366,12 @@ export class RfqApi {
       direction: params.direction,
       legs: legs.map(pricedWireLeg),
       max_fee: formatUnits(maxFee, 18),
-      nonce: nonce as unknown as number,
+      nonce: nonce,
       signer: signed.signer,
       signature: signed.signature,
       signature_expiry_sec: expirySec,
       quote_id_to_cancel: params.quoteIdToCancel,
-      nonce_to_cancel: params.nonceToCancel as unknown as number,
+      nonce_to_cancel: params.nonceToCancel,
       mmp: params.mmp,
       label: params.label,
     } as never);

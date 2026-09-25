@@ -1846,7 +1846,7 @@ export type RpcErrorCatalog =
   | NewSubaccountInFallbackUniverse
   | DepositBelowSubaccountCreationFee
   | LendingBorrowsExceedSupply
-  | SecurityModuleCashOutflowWhileInsolvent
+  | SecurityModuleOutflowWhileInsolvent
   | SecurityModuleCannotBorrow
   | SubaccountHasOpenOrders
   | SubaccountNotDeletable
@@ -1932,7 +1932,8 @@ export type RpcErrorCatalog =
   | MarginOverrideUniverseMismatch
   | MarginOverrideManagerKindMismatch
   | MarginOverrideCurrencyNotInManager
-  | MarginOverrideSpotAssetNotInManager;
+  | MarginOverrideSpotAssetNotInManager
+  | AuctionSelfBid;
 
 export interface DeriveApi {
   methods: EndpointMap;
@@ -2449,7 +2450,7 @@ export interface JsonRpcRequestFor_BurnSharesEdgeRpcParams {
  * via the `definition` "BurnSharesEdgeRpcParams".
  */
 export interface BurnSharesEdgeRpcParams {
-  nonce: number;
+  nonce: string;
   request_id: VaultRequestId;
   share_price: string;
   signature: string;
@@ -2655,7 +2656,7 @@ export interface JsonRpcRequestFor_CancelVaultRequestEdgeRpcParams {
  * via the `definition` "CancelVaultRequestEdgeRpcParams".
  */
 export interface CancelVaultRequestEdgeRpcParams {
-  nonce: number;
+  nonce: string;
   signature: string;
   signature_expiry_sec: number;
   signer: Address;
@@ -2689,7 +2690,7 @@ export interface JsonRpcRequestFor_CancelBatchQuotesEdgeRpcParams {
  */
 export interface CancelBatchQuotesEdgeRpcParams {
   label?: string | null;
-  nonce?: number | null;
+  nonce?: string | null;
   quote_id?: string | null;
   rfq_id?: string | null;
   subaccount_id: number;
@@ -2719,7 +2720,7 @@ export interface JsonRpcRequestFor_CancelBatchRfqsEdgeRpcParams {
  */
 export interface CancelBatchRfqsEdgeRpcParams {
   label?: string | null;
-  nonce?: number | null;
+  nonce?: string | null;
   rfq_id?: string | null;
   subaccount_id: number;
 }
@@ -2803,7 +2804,7 @@ export interface JsonRpcRequestFor_CancelByNonceEdgeRpcParams {
  */
 export interface CancelByNonceEdgeRpcParams {
   instrument_name: string;
-  nonce: number;
+  nonce: string;
   subaccount_id: number;
 }
 /**
@@ -2831,7 +2832,7 @@ export interface JsonRpcRequestFor_CancelQuoteEdgeRpcParams {
  */
 export interface CancelQuoteEdgeRpcParams {
   label?: string | null;
-  nonce?: number | null;
+  nonce?: string | null;
   quote_id: string;
   rfq_id?: string | null;
   subaccount_id: number;
@@ -2968,7 +2969,7 @@ export interface CreateVaultEdgeRpcParams {
   manager_id: number;
   max_fee_usd: string;
   max_slippage_bps: number;
-  nonce: number;
+  nonce: string;
   performance_fee_bps: number;
   signature: string;
   signature_expiry_sec: number;
@@ -3000,7 +3001,7 @@ export interface JsonRpcRequestFor_DeleteSubaccountEdgeRpcParams {
  * via the `definition` "DeleteSubaccountEdgeRpcParams".
  */
 export interface DeleteSubaccountEdgeRpcParams {
-  nonce: number;
+  nonce: string;
   signature: string;
   signature_expiry_sec: number;
   signer: string;
@@ -3074,7 +3075,7 @@ export interface ExecuteQuoteEdgeRpcParams {
   label?: string;
   legs: PricedLegParamsAndResponse[];
   max_fee: string;
-  nonce: number;
+  nonce: string;
   quote_id: string;
   referral_code?: string;
   rfq_id: string;
@@ -3128,7 +3129,7 @@ export interface JsonRpcRequestFor_ForceBurnEdgeRpcParams {
  */
 export interface ForceBurnEdgeRpcParams {
   holder: Address;
-  nonce: number;
+  nonce: string;
   signature: string;
   signature_expiry_sec: number;
   signer: Address;
@@ -4415,7 +4416,7 @@ export interface JsonRpcRequestFor_PrivateLiquidateEdgeRpcParams {
  */
 export interface PrivateLiquidateEdgeRpcParams {
   liquidate_subaccount_id: number;
-  nonce: number;
+  nonce: string;
   percent_of_acc: string;
   price_limit: string;
   signature: string;
@@ -4449,7 +4450,7 @@ export interface JsonRpcRequestFor_MintSharesEdgeRpcParams {
  */
 export interface MintSharesEdgeRpcParams {
   deposit_hash: string;
-  nonce: number;
+  nonce: string;
   request_id: VaultRequestId;
   share_price: string;
   signature: string;
@@ -4564,7 +4565,7 @@ export interface ActionInputDataEdgeRpcResponseFor_OrderActionDataEdgeRpcRespons
   data: OrderActionDataEdgeRpcResponse;
   expiry: number;
   module: string;
-  nonce: number;
+  nonce: string;
   owner: string;
   signer: string;
   subaccount_id: number;
@@ -4811,7 +4812,7 @@ export interface ReplaceOrderEdgeRpcParams {
   max_fee: string;
   mmp?: boolean | null;
   nonce: string;
-  nonce_to_cancel?: number | null;
+  nonce_to_cancel?: string | null;
   order_id_to_cancel?: string | null;
   order_type?: 'limit' | 'market';
   reduce_only?: boolean | null;
@@ -4861,8 +4862,8 @@ export interface ReplaceQuoteEdgeRpcParams {
   legs: PricedLegParamsAndResponse[];
   max_fee: string;
   mmp?: boolean;
-  nonce: number;
-  nonce_to_cancel?: number | null;
+  nonce: string;
+  nonce_to_cancel?: string | null;
   quote_id_to_cancel?: string | null;
   referral_code?: string;
   rfq_id: string;
@@ -4899,7 +4900,7 @@ export interface JsonRpcRequestFor_RequestVaultDepositEdgeRpcParams {
 export interface RequestVaultDepositEdgeRpcParams {
   amount: string;
   deposit_spot_asset: Address;
-  nonce: number;
+  nonce: string;
   signature: string;
   signature_expiry_sec: number;
   signer: Address;
@@ -4923,7 +4924,7 @@ export interface JsonRpcRequestFor_RequestVaultWithdrawEdgeRpcParams {
  * via the `definition` "RequestVaultWithdrawEdgeRpcParams".
  */
 export interface RequestVaultWithdrawEdgeRpcParams {
-  nonce: number;
+  nonce: string;
   shares_to_burn: string;
   signature: string;
   signature_expiry_sec: number;
@@ -5001,7 +5002,7 @@ export interface SendQuoteEdgeRpcParams {
   legs: PricedLegParamsAndResponse[];
   max_fee: string;
   mmp?: boolean;
-  nonce: number;
+  nonce: string;
   referral_code?: string;
   rfq_id: string;
   signature: string;
@@ -5226,7 +5227,7 @@ export interface PrivateTransferSpotEdgeRpcParams {
   asset_name: string;
   max_fee_usd: string;
   new_subaccount_manager: number;
-  nonce: number;
+  nonce: string;
   signature: string;
   signature_expiry_sec: number;
   signer: string;
@@ -5263,7 +5264,7 @@ export interface PrivateTransferSpotExternalEdgeRpcParams {
   asset_name: string;
   max_fee_usd: string;
   new_subaccount_manager: number;
-  nonce: number;
+  nonce: string;
   recipient_address: string;
   signature: string;
   signature_expiry_sec: number;
@@ -5328,7 +5329,7 @@ export interface JsonRpcRequestFor_UpdateWhitelistedRecipientsEdgeRpcParams {
  */
 export interface UpdateWhitelistedRecipientsEdgeRpcParams {
   add: string[];
-  nonce: number;
+  nonce: string;
   remove: string[];
   signature: string;
   signature_expiry_sec: number;
@@ -5365,7 +5366,7 @@ export interface PrivateWithdrawEdgeRpcParams {
   asset_name: string;
   force_batch: boolean;
   max_fee_usd: string;
-  nonce: number;
+  nonce: string;
   recipient?: string | null;
   signature: string;
   signature_expiry_sec: number;
@@ -5428,7 +5429,7 @@ export interface PublicExecuteQuoteDebugEdgeRpcParams {
   direction: Direction;
   legs: PricedLegParamsAndResponse[];
   max_fee: string;
-  nonce: number;
+  nonce: string;
   quote_id: string;
   rfq_id: string;
   signature: string;
@@ -7005,7 +7006,7 @@ export interface PublicSendQuoteDebugEdgeRpcParams {
   direction: Direction;
   legs: PricedLegParamsAndResponse[];
   max_fee: string;
-  nonce: number;
+  nonce: string;
   rfq_id: string;
   signature: string;
   signature_expiry_sec: number;
@@ -7211,7 +7212,7 @@ export interface PublicWithdrawDebugEdgeRpcParams {
   asset_name: string;
   force_batch: boolean;
   max_fee_usd: string;
-  nonce: number;
+  nonce: string;
   recipient?: string | null;
   signature_expiry_sec: number;
   signer: string;
@@ -8083,12 +8084,12 @@ export interface LendingBorrowsExceedSupply {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "SecurityModuleCashOutflowWhileInsolvent".
+ * via the `definition` "SecurityModuleOutflowWhileInsolvent".
  */
-export interface SecurityModuleCashOutflowWhileInsolvent {
+export interface SecurityModuleOutflowWhileInsolvent {
   code: 11040;
   data?: string | null;
-  message: 'Security module cannot pay out cash while it reserves cash for an insolvent auction';
+  message: 'Security module cannot pay out while it reserves cash for an insolvent auction';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -8790,7 +8791,7 @@ export interface AuctionSolventExpired {
 export interface AuctionSelfTransfer {
   code: 19005;
   data?: string | null;
-  message: 'Subaccount cannot bid on its own auction';
+  message: 'Liquidation cannot transfer a subaccount to itself';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -8863,4 +8864,13 @@ export interface MarginOverrideSpotAssetNotInManager {
   code: 19013;
   data?: string | null;
   message: 'Margin override lists a spot asset the manager does not';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AuctionSelfBid".
+ */
+export interface AuctionSelfBid {
+  code: 19014;
+  data?: string | null;
+  message: 'Subaccount cannot bid on its own auction';
 }

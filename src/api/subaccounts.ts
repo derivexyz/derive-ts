@@ -180,7 +180,7 @@ export class SubaccountsApi {
     return this.ctx.send('private/delete_subaccount', {
       subaccount_id: params.subaccountId,
       // Nonces are UTC-nanosecond decimal strings beyond 2^53; the API accepts string-or-number despite the generated `number`.
-      nonce: action.fields.nonce as unknown as number,
+      nonce: action.fields.nonce,
       signer: action.fields.signer,
       signature: action.signature!,
       signature_expiry_sec: action.fields.expirySec,

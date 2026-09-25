@@ -138,7 +138,7 @@ function signedEnvelope(action: SignedAction) {
     subaccount_id: Number(action.fields.subaccountId),
     // The API deserializes nonce via string_or_number; nanosecond nonces
     // exceed 2^53, so send the decimal string despite the generated type.
-    nonce: action.fields.nonce as unknown as number,
+    nonce: action.fields.nonce,
     signature_expiry_sec: action.fields.expirySec,
     signer: action.fields.signer,
     signature: action.signature as string, // set by sign() above
