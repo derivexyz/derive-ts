@@ -3430,17 +3430,30 @@ export interface DepositEntry {
   asset: string;
   batch_status: BatchStatus;
   batch_uuid: string;
+  bridge_origin?: DepositBridgeOrigin | null;
   fallback_error_code?: number | null;
   fallback_error_data?: string | null;
   fallback_error_message?: string | null;
   fee: string;
   is_fallback: boolean;
+  l1_sender?: string | null;
+  l1_tx_hash?: string | null;
   new_subaccount: boolean;
   operation_id: string;
   subaccount_id: number;
   timestamp: number;
   tx_hash?: string | null;
   wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "DepositBridgeOrigin".
+ */
+export interface DepositBridgeOrigin {
+  rail: string;
+  source_address?: string | null;
+  source_chain_id: number;
+  source_tx_hash: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6337,20 +6350,42 @@ export interface GetPendingDepositsResult {
  * via the `definition` "PendingDepositEntry".
  */
 export interface PendingDepositEntry {
-  action_id: number;
+  action_id?: number | null;
   action_type: string;
-  amount: string;
+  amount?: string | null;
   asset: string;
-  block_number: number;
+  block_number?: number | null;
+  bridge_to_l1?: PendingDepositBridgeOrigin | null;
   credit_nonce?: string | null;
   deposit_type: string;
-  log_index: number;
+  log_index?: number | null;
   manager_id: number;
   status: string;
   subaccount_id: number;
   timestamp: number;
-  tx_hash: string;
+  tx_hash?: string | null;
   updated_at_ms: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PendingDepositBridgeOrigin".
+ */
+export interface PendingDepositBridgeOrigin {
+  bridge_id: string;
+  bridge_status: string;
+  delivered_at_ms?: number | null;
+  deposit_address: string;
+  expected_amount: string;
+  expires_at_ms: number;
+  rail: string;
+  receiving_amount?: string | null;
+  receiving_token?: string | null;
+  receiving_tx_hash?: string | null;
+  source_address?: string | null;
+  source_chain_id: number;
+  source_tx_hash: string;
+  substatus: string;
+  token: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
