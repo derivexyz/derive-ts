@@ -1851,6 +1851,7 @@ export type RpcErrorCatalog =
   | SubaccountHasOpenOrders
   | SubaccountNotDeletable
   | SecurityModuleCannotTrade
+  | WithdrawalsUnavailableForAsset
   | TriggerOrderAlreadyCancelledOrExpired
   | InvalidTriggerPrice
   | TooManyTriggerOrders
@@ -8161,6 +8162,15 @@ export interface SecurityModuleCannotTrade {
   code: 11044;
   data?: string | null;
   message: 'Security module cannot trade';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "WithdrawalsUnavailableForAsset".
+ */
+export interface WithdrawalsUnavailableForAsset {
+  code: 11045;
+  data?: string | null;
+  message: 'Withdrawals for this asset are not yet available';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
