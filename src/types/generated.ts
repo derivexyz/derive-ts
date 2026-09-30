@@ -990,6 +990,21 @@ export type JSONRPCResponseFor_PrivateSetSessionKeyEdgeRPCResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_SignedActionDebugEdgeRpcResponse_for_SetSessionKeyActionDataEdgeRpcResponse".
+ */
+export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse =
+  JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse1 & {
+    id: JsonRpcId;
+  };
+export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse1 =
+  | {
+      result: SignedActionDebugEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_TransferPositionsWireResponse".
  */
 export type JSONRPCResponseFor_TransferPositionsWireResponse = JSONRPCResponseFor_TransferPositionsWireResponse1 & {
@@ -998,6 +1013,21 @@ export type JSONRPCResponseFor_TransferPositionsWireResponse = JSONRPCResponseFo
 export type JSONRPCResponseFor_TransferPositionsWireResponse1 =
   | {
       result: TransferPositionsWireResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_TransferPositionsDebugEdgeRpcResponse".
+ */
+export type JSONRPCResponseFor_TransferPositionsDebugEdgeRpcResponse =
+  JSONRPCResponseFor_TransferPositionsDebugEdgeRpcResponse1 & {
+    id: JsonRpcId;
+  };
+export type JSONRPCResponseFor_TransferPositionsDebugEdgeRpcResponse1 =
+  | {
+      result: TransferPositionsDebugEdgeRpcResponse;
     }
   | {
       error: RPCError;
@@ -1019,6 +1049,21 @@ export type JSONRPCResponseFor_PrivateTransferSpotEdgeRpcResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_SignedActionDebugEdgeRpcResponse_for_TransferActionDataEdgeRpcResponse".
+ */
+export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_TransferActionDataEdgeRpcResponse =
+  JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_TransferActionDataEdgeRpcResponse1 & {
+    id: JsonRpcId;
+  };
+export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_TransferActionDataEdgeRpcResponse1 =
+  | {
+      result: SignedActionDebugEdgeRpcResponseFor_TransferActionDataEdgeRpcResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_PrivateTransferSpotExternalEdgeRpcResponse".
  */
 export type JSONRPCResponseFor_PrivateTransferSpotExternalEdgeRpcResponse =
@@ -1028,6 +1073,21 @@ export type JSONRPCResponseFor_PrivateTransferSpotExternalEdgeRpcResponse =
 export type JSONRPCResponseFor_PrivateTransferSpotExternalEdgeRpcResponse1 =
   | {
       result: PrivateTransferSpotExternalEdgeRpcResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_SignedActionDebugEdgeRpcResponse_for_ExternalTransferActionDataEdgeRpcResponse".
+ */
+export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_ExternalTransferActionDataEdgeRpcResponse =
+  JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_ExternalTransferActionDataEdgeRpcResponse1 & {
+    id: JsonRpcId;
+  };
+export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_ExternalTransferActionDataEdgeRpcResponse1 =
+  | {
+      result: SignedActionDebugEdgeRpcResponseFor_ExternalTransferActionDataEdgeRpcResponse;
     }
   | {
       error: RPCError;
@@ -1057,6 +1117,21 @@ export type JSONRPCResponseFor_UpdateWhitelistedRecipientsEdgeRpcResponse =
 export type JSONRPCResponseFor_UpdateWhitelistedRecipientsEdgeRpcResponse1 =
   | {
       result: UpdateWhitelistedRecipientsEdgeRpcResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_SignedActionDebugEdgeRpcResponse_for_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse".
+ */
+export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse =
+  JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse1 & {
+    id: JsonRpcId;
+  };
+export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse1 =
+  | {
+      result: SignedActionDebugEdgeRpcResponseFor_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse;
     }
   | {
       error: RPCError;
@@ -2229,17 +2304,33 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_SetSessionKeyEdgeRpcParams;
     response: JSONRPCResponseFor_PrivateSetSessionKeyEdgeRPCResponse;
   };
+  'private/set_session_key_debug': {
+    request: JsonRpcRequestFor_SetSessionKeyEdgeRpcParams;
+    response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse;
+  };
   'private/transfer_positions': {
     request: JsonRpcRequestFor_TransferPositionsEdgeRpcParams;
     response: JSONRPCResponseFor_TransferPositionsWireResponse;
+  };
+  'private/transfer_positions_debug': {
+    request: JsonRpcRequestFor_TransferPositionsEdgeRpcParams;
+    response: JSONRPCResponseFor_TransferPositionsDebugEdgeRpcResponse;
   };
   'private/transfer_spot': {
     request: JsonRpcRequestFor_PrivateTransferSpotEdgeRpcParams;
     response: JSONRPCResponseFor_PrivateTransferSpotEdgeRpcResponse;
   };
+  'private/transfer_spot_debug': {
+    request: JsonRpcRequestFor_PrivateTransferSpotEdgeRpcParams;
+    response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_TransferActionDataEdgeRpcResponse;
+  };
   'private/transfer_spot_external': {
     request: JsonRpcRequestFor_PrivateTransferSpotExternalEdgeRpcParams;
     response: JSONRPCResponseFor_PrivateTransferSpotExternalEdgeRpcResponse;
+  };
+  'private/transfer_spot_external_debug': {
+    request: JsonRpcRequestFor_PrivateTransferSpotExternalEdgeRpcParams;
+    response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_ExternalTransferActionDataEdgeRpcResponse;
   };
   'private/update_vault_info': {
     request: JsonRpcRequestFor_UpdateVaultInfoEdgeRpcParams;
@@ -2248,6 +2339,10 @@ export interface EndpointMap {
   'private/update_whitelisted_recipients': {
     request: JsonRpcRequestFor_UpdateWhitelistedRecipientsEdgeRpcParams;
     response: JSONRPCResponseFor_UpdateWhitelistedRecipientsEdgeRpcResponse;
+  };
+  'private/update_whitelisted_recipients_debug': {
+    request: JsonRpcRequestFor_UpdateWhitelistedRecipientsEdgeRpcParams;
+    response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse;
   };
   'private/withdraw': {
     request: JsonRpcRequestFor_PrivateWithdrawEdgeRpcParams;
@@ -5143,7 +5238,7 @@ export interface JsonRpcRequestFor_SetSessionKeyEdgeRpcParams {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/set_session_key';
+  method: 'private/set_session_key_debug';
   params: SetSessionKeyEdgeRpcParams;
 }
 /**
@@ -5179,6 +5274,46 @@ export interface PrivateSetSessionKeyEdgeRPCResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SignedActionDebugEdgeRpcResponse_for_SetSessionKeyActionDataEdgeRpcResponse".
+ */
+export interface SignedActionDebugEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse {
+  action_hash: string;
+  action_typehash: string;
+  domain_separator: string;
+  encoded_data: string;
+  encoded_data_hashed: string;
+  expected_signer: string;
+  input_data: ActionInputDataEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse;
+  module: string;
+  owner: string;
+  recovered_signer?: string | null;
+  typed_data_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ActionInputDataEdgeRpcResponse_for_SetSessionKeyActionDataEdgeRpcResponse".
+ */
+export interface ActionInputDataEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse {
+  data: SetSessionKeyActionDataEdgeRpcResponse;
+  expiry: number;
+  module: string;
+  nonce: string;
+  owner: string;
+  signer: string;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SetSessionKeyActionDataEdgeRpcResponse".
+ */
+export interface SetSessionKeyActionDataEdgeRpcResponse {
+  expiry_sec: number;
+  scopes: string[];
+  session_key: string;
+  subaccounts: number[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_TransferPositionsEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_TransferPositionsEdgeRpcParams {
@@ -5186,7 +5321,7 @@ export interface JsonRpcRequestFor_TransferPositionsEdgeRpcParams {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/transfer_positions';
+  method: 'private/transfer_positions_debug';
   params: TransferPositionsEdgeRpcParams;
 }
 /**
@@ -5222,6 +5357,100 @@ export interface TransferPositionsWireResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "TransferPositionsDebugEdgeRpcResponse".
+ */
+export interface TransferPositionsDebugEdgeRpcResponse {
+  maker_result: SignedActionDebugEdgeRpcResponseFor_RfqMakerActionDataEdgeRpcResponse;
+  taker_result: SignedActionDebugEdgeRpcResponseFor_RfqTakerActionDataEdgeRpcResponse;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SignedActionDebugEdgeRpcResponse_for_RfqMakerActionDataEdgeRpcResponse".
+ */
+export interface SignedActionDebugEdgeRpcResponseFor_RfqMakerActionDataEdgeRpcResponse {
+  action_hash: string;
+  action_typehash: string;
+  domain_separator: string;
+  encoded_data: string;
+  encoded_data_hashed: string;
+  expected_signer: string;
+  input_data: ActionInputDataEdgeRpcResponseFor_RfqMakerActionDataEdgeRpcResponse;
+  module: string;
+  owner: string;
+  recovered_signer?: string | null;
+  typed_data_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ActionInputDataEdgeRpcResponse_for_RfqMakerActionDataEdgeRpcResponse".
+ */
+export interface ActionInputDataEdgeRpcResponseFor_RfqMakerActionDataEdgeRpcResponse {
+  data: RfqMakerActionDataEdgeRpcResponse;
+  expiry: number;
+  module: string;
+  nonce: string;
+  owner: string;
+  signer: string;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RfqMakerActionDataEdgeRpcResponse".
+ */
+export interface RfqMakerActionDataEdgeRpcResponse {
+  max_fee: string;
+  trades: RfqLegEdgeRpcResponse[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RfqLegEdgeRpcResponse".
+ */
+export interface RfqLegEdgeRpcResponse {
+  amount: string;
+  asset_address: string;
+  asset_sub_id: string;
+  price: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SignedActionDebugEdgeRpcResponse_for_RfqTakerActionDataEdgeRpcResponse".
+ */
+export interface SignedActionDebugEdgeRpcResponseFor_RfqTakerActionDataEdgeRpcResponse {
+  action_hash: string;
+  action_typehash: string;
+  domain_separator: string;
+  encoded_data: string;
+  encoded_data_hashed: string;
+  expected_signer: string;
+  input_data: ActionInputDataEdgeRpcResponseFor_RfqTakerActionDataEdgeRpcResponse;
+  module: string;
+  owner: string;
+  recovered_signer?: string | null;
+  typed_data_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ActionInputDataEdgeRpcResponse_for_RfqTakerActionDataEdgeRpcResponse".
+ */
+export interface ActionInputDataEdgeRpcResponseFor_RfqTakerActionDataEdgeRpcResponse {
+  data: RfqTakerActionDataEdgeRpcResponse;
+  expiry: number;
+  module: string;
+  nonce: string;
+  owner: string;
+  signer: string;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RfqTakerActionDataEdgeRpcResponse".
+ */
+export interface RfqTakerActionDataEdgeRpcResponse {
+  max_fee: string;
+  order_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_PrivateTransferSpotEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_PrivateTransferSpotEdgeRpcParams {
@@ -5229,7 +5458,7 @@ export interface JsonRpcRequestFor_PrivateTransferSpotEdgeRpcParams {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/transfer_spot';
+  method: 'private/transfer_spot_debug';
   params: PrivateTransferSpotEdgeRpcParams;
 }
 /**
@@ -5259,6 +5488,48 @@ export interface PrivateTransferSpotEdgeRpcResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SignedActionDebugEdgeRpcResponse_for_TransferActionDataEdgeRpcResponse".
+ */
+export interface SignedActionDebugEdgeRpcResponseFor_TransferActionDataEdgeRpcResponse {
+  action_hash: string;
+  action_typehash: string;
+  domain_separator: string;
+  encoded_data: string;
+  encoded_data_hashed: string;
+  expected_signer: string;
+  input_data: ActionInputDataEdgeRpcResponseFor_TransferActionDataEdgeRpcResponse;
+  module: string;
+  owner: string;
+  recovered_signer?: string | null;
+  typed_data_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ActionInputDataEdgeRpcResponse_for_TransferActionDataEdgeRpcResponse".
+ */
+export interface ActionInputDataEdgeRpcResponseFor_TransferActionDataEdgeRpcResponse {
+  data: TransferActionDataEdgeRpcResponse;
+  expiry: number;
+  module: string;
+  nonce: string;
+  owner: string;
+  signer: string;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "TransferActionDataEdgeRpcResponse".
+ */
+export interface TransferActionDataEdgeRpcResponse {
+  amount: string;
+  asset: string;
+  max_fee_usd: string;
+  new_subaccount_manager: number;
+  sub_id: string;
+  to_subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_PrivateTransferSpotExternalEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_PrivateTransferSpotExternalEdgeRpcParams {
@@ -5266,7 +5537,7 @@ export interface JsonRpcRequestFor_PrivateTransferSpotExternalEdgeRpcParams {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/transfer_spot_external';
+  method: 'private/transfer_spot_external_debug';
   params: PrivateTransferSpotExternalEdgeRpcParams;
 }
 /**
@@ -5294,6 +5565,49 @@ export interface PrivateTransferSpotExternalEdgeRpcParams {
 export interface PrivateTransferSpotExternalEdgeRpcResponse {
   op_uuid: string;
   operation_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SignedActionDebugEdgeRpcResponse_for_ExternalTransferActionDataEdgeRpcResponse".
+ */
+export interface SignedActionDebugEdgeRpcResponseFor_ExternalTransferActionDataEdgeRpcResponse {
+  action_hash: string;
+  action_typehash: string;
+  domain_separator: string;
+  encoded_data: string;
+  encoded_data_hashed: string;
+  expected_signer: string;
+  input_data: ActionInputDataEdgeRpcResponseFor_ExternalTransferActionDataEdgeRpcResponse;
+  module: string;
+  owner: string;
+  recovered_signer?: string | null;
+  typed_data_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ActionInputDataEdgeRpcResponse_for_ExternalTransferActionDataEdgeRpcResponse".
+ */
+export interface ActionInputDataEdgeRpcResponseFor_ExternalTransferActionDataEdgeRpcResponse {
+  data: ExternalTransferActionDataEdgeRpcResponse;
+  expiry: number;
+  module: string;
+  nonce: string;
+  owner: string;
+  signer: string;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ExternalTransferActionDataEdgeRpcResponse".
+ */
+export interface ExternalTransferActionDataEdgeRpcResponse {
+  amount: string;
+  asset: string;
+  max_fee_usd: string;
+  new_subaccount_manager: number;
+  recipient_address: string;
+  sub_id: string;
+  to_subaccount_id: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5334,7 +5648,7 @@ export interface JsonRpcRequestFor_UpdateWhitelistedRecipientsEdgeRpcParams {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/update_whitelisted_recipients';
+  method: 'private/update_whitelisted_recipients_debug';
   params: UpdateWhitelistedRecipientsEdgeRpcParams;
 }
 /**
@@ -5358,6 +5672,44 @@ export interface UpdateWhitelistedRecipientsEdgeRpcResponse {
   op_uuid: string;
   operation_id: number;
   whitelisted_recipients: string[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SignedActionDebugEdgeRpcResponse_for_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse".
+ */
+export interface SignedActionDebugEdgeRpcResponseFor_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse {
+  action_hash: string;
+  action_typehash: string;
+  domain_separator: string;
+  encoded_data: string;
+  encoded_data_hashed: string;
+  expected_signer: string;
+  input_data: ActionInputDataEdgeRpcResponseFor_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse;
+  module: string;
+  owner: string;
+  recovered_signer?: string | null;
+  typed_data_hash: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ActionInputDataEdgeRpcResponse_for_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse".
+ */
+export interface ActionInputDataEdgeRpcResponseFor_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse {
+  data: UpdateWhitelistedRecipientsActionDataEdgeRpcResponse;
+  expiry: number;
+  module: string;
+  nonce: string;
+  owner: string;
+  signer: string;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "UpdateWhitelistedRecipientsActionDataEdgeRpcResponse".
+ */
+export interface UpdateWhitelistedRecipientsActionDataEdgeRpcResponse {
+  add: string[];
+  remove: string[];
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6357,7 +6709,6 @@ export interface PendingDepositEntry {
   asset: string;
   block_number?: number | null;
   bridge_to_l1?: PendingDepositBridgeOrigin | null;
-  credit_nonce?: string | null;
   deposit_type: string;
   log_index?: number | null;
   manager_id: number;
