@@ -1380,6 +1380,30 @@ export type JSONRPCResponseFor_PublicGetLiveAuctionsResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_GetLiveIncidentsResponse".
+ */
+export type JSONRPCResponseFor_GetLiveIncidentsResponse = JSONRPCResponseFor_GetLiveIncidentsResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_GetLiveIncidentsResponse1 =
+  | {
+      result: GetLiveIncidentsResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MonitorType".
+ */
+export type MonitorType = 'manual' | 'auto';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "Severity".
+ */
+export type Severity = 'low' | 'medium' | 'high';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_GetMakerProgramScoresResponse".
  */
 export type JSONRPCResponseFor_GetMakerProgramScoresResponse = JSONRPCResponseFor_GetMakerProgramScoresResponse1 & {
@@ -2403,6 +2427,10 @@ export interface EndpointMap {
   'public/get_live_auctions': {
     request: JsonRpcRequestFor_NoParams;
     response: JSONRPCResponseFor_PublicGetLiveAuctionsResponse;
+  };
+  'public/get_live_incidents': {
+    request: JsonRpcRequestFor_GetLiveIncidentsParams;
+    response: JSONRPCResponseFor_GetLiveIncidentsResponse;
   };
   'public/get_maker_program_scores': {
     request: JsonRpcRequestFor_GetMakerProgramScoresParams;
@@ -6478,6 +6506,41 @@ export interface LiveAuction {
   };
   subaccount_id: number;
   timestamp: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetLiveIncidentsParams".
+ */
+export interface JsonRpcRequestFor_GetLiveIncidentsParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_live_incidents';
+  params: GetLiveIncidentsParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetLiveIncidentsParams".
+ */
+export interface GetLiveIncidentsParams {}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetLiveIncidentsResponse".
+ */
+export interface GetLiveIncidentsResponse {
+  incidents: IncidentResponse[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "IncidentResponse".
+ */
+export interface IncidentResponse {
+  creation_timestamp_sec: number;
+  label: string;
+  message: string;
+  monitor_type: MonitorType;
+  severity: Severity;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
