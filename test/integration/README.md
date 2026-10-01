@@ -8,7 +8,7 @@ the real transports and authentication flow.
 From `sdk/typescript/`, optionally point the smoke tests at an endpoint:
 
 ```bash
-HTTP_ADDRESS=http://localhost:8080 WEBSOCKET_ADDRESS=ws://localhost:3000/ws \
+HTTP_ADDRESS=http://localhost:18080 WEBSOCKET_ADDRESS=ws://localhost:13000/ws \
 npm run test:integration
 ```
 

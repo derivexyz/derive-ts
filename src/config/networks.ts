@@ -66,8 +66,8 @@ export const NETWORKS: Record<NetworkName, NetworkConfig> = {
   },
   local: {
     name: 'local',
-    httpUrl: 'http://localhost:8080',
-    wsUrl: 'ws://localhost:3000/ws',
+    httpUrl: 'http://localhost:18080',
+    wsUrl: 'ws://localhost:13000/ws',
     chainId: 31337, // anvil
     modules: { ...V3_MODULE_ADDRESSES },
     contracts: {

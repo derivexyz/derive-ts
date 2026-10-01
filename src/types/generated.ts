@@ -839,6 +839,20 @@ export type JSONRPCResponseFor_RFQPollWireResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_PendingDepositBridgeOrigin".
+ */
+export type JSONRPCResponseFor_PendingDepositBridgeOrigin = JSONRPCResponseFor_PendingDepositBridgeOrigin1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_PendingDepositBridgeOrigin1 =
+  | {
+      result: PendingDepositBridgeOrigin;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_VaultRequestAckWireResponse".
  */
 export type JSONRPCResponseFor_VaultRequestAckWireResponse = JSONRPCResponseFor_VaultRequestAckWireResponse1 & {
@@ -2275,6 +2289,10 @@ export interface EndpointMap {
   'private/poll_rfqs': {
     request: JsonRpcRequestFor_PollRfqsEdgeRpcParams;
     response: JSONRPCResponseFor_RFQPollWireResponse;
+  };
+  'private/register_bridge_deposit': {
+    request: JsonRpcRequestFor_RegisterBridgeDepositParams;
+    response: JSONRPCResponseFor_PendingDepositBridgeOrigin;
   };
   'private/reject_deposit_request': {
     request: JsonRpcRequestFor_RejectDepositRequestEdgeRpcParams;
@@ -4891,6 +4909,57 @@ export interface RFQResultPublic {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_RegisterBridgeDepositParams".
+ */
+export interface JsonRpcRequestFor_RegisterBridgeDepositParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/register_bridge_deposit';
+  params: RegisterBridgeDepositParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RegisterBridgeDepositParams".
+ */
+export interface RegisterBridgeDepositParams {
+  bridge_token: string;
+  bridge_token_decimals: number;
+  deposit_address: string;
+  expected_amount: string;
+  provider_transfer_id?: string | null;
+  rail: string;
+  source_chain_id: number;
+  source_token: string;
+  source_tx_hash: string;
+  tool?: string | null;
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PendingDepositBridgeOrigin".
+ */
+export interface PendingDepositBridgeOrigin {
+  bridge_id: string;
+  bridge_status: string;
+  delivered_at_ms?: number | null;
+  deposit_address: string;
+  expected_amount: string;
+  expires_at_ms: number;
+  provider_transfer_id?: string | null;
+  rail: string;
+  receiving_amount?: string | null;
+  receiving_token?: string | null;
+  receiving_tx_hash?: string | null;
+  source_address?: string | null;
+  source_chain_id: number;
+  source_tx_hash: string;
+  substatus: string;
+  token: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_RejectDepositRequestEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_RejectDepositRequestEdgeRpcParams {
@@ -6780,27 +6849,6 @@ export interface PendingDepositEntry {
   timestamp: number;
   tx_hash?: string | null;
   updated_at_ms: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PendingDepositBridgeOrigin".
- */
-export interface PendingDepositBridgeOrigin {
-  bridge_id: string;
-  bridge_status: string;
-  delivered_at_ms?: number | null;
-  deposit_address: string;
-  expected_amount: string;
-  expires_at_ms: number;
-  rail: string;
-  receiving_amount?: string | null;
-  receiving_token?: string | null;
-  receiving_tx_hash?: string | null;
-  source_address?: string | null;
-  source_chain_id: number;
-  source_tx_hash: string;
-  substatus: string;
-  token: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
