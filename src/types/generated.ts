@@ -6536,6 +6536,7 @@ export interface AuctionBidEvent {
   bidder_id: number;
   cash_received: string;
   discount_pnl: string;
+  operation_id: string;
   percent_liquidated: string;
   positions_realized_pnl: {
     [k: string]: string;

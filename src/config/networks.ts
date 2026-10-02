@@ -46,9 +46,8 @@ export const NETWORKS: Record<NetworkName, NetworkConfig> = {
     chainId: 1, // Ethereum L1
     modules: { ...V3_MODULE_ADDRESSES },
     contracts: {
-      // Placeholder — set the mainnet ActionManager address once published.
-      actionManager: '0x0000000000000000000000000000000000000000',
-      usdc: '0x6879287835A86F50f784313dBEd5E5cCC5bb8481',
+      actionManager: '0xE366CcA474968e33b777E13905829A3b800CFAD3',
+      usdc: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
       cash: '0x57B03E14d409ADC7fAb6CFc44b5886CAD2D5f02b',
     },
   },
