@@ -24,7 +24,7 @@ import type { ClientContext } from './context';
 export interface InstrumentsQuery {
   instrumentType: PublicAssetType;
   currency?: string;
-  /** Include expired instruments. Default false. */
+  /** Options only: list expired options instead of live ones. Default false. */
   expired?: boolean;
   page?: number;
   pageSize?: number;

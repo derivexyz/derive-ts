@@ -22,7 +22,8 @@
  * the on-chain flows). Direct only runs when RPC_URL is set.
  *
  * For sepolia faucet: https://cloud.google.com/application/web3/faucet/ethereum/sepolia.
- * You can mint USDC on sepolia via https://testnet.app.derive.xyz/developers.
+ * To mint testnet tokens, open https://testnet.app.derive.xyz, connect your wallet,
+ * and click Deposit in the top right, then Mint a token of your choice.
  *
  * Run:
  *   DERIVE_NETWORK=testnet PRIVATE_KEY=0x... [RPC_URL=https://...] \

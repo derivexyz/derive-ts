@@ -740,6 +740,25 @@ export type JSONRPCResponseFor_VaultSharesWireResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_GetWithdrawAddressesResult".
+ */
+export type JSONRPCResponseFor_GetWithdrawAddressesResult = JSONRPCResponseFor_GetWithdrawAddressesResult1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_GetWithdrawAddressesResult1 =
+  | {
+      result: GetWithdrawAddressesResult;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AddressKind".
+ */
+export type AddressKind = 'evm' | 'solana';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_WithdrawalHistoryResult".
  */
 export type JSONRPCResponseFor_WithdrawalHistoryResult = JSONRPCResponseFor_WithdrawalHistoryResult1 & {
@@ -752,6 +771,12 @@ export type JSONRPCResponseFor_WithdrawalHistoryResult1 =
   | {
       error: RPCError;
     };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "WithdrawalForwardStatus".
+ */
+export type WithdrawalForwardStatus =
+  'delivered' | 'awaiting_payout' | 'pending' | 'held' | 'in_flight' | 'failed' | 'recovered';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_PrivateLiquidateEdgeRpcResponse".
@@ -847,6 +872,20 @@ export type JSONRPCResponseFor_PendingDepositBridgeOrigin = JSONRPCResponseFor_P
 export type JSONRPCResponseFor_PendingDepositBridgeOrigin1 =
   | {
       result: PendingDepositBridgeOrigin;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_RegisterWithdrawAddressResult".
+ */
+export type JSONRPCResponseFor_RegisterWithdrawAddressResult = JSONRPCResponseFor_RegisterWithdrawAddressResult1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_RegisterWithdrawAddressResult1 =
+  | {
+      result: RegisterWithdrawAddressResult;
     }
   | {
       error: RPCError;
@@ -1918,6 +1957,7 @@ export type RpcErrorCatalog =
   | OrderConfirmationTimeout
   | EngineConfirmationTimeout
   | BackendUnavailable
+  | SettlementTooFarBehind
   | AssetNotErc20
   | SameAccountTransfer
   | MultipleCurrenciesNotSupported
@@ -1965,6 +2005,8 @@ export type RpcErrorCatalog =
   | SubaccountNotDeletable
   | SecurityModuleCannotTrade
   | WithdrawalsUnavailableForAsset
+  | WithdrawDestinationUnsupported
+  | InvalidWithdrawRecipient
   | TriggerOrderAlreadyCancelledOrExpired
   | InvalidTriggerPrice
   | TooManyTriggerOrders
@@ -2258,6 +2300,10 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_GetVaultSharesEdgeRpcParams;
     response: JSONRPCResponseFor_VaultSharesWireResponse;
   };
+  'private/get_withdraw_addresses': {
+    request: JsonRpcRequestFor_GetWithdrawAddressesParams;
+    response: JSONRPCResponseFor_GetWithdrawAddressesResult;
+  };
   'private/get_withdrawal_history': {
     request: JsonRpcRequestFor_GetWithdrawalHistoryEdgeRpcParams;
     response: JSONRPCResponseFor_WithdrawalHistoryResult;
@@ -2293,6 +2339,10 @@ export interface EndpointMap {
   'private/register_bridge_deposit': {
     request: JsonRpcRequestFor_RegisterBridgeDepositParams;
     response: JSONRPCResponseFor_PendingDepositBridgeOrigin;
+  };
+  'private/register_withdraw_address': {
+    request: JsonRpcRequestFor_RegisterWithdrawAddressParams;
+    response: JSONRPCResponseFor_RegisterWithdrawAddressResult;
   };
   'private/reject_deposit_request': {
     request: JsonRpcRequestFor_RejectDepositRequestEdgeRpcParams;
@@ -4508,6 +4558,44 @@ export interface VaultConfig {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetWithdrawAddressesParams".
+ */
+export interface JsonRpcRequestFor_GetWithdrawAddressesParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/get_withdraw_addresses';
+  params: GetWithdrawAddressesParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetWithdrawAddressesParams".
+ */
+export interface GetWithdrawAddressesParams {
+  wallet: Address;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetWithdrawAddressesResult".
+ */
+export interface GetWithdrawAddressesResult {
+  withdraw_addresses: WithdrawAddressEntry[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "WithdrawAddressEntry".
+ */
+export interface WithdrawAddressEntry {
+  address_kind: AddressKind;
+  chain_id: number;
+  recipient: string;
+  recipient_display: string;
+  whitelisted: boolean;
+  withdraw_address: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_GetWithdrawalHistoryEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_GetWithdrawalHistoryEdgeRpcParams {
@@ -4546,12 +4634,28 @@ export interface WithdrawalEntry {
   batch_uuid: string;
   erc20_address: string;
   fee: string;
+  forward?: WithdrawalForward | null;
   operation_id: string;
   recipient: string;
   subaccount_id: number;
   timestamp: number;
   tx_hash?: string | null;
   wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "WithdrawalForward".
+ */
+export interface WithdrawalForward {
+  amount_forwarded: string | null;
+  chain_id: number;
+  destination_tx?: string | null;
+  forward_tx?: string | null;
+  hold_reason?: string | null;
+  message_id?: string | null;
+  rail?: string | null;
+  recipient: string;
+  status: WithdrawalForwardStatus;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -4956,6 +5060,47 @@ export interface PendingDepositBridgeOrigin {
   source_chain_id: number;
   source_tx_hash: string;
   substatus: string;
+  token: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_RegisterWithdrawAddressParams".
+ */
+export interface JsonRpcRequestFor_RegisterWithdrawAddressParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/register_withdraw_address';
+  params: RegisterWithdrawAddressParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RegisterWithdrawAddressParams".
+ */
+export interface RegisterWithdrawAddressParams {
+  chain_id: number;
+  recipient: string;
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RegisterWithdrawAddressResult".
+ */
+export interface RegisterWithdrawAddressResult {
+  chain_id: number;
+  recipient: string;
+  recipient_display: string;
+  routes: ForwardedToken[];
+  withdraw_address: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ForwardedToken".
+ */
+export interface ForwardedToken {
+  bridge_type: string;
+  symbol: string;
   token: string;
 }
 /**
@@ -8214,6 +8359,15 @@ export interface BackendUnavailable {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SettlementTooFarBehind".
+ */
+export interface SettlementTooFarBehind {
+  code: 9003;
+  data?: string | null;
+  message: 'Settlement is too far behind, retry later';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "AssetNotErc20".
  */
 export interface AssetNotErc20 {
@@ -8634,6 +8788,24 @@ export interface WithdrawalsUnavailableForAsset {
   code: 11045;
   data?: string | null;
   message: 'Withdrawals for this asset are not yet available';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "WithdrawDestinationUnsupported".
+ */
+export interface WithdrawDestinationUnsupported {
+  code: 11046;
+  data?: string | null;
+  message: 'Withdrawals are not forwarded to this chain';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InvalidWithdrawRecipient".
+ */
+export interface InvalidWithdrawRecipient {
+  code: 11047;
+  data?: string | null;
+  message: 'Recipient is not a valid address on the destination chain';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema

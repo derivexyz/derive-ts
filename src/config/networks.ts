@@ -3,8 +3,9 @@ import type { NetworkConfig, NetworkName } from './types';
 
 /**
  * The mintable testnet ERC-20s, read from `public/get_all_currencies`
- * (`spot[].erc20.underlying_erc20`) on Sepolia. Mint them by connecting a
- * wallet at https://testnet.app.derive.xyz/developers.
+ * (`spot[].erc20.underlying_erc20`) on Sepolia. Mint them at
+ * https://testnet.app.derive.xyz: connect a wallet, click Deposit in the top
+ * right, then Mint.
  */
 const TESTNET_TOKENS: Record<string, string> = {
   AUSD: '0x8f6d7a5a3aC3BE597E3dA3F0edF0C1A7Cf3289E2',
