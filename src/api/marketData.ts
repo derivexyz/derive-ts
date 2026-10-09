@@ -299,6 +299,12 @@ export class MarketDataApi {
     });
   }
 
+  /** Ids of all subaccounts owned by `wallet` — `[]` if it has none. */
+  async getSubaccounts(wallet: string): Promise<number[]> {
+    const result = await this.ctx.send('public/get_subaccounts', { wallet });
+    return result.subaccount_ids;
+  }
+
   /**
    * Mark-to-market value and margin for a subaccount, computed on the margin
    * basis actually in effect (see `is_delayed_liquidation` in the result).

@@ -528,6 +528,20 @@ export type JSONRPCResponseFor_MultipleVaultRequestsWireResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_RFQPollWireResponse".
+ */
+export type JSONRPCResponseFor_RFQPollWireResponse = JSONRPCResponseFor_RFQPollWireResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_RFQPollWireResponse1 =
+  | {
+      result: RFQPollWireResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_GetMarginRPCResponse".
  */
 export type JSONRPCResponseFor_GetMarginRPCResponse = JSONRPCResponseFor_GetMarginRPCResponse1 & {
@@ -844,20 +858,6 @@ export type JSONRPCResponseFor_QuotePollWireResponse = JSONRPCResponseFor_QuoteP
 export type JSONRPCResponseFor_QuotePollWireResponse1 =
   | {
       result: QuotePollWireResponse;
-    }
-  | {
-      error: RPCError;
-    };
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JSONRPCResponse_for_RFQPollWireResponse".
- */
-export type JSONRPCResponseFor_RFQPollWireResponse = JSONRPCResponseFor_RFQPollWireResponse1 & {
-  id: JsonRpcId;
-};
-export type JSONRPCResponseFor_RFQPollWireResponse1 =
-  | {
-      result: RFQPollWireResponse;
     }
   | {
       error: RPCError;
@@ -2232,12 +2232,16 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_GetLiveVaultRequestsEdgeRpcParams;
     response: JSONRPCResponseFor_MultipleVaultRequestsWireResponse;
   };
+  'private/get_maker_rfq_history': {
+    request: JsonRpcRequestFor_GetMakerRfqHistoryEdgeRpcParams;
+    response: JSONRPCResponseFor_RFQPollWireResponse;
+  };
   'private/get_margin': {
     request: JsonRpcRequestFor_PrivateGetMarginEdgeRpcParams;
     response: JSONRPCResponseFor_GetMarginRPCResponse;
   };
   'private/get_mmp_config': {
-    request: JsonRpcRequestFor_MmpScopeEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateGetMmpConfig;
     response: JSONRPCResponseFor_ArrayOf_MmpConfigResult;
   };
   'private/get_open_orders': {
@@ -2317,15 +2321,15 @@ export interface EndpointMap {
     response: JSONRPCResponseFor_VaultSettleWireResponse;
   };
   'private/order': {
-    request: JsonRpcRequestFor_CreateOrderEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateOrder;
     response: JSONRPCResponseFor_OrderCreatedWireResponse;
   };
   'private/order_debug': {
-    request: JsonRpcRequestFor_CreateOrderEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateOrderDebug;
     response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_OrderActionDataEdgeRpcResponse;
   };
   'private/order_quote': {
-    request: JsonRpcRequestFor_OrderQuoteEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateOrderQuote;
     response: JSONRPCResponseFor_OrderQuoteEdgeRpcResponse;
   };
   'private/poll_quotes': {
@@ -2365,7 +2369,7 @@ export interface EndpointMap {
     response: JSONRPCResponseFor_VaultRequestAckWireResponse;
   };
   'private/reset_mmp': {
-    request: JsonRpcRequestFor_MmpScopeEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateResetMmp;
     response: JSONRPCResponseFor_ResetMmpResponse;
   };
   'private/rfq_get_best_quote': {
@@ -2393,35 +2397,35 @@ export interface EndpointMap {
     response: JSONRPCResponseFor_SetMmpConfigResponse;
   };
   'private/set_session_key': {
-    request: JsonRpcRequestFor_SetSessionKeyEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateSetSessionKey;
     response: JSONRPCResponseFor_PrivateSetSessionKeyEdgeRPCResponse;
   };
   'private/set_session_key_debug': {
-    request: JsonRpcRequestFor_SetSessionKeyEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateSetSessionKeyDebug;
     response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse;
   };
   'private/transfer_positions': {
-    request: JsonRpcRequestFor_TransferPositionsEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateTransferPositions;
     response: JSONRPCResponseFor_TransferPositionsWireResponse;
   };
   'private/transfer_positions_debug': {
-    request: JsonRpcRequestFor_TransferPositionsEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateTransferPositionsDebug;
     response: JSONRPCResponseFor_TransferPositionsDebugEdgeRpcResponse;
   };
   'private/transfer_spot': {
-    request: JsonRpcRequestFor_PrivateTransferSpotEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateTransferSpot;
     response: JSONRPCResponseFor_PrivateTransferSpotEdgeRpcResponse;
   };
   'private/transfer_spot_debug': {
-    request: JsonRpcRequestFor_PrivateTransferSpotEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateTransferSpotDebug;
     response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_TransferActionDataEdgeRpcResponse;
   };
   'private/transfer_spot_external': {
-    request: JsonRpcRequestFor_PrivateTransferSpotExternalEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateTransferSpotExternal;
     response: JSONRPCResponseFor_PrivateTransferSpotExternalEdgeRpcResponse;
   };
   'private/transfer_spot_external_debug': {
-    request: JsonRpcRequestFor_PrivateTransferSpotExternalEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateTransferSpotExternalDebug;
     response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_ExternalTransferActionDataEdgeRpcResponse;
   };
   'private/update_vault_info': {
@@ -2429,11 +2433,11 @@ export interface EndpointMap {
     response: JSONRPCResponseFor_OffchainAckWireResponse;
   };
   'private/update_whitelisted_recipients': {
-    request: JsonRpcRequestFor_UpdateWhitelistedRecipientsEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateUpdateWhitelistedRecipients;
     response: JSONRPCResponseFor_UpdateWhitelistedRecipientsEdgeRpcResponse;
   };
   'private/update_whitelisted_recipients_debug': {
-    request: JsonRpcRequestFor_UpdateWhitelistedRecipientsEdgeRpcParams;
+    request: JsonRpcRequestFor_PrivateUpdateWhitelistedRecipientsDebug;
     response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse;
   };
   'private/withdraw': {
@@ -2449,7 +2453,7 @@ export interface EndpointMap {
     response: JSONRPCResponseFor_QuoteExecuteDebugResult;
   };
   'public/get_all_currencies': {
-    request: JsonRpcRequestFor_NoParams;
+    request: JsonRpcRequestFor_PublicGetAllCurrencies;
     response: JSONRPCResponseFor_ArrayOf_CurrencyResponse;
   };
   'public/get_all_instruments': {
@@ -2457,7 +2461,7 @@ export interface EndpointMap {
     response: JSONRPCResponseFor_GetAllInstrumentsResponse;
   };
   'public/get_all_live_instruments': {
-    request: JsonRpcRequestFor_NoParams;
+    request: JsonRpcRequestFor_PublicGetAllLiveInstruments;
     response: JSONRPCResponseFor_ArrayOf_String;
   };
   'public/get_all_referral_codes': {
@@ -2493,7 +2497,7 @@ export interface EndpointMap {
     response: JSONRPCResponseFor_LiquidationHistoryResult;
   };
   'public/get_live_auctions': {
-    request: JsonRpcRequestFor_NoParams;
+    request: JsonRpcRequestFor_PublicGetLiveAuctions;
     response: JSONRPCResponseFor_PublicGetLiveAuctionsResponse;
   };
   'public/get_live_incidents': {
@@ -2533,8 +2537,12 @@ export interface EndpointMap {
     response: JSONRPCResponseFor_GetReferralPerformanceResult;
   };
   'public/get_risk_universes': {
-    request: JsonRpcRequestFor_NoParams;
+    request: JsonRpcRequestFor_PublicGetRiskUniverses;
     response: JSONRPCResponseFor_ArrayOf_RiskUniverseResponse;
+  };
+  'public/get_subaccounts': {
+    request: JsonRpcRequestFor_PublicGetSubaccountsEdgeRpcParams;
+    response: JSONRPCResponseFor_PrivateGetSubaccountsRPCResponse;
   };
   'public/get_ticker': {
     request: JsonRpcRequestFor_GetTickerEdgeRpcParams;
@@ -2545,7 +2553,7 @@ export interface EndpointMap {
     response: JSONRPCResponseFor_GetTickersResponse;
   };
   'public/get_time': {
-    request: JsonRpcRequestFor_NoParams;
+    request: JsonRpcRequestFor_PublicGetTime;
     response: JSONRPCResponseForInt64;
   };
   'public/get_trade_history': {
@@ -2581,7 +2589,7 @@ export interface EndpointMap {
     response: JSONRPCResponseFor_PublicGetWalletsFromSessionKeyRPCResponse;
   };
   'public/getRateLimits': {
-    request: JsonRpcRequestFor_NoParams;
+    request: JsonRpcRequestFor_PublicGetRateLimits;
     response: JSONRPCResponseFor_RateLimitResult;
   };
   'public/login': {
@@ -2593,7 +2601,7 @@ export interface EndpointMap {
     response: JSONRPCResponseFor_PublicMarginWatchResponse;
   };
   'public/order_quote': {
-    request: JsonRpcRequestFor_OrderQuoteEdgeRpcParams;
+    request: JsonRpcRequestFor_PublicOrderQuote;
     response: JSONRPCResponseFor_OrderQuoteEdgeRpcResponse;
   };
   'public/register_deposit_address': {
@@ -3890,6 +3898,70 @@ export interface GetLiveVaultRequestsEdgeRpcParams {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetMakerRfqHistoryEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_GetMakerRfqHistoryEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/get_maker_rfq_history';
+  params: GetMakerRfqHistoryEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetMakerRfqHistoryEdgeRpcParams".
+ */
+export interface GetMakerRfqHistoryEdgeRpcParams {
+  from_timestamp?: number | null;
+  page?: number;
+  page_size?: number;
+  rfq_id?: string | null;
+  rfq_subaccount_id?: number | null;
+  status?: RFQStatus | null;
+  subaccount_id: number;
+  to_timestamp?: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RFQPollWireResponse".
+ */
+export interface RFQPollWireResponse {
+  pagination: PaginationInfo;
+  rfqs: RFQResultPublic[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RFQResultPublic".
+ */
+export interface RFQResultPublic {
+  cancel_reason: RFQCancelReason;
+  creation_timestamp: number;
+  fill_rate: string | null;
+  filled_direction?: Direction | null;
+  filled_pct: string;
+  last_update_timestamp: number;
+  legs: LegUnpricedParams[];
+  partial_fill_step: string;
+  recent_fill_rate: string | null;
+  rfq_id: string;
+  status: RFQStatus;
+  subaccount_id: number;
+  total_cost: string | null;
+  valid_until: number;
+  wallet: Address;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "LegUnpricedParams".
+ */
+export interface LegUnpricedParams {
+  amount: string;
+  direction: Direction;
+  instrument_name: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_PrivateGetMarginEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_PrivateGetMarginEdgeRpcParams {
@@ -3940,14 +4012,14 @@ export interface GetMarginRPCResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_MmpScopeEdgeRpcParams".
+ * via the `definition` "JsonRpcRequest_for_PrivateGetMmpConfig".
  */
-export interface JsonRpcRequestFor_MmpScopeEdgeRpcParams {
+export interface JsonRpcRequestFor_PrivateGetMmpConfig {
   headers?: {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/reset_mmp';
+  method: 'private/get_mmp_config';
   params: MmpScopeEdgeRpcParams;
 }
 /**
@@ -4212,15 +4284,6 @@ export interface RFQPrivateWireResponse {
   total_cost: string | null;
   valid_until: number;
   wallet: Address;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "LegUnpricedParams".
- */
-export interface LegUnpricedParams {
-  amount: string;
-  direction: Direction;
-  instrument_name: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -4719,14 +4782,14 @@ export interface MintSharesEdgeRpcParams {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_CreateOrderEdgeRpcParams".
+ * via the `definition` "JsonRpcRequest_for_PrivateOrder".
  */
-export interface JsonRpcRequestFor_CreateOrderEdgeRpcParams {
+export interface JsonRpcRequestFor_PrivateOrder {
   headers?: {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/order_debug';
+  method: 'private/order';
   params: CreateOrderEdgeRpcParams;
 }
 /**
@@ -4801,6 +4864,18 @@ export interface TradeWireResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PrivateOrderDebug".
+ */
+export interface JsonRpcRequestFor_PrivateOrderDebug {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/order_debug';
+  params: CreateOrderEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "SignedActionDebugEdgeRpcResponse_for_OrderActionDataEdgeRpcResponse".
  */
 export interface SignedActionDebugEdgeRpcResponseFor_OrderActionDataEdgeRpcResponse {
@@ -4844,14 +4919,14 @@ export interface OrderActionDataEdgeRpcResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_OrderQuoteEdgeRpcParams".
+ * via the `definition` "JsonRpcRequest_for_PrivateOrderQuote".
  */
-export interface JsonRpcRequestFor_OrderQuoteEdgeRpcParams {
+export interface JsonRpcRequestFor_PrivateOrderQuote {
   headers?: {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'public/order_quote';
+  method: 'private/order_quote';
   params: OrderQuoteEdgeRpcParams;
 }
 /**
@@ -4981,35 +5056,6 @@ export interface PollRfqsEdgeRpcParams {
   status?: string | null;
   subaccount_id: number;
   to_timestamp?: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "RFQPollWireResponse".
- */
-export interface RFQPollWireResponse {
-  pagination: PaginationInfo;
-  rfqs: RFQResultPublic[];
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "RFQResultPublic".
- */
-export interface RFQResultPublic {
-  cancel_reason: RFQCancelReason;
-  creation_timestamp: number;
-  fill_rate: string | null;
-  filled_direction?: Direction | null;
-  filled_pct: string;
-  last_update_timestamp: number;
-  legs: LegUnpricedParams[];
-  partial_fill_step: string;
-  recent_fill_rate: string | null;
-  rfq_id: string;
-  status: RFQStatus;
-  subaccount_id: number;
-  total_cost: string | null;
-  valid_until: number;
-  wallet: Address;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5285,6 +5331,18 @@ export interface RequestVaultWithdrawEdgeRpcParams {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PrivateResetMmp".
+ */
+export interface JsonRpcRequestFor_PrivateResetMmp {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/reset_mmp';
+  params: MmpScopeEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_RfqGetBestQuoteEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_RfqGetBestQuoteEdgeRpcParams {
@@ -5473,14 +5531,14 @@ export interface SetMmpConfigResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_SetSessionKeyEdgeRpcParams".
+ * via the `definition` "JsonRpcRequest_for_PrivateSetSessionKey".
  */
-export interface JsonRpcRequestFor_SetSessionKeyEdgeRpcParams {
+export interface JsonRpcRequestFor_PrivateSetSessionKey {
   headers?: {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/set_session_key_debug';
+  method: 'private/set_session_key';
   params: SetSessionKeyEdgeRpcParams;
 }
 /**
@@ -5513,6 +5571,18 @@ export interface PrivateSetSessionKeyEdgeRPCResponse {
   protocol_scopes: string[];
   public_session_key: string;
   subaccount_ids: number[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PrivateSetSessionKeyDebug".
+ */
+export interface JsonRpcRequestFor_PrivateSetSessionKeyDebug {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/set_session_key_debug';
+  params: SetSessionKeyEdgeRpcParams;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5556,14 +5626,14 @@ export interface SetSessionKeyActionDataEdgeRpcResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_TransferPositionsEdgeRpcParams".
+ * via the `definition` "JsonRpcRequest_for_PrivateTransferPositions".
  */
-export interface JsonRpcRequestFor_TransferPositionsEdgeRpcParams {
+export interface JsonRpcRequestFor_PrivateTransferPositions {
   headers?: {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/transfer_positions_debug';
+  method: 'private/transfer_positions';
   params: TransferPositionsEdgeRpcParams;
 }
 /**
@@ -5596,6 +5666,18 @@ export interface SignedTransferQuoteEdgeRpcParams {
 export interface TransferPositionsWireResponse {
   maker_quote: QuotePrivateWireResponse;
   taker_quote: QuotePrivateWireResponse;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PrivateTransferPositionsDebug".
+ */
+export interface JsonRpcRequestFor_PrivateTransferPositionsDebug {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/transfer_positions_debug';
+  params: TransferPositionsEdgeRpcParams;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5693,14 +5775,14 @@ export interface RfqTakerActionDataEdgeRpcResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_PrivateTransferSpotEdgeRpcParams".
+ * via the `definition` "JsonRpcRequest_for_PrivateTransferSpot".
  */
-export interface JsonRpcRequestFor_PrivateTransferSpotEdgeRpcParams {
+export interface JsonRpcRequestFor_PrivateTransferSpot {
   headers?: {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/transfer_spot_debug';
+  method: 'private/transfer_spot';
   params: PrivateTransferSpotEdgeRpcParams;
 }
 /**
@@ -5727,6 +5809,18 @@ export interface PrivateTransferSpotEdgeRpcParams {
 export interface PrivateTransferSpotEdgeRpcResponse {
   op_uuid: string;
   operation_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PrivateTransferSpotDebug".
+ */
+export interface JsonRpcRequestFor_PrivateTransferSpotDebug {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/transfer_spot_debug';
+  params: PrivateTransferSpotEdgeRpcParams;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5772,14 +5866,14 @@ export interface TransferActionDataEdgeRpcResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_PrivateTransferSpotExternalEdgeRpcParams".
+ * via the `definition` "JsonRpcRequest_for_PrivateTransferSpotExternal".
  */
-export interface JsonRpcRequestFor_PrivateTransferSpotExternalEdgeRpcParams {
+export interface JsonRpcRequestFor_PrivateTransferSpotExternal {
   headers?: {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/transfer_spot_external_debug';
+  method: 'private/transfer_spot_external';
   params: PrivateTransferSpotExternalEdgeRpcParams;
 }
 /**
@@ -5807,6 +5901,18 @@ export interface PrivateTransferSpotExternalEdgeRpcParams {
 export interface PrivateTransferSpotExternalEdgeRpcResponse {
   op_uuid: string;
   operation_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PrivateTransferSpotExternalDebug".
+ */
+export interface JsonRpcRequestFor_PrivateTransferSpotExternalDebug {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/transfer_spot_external_debug';
+  params: PrivateTransferSpotExternalEdgeRpcParams;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5883,14 +5989,14 @@ export interface OffchainAckWireResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_UpdateWhitelistedRecipientsEdgeRpcParams".
+ * via the `definition` "JsonRpcRequest_for_PrivateUpdateWhitelistedRecipients".
  */
-export interface JsonRpcRequestFor_UpdateWhitelistedRecipientsEdgeRpcParams {
+export interface JsonRpcRequestFor_PrivateUpdateWhitelistedRecipients {
   headers?: {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'private/update_whitelisted_recipients_debug';
+  method: 'private/update_whitelisted_recipients';
   params: UpdateWhitelistedRecipientsEdgeRpcParams;
 }
 /**
@@ -5914,6 +6020,18 @@ export interface UpdateWhitelistedRecipientsEdgeRpcResponse {
   op_uuid: string;
   operation_id: number;
   whitelisted_recipients: string[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PrivateUpdateWhitelistedRecipientsDebug".
+ */
+export interface JsonRpcRequestFor_PrivateUpdateWhitelistedRecipientsDebug {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/update_whitelisted_recipients_debug';
+  params: UpdateWhitelistedRecipientsEdgeRpcParams;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6059,14 +6177,14 @@ export interface QuoteExecuteDebugResult {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_NoParams".
+ * via the `definition` "JsonRpcRequest_for_PublicGetAllCurrencies".
  */
-export interface JsonRpcRequestFor_NoParams {
+export interface JsonRpcRequestFor_PublicGetAllCurrencies {
   headers?: {
     [k: string]: unknown;
   } | null;
   id: JsonRpcId;
-  method: 'public/get_time';
+  method: 'public/get_all_currencies';
   params: NoParams;
 }
 /**
@@ -6277,6 +6395,18 @@ export interface PerpPublicDetails {
 export interface PaginationInfo2 {
   count: number;
   num_pages: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicGetAllLiveInstruments".
+ */
+export interface JsonRpcRequestFor_PublicGetAllLiveInstruments {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_all_live_instruments';
+  params: NoParams;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6698,6 +6828,18 @@ export interface AuctionBidEvent {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicGetLiveAuctions".
+ */
+export interface JsonRpcRequestFor_PublicGetLiveAuctions {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_live_auctions';
+  params: NoParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "PublicGetLiveAuctionsResponse".
  */
 export interface PublicGetLiveAuctionsResponse {
@@ -7082,6 +7224,18 @@ export interface ReferralPerformanceByInstrumentType {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicGetRiskUniverses".
+ */
+export interface JsonRpcRequestFor_PublicGetRiskUniverses {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_risk_universes';
+  params: NoParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "RiskUniverseResponse".
  */
 export interface RiskUniverseResponse {
@@ -7121,6 +7275,25 @@ export interface SecurityModuleDetails {
   cash_asset: string;
   cash_currency: string;
   subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicGetSubaccountsEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_PublicGetSubaccountsEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_subaccounts';
+  params: PublicGetSubaccountsEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicGetSubaccountsEdgeRpcParams".
+ */
+export interface PublicGetSubaccountsEdgeRpcParams {
+  wallet: Address;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -7219,6 +7392,18 @@ export interface GetTickersResponse {
   tickers: {
     [k: string]: TickerSlimSnapshot;
   };
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicGetTime".
+ */
+export interface JsonRpcRequestFor_PublicGetTime {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_time';
+  params: NoParams;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -7522,6 +7707,18 @@ export interface PublicGetWalletsFromSessionKeyRPCResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicGetRateLimits".
+ */
+export interface JsonRpcRequestFor_PublicGetRateLimits {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/getRateLimits';
+  params: NoParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "RateLimitResult".
  */
 export interface RateLimitResult {
@@ -7598,6 +7795,18 @@ export interface PublicMarginWatchResponse {
   subaccount_id: number;
   subaccount_value: string;
   valuation_timestamp: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicOrderQuote".
+ */
+export interface JsonRpcRequestFor_PublicOrderQuote {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/order_quote';
+  params: OrderQuoteEdgeRpcParams;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
