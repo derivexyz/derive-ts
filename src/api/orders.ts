@@ -27,8 +27,9 @@ export interface PlaceOrderParams {
   limitPrice: DecimalLike;
   /**
    * Highest fee per unit the signature allows (the exchange charges its
-   * normal fee regardless — this only caps it). Defaults to 3x the
-   * instrument's current taker cost; pass explicitly for market makers.
+   * normal fee regardless — this only caps it). Defaults to a loose bound
+   * that covers the taker fee, feed moves and partial fills; pass it
+   * explicitly for a tighter cap.
    */
   maxFee?: DecimalLike;
   orderType?: 'limit' | 'market';
@@ -101,7 +102,10 @@ export class OrdersApi {
     const amount = toE18(params.amount);
     if (amount <= 0n) throw new Error('order amount must be positive');
     const limitPrice = toE18(params.limitPrice);
-    const maxFee = toE18(params.maxFee ?? (await this.defaultMaxFee(params.instrumentName, params.limitPrice)));
+    const extraFee = params.extraFee === undefined ? undefined : toE18(params.extraFee);
+    const maxFee = toE18(
+      params.maxFee ?? (await this.defaultMaxFee(params.instrumentName, { limitPrice, amount, extraFee })),
+    );
     if (maxFee < 0n) throw new Error('maxFee must not be negative');
 
     const instrument = await this.instrument(params.instrumentName);
@@ -153,7 +157,7 @@ export class OrdersApi {
       reject_post_only: params.rejectPostOnly,
       is_atomic_signing: params.isAtomicSigning,
       client: params.clientOrderId,
-      extra_fee: params.extraFee === undefined ? undefined : formatUnits(toE18(params.extraFee), 18),
+      extra_fee: extraFee === undefined ? undefined : formatUnits(extraFee, 18),
       reject_timestamp: params.rejectTimestamp,
       algo_type: params.algoType,
       algo_duration_sec: params.algoDurationSec,
@@ -261,22 +265,37 @@ export class OrdersApi {
 
   /**
    * The signed max fee must cover whatever the exchange charges at match
-   * time or the order is rejected. The exchange bounds the per-unit fee at
-   * `2 x taker_fee_rate x max(index, limit) + base_fee`, where `index` is
-   * the underlying SPOT feed (`ticker.I`) — NOT the option mark
-   * (`ticker.M`). We mirror that and apply a 3x headroom for feed moves
-   * between signing and matching.
+   * time or the order is rejected. The exchange bounds the per-unit fee of
+   * a taker match at
+   * `2 x taker_fee_rate x index + base_fee / filled_amount + extra_fee / amount`,
+   * where `index` is the underlying SPOT feed (`ticker.I`) — NOT the option
+   * mark (`ticker.M`). The base fee is charged once per match, so its
+   * per-unit share grows as the fill gets smaller.
+   *
+   * The default is deliberately loose: 3x the rate term for feed moves
+   * between signing and matching, and the base fee spread over a fill of
+   * 1/1000 of the order (never below one amount step). This keeps partial
+   * fills valid and limits the extra slack to 1000 base fees at any size.
    */
-  private async defaultMaxFee(instrumentName: string, limitPrice: DecimalLike): Promise<string> {
+  private async defaultMaxFee(
+    instrumentName: string,
+    order: { limitPrice: bigint; amount: bigint; extraFee?: bigint },
+  ): Promise<string> {
     const [instrument, ticker] = await Promise.all([
       this.instrument(instrumentName),
       this.marketData.getTicker(instrumentName),
     ]);
-    const feeBasis = Math.max(Number(ticker.I), Number(limitPrice));
-    const perUnitTakerCost = feeBasis * Number(instrument.taker_fee_rate) + Number(instrument.base_fee);
+    const decimal = (e18: bigint) => Number(formatUnits(e18, 18));
+    const amount = decimal(order.amount);
+    const feeBasis = Math.max(Number(ticker.I), decimal(order.limitPrice));
+    const smallestCoveredFill = Math.max(Number(instrument.amount_step), amount / 1000);
+    const perUnitTakerCost =
+      3 * feeBasis * Number(instrument.taker_fee_rate) +
+      Number(instrument.base_fee) / smallestCoveredFill +
+      decimal(order.extraFee ?? 0n) / amount;
     if (!Number.isFinite(perUnitTakerCost) || perUnitTakerCost < 0) {
       throw new Error(`cannot derive a default max fee for ${instrumentName} — pass maxFee explicitly`);
     }
-    return (perUnitTakerCost * 3).toFixed(6);
+    return perUnitTakerCost.toFixed(6);
   }
 }

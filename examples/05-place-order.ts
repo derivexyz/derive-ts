@@ -43,8 +43,8 @@ run(async () => {
 
     // maxFee is the fee cap baked into the signature: the exchange charges its
     // normal taker/maker fee regardless, but can never take more than you signed.
-    // Left unset it defaults to 3x the current taker cost — fine headroom for a
-    // one-off order; market makers should pass it explicitly.
+    // Left unset it defaults to a loose cap that covers the taker fee, feed
+    // moves and partial fills; pass it explicitly for a tighter cap.
     const { order } = await client.orders.place({
       subaccountId,
       instrumentName,

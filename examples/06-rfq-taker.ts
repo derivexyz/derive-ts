@@ -49,8 +49,9 @@ run(async () => {
 
     // 1. Request quotes: one leg, buying SIZE contracts. Amounts are always
     //    positive — direction carries the sign. maxTotalCost (here: 5% above
-    //    mark) makes the exchange reject any fill costing more, a second
-    //    safety net on top of picking the best quote ourselves.
+    //    mark) hides costlier quotes from getBestQuote and the best-quotes
+    //    channel. It is not an execution limit: pollQuotes below returns every
+    //    quote, and executeQuote fills any valid quote.
     const rfq = await client.rfq.sendRfq({
       subaccountId,
       legs: [{ instrumentName: INSTRUMENT, amount: SIZE, direction: 'buy' }],
@@ -82,7 +83,7 @@ run(async () => {
 
     // 4. Execute it. maxFee (USD) is part of the signed payload — the trade is
     //    rejected rather than charged more. enableTakerProtection additionally
-    //    rejects the fill if a better quote has since arrived.
+    //    rejects the fill if the orderbook offers the same legs for less.
     const fill = await client.rfq.executeQuote({
       subaccountId,
       quote: best,

@@ -37,7 +37,8 @@ export class HttpTransport {
     }
 
     logger('debug', `HTTP ${method}`, params);
-    let response: Response;
+    let response: Response | undefined;
+    let body: RawRpcResponse;
     try {
       response = await fetch(`${baseUrl}/${method}`, {
         method: 'POST',
@@ -46,20 +47,18 @@ export class HttpTransport {
         // Never follow a redirect: it would forward the signed X-Derive*
         // auth headers to the redirect target.
         redirect: 'error',
+        // Also bounds the body read below, not only the response headers.
         signal: AbortSignal.timeout(timeoutMs),
       });
+      body = (await response.json()) as RawRpcResponse;
     } catch (cause) {
       if (cause instanceof DOMException && cause.name === 'TimeoutError') {
         throw new DeriveTimeoutError(`${method}: no response within ${timeoutMs}ms`);
       }
+      if (response) {
+        throw new Error(`${method}: non-JSON response with HTTP status ${response.status}`, { cause });
+      }
       throw cause;
-    }
-
-    let body: RawRpcResponse;
-    try {
-      body = (await response.json()) as RawRpcResponse;
-    } catch {
-      throw new Error(`${method}: non-JSON response with HTTP status ${response.status}`);
     }
     logger('debug', `HTTP ${method} response (${response.status})`, body);
     return unwrapResponse<ResultFor<M>>(method, body);

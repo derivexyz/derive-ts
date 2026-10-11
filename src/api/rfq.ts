@@ -52,7 +52,10 @@ export interface ExecuteQuoteParams {
   quote: Pick<QuoteResultPublic, 'rfq_id' | 'quote_id' | 'direction' | 'legs'>;
   /** Worst execution fee the taker accepts, in USD. */
   maxFee: DecimalLike;
-  /** Reject the fill if the quote is no longer the best available price. */
+  /**
+   * Reject the fill (`QuoteTakerCostTooHigh`) if the orderbook fills the same
+   * legs at a lower total cost. No check when the book cannot fill every leg.
+   */
   enableTakerProtection?: boolean;
   label?: string;
   nonce?: string;
@@ -70,10 +73,11 @@ interface ResolvedLeg {
 }
 
 /**
- * The API rejects quote signatures expiring before the RFQ's full 600s
- * quoting window + 60s buffer; 700s covers a quote sent at RFQ creation.
+ * The API rejects quote and execute signatures that expire less than 60s
+ * after the RFQ's `valid_until`, and more than one day from now. One hour
+ * covers the RFQ window on every network, even for a brand-new RFQ.
  */
-const DEFAULT_QUOTE_EXPIRY_SEC = 700;
+const DEFAULT_QUOTE_EXPIRY_SEC = 3600;
 
 /**
  * RFQ trading: takers request quotes on multi-leg packages, makers answer
@@ -89,14 +93,27 @@ export class RfqApi {
 
   // ── Taker ──────────────────────────────────────────────────────────
 
-  /** Requests quotes for a package of legs. Unsigned — only the eventual execute is. */
+  /**
+   * Requests quotes for a package of legs. Unsigned — only the eventual execute is.
+   *
+   * `maxTotalCost` and `minTotalCost` are quote filters, not execution limits.
+   * Only `getBestQuote` and the `{subaccount_id}.best.quotes` channel apply them.
+   * `pollQuotes` returns every quote, and `executeQuote` fills any valid quote.
+   * Check the cost yourself before you execute.
+   *
+   * Total cost is in USD for the full RFQ size, from the taker's side:
+   * positive means you pay, negative means you receive.
+   */
   async sendRfq(params: {
     subaccountId: number;
     legs: RfqLeg[];
     label?: string;
-    /** Reject fills costing the taker more than this (buy-side cap). */
+    /** When you buy: hide quotes that cost more than this. */
     maxTotalCost?: DecimalLike;
-    /** Reject fills earning the taker less than this (sell-side floor). */
+    /**
+     * When you sell: hide quotes that cost more than this. A sale that pays you
+     * has a negative cost, so `-180` hides quotes that pay you less than 180.
+     */
     minTotalCost?: DecimalLike;
     /** Restrict quoting to these maker wallets. */
     counterparties?: string[];

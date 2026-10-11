@@ -15,12 +15,13 @@ export interface RawRpcResponse {
 }
 
 /**
- * A well-formed public method is `namespace/name`, both lowercase
- * snake-case. Rejecting anything else stops a crafted string containing
- * path traversal from escaping the path when the HTTP transport
- * interpolates the method into the request URL.
+ * A well-formed public method is `namespace/name`: a lowercase namespace and
+ * an alphanumeric name (snake-case, or camelCase as in `getRateLimits`).
+ * Rejecting anything else stops a crafted string containing path traversal
+ * from escaping the path when the HTTP transport interpolates the method
+ * into the request URL.
  */
-const METHOD_FORMAT = /^[a-z]+\/[a-z0-9_]+$/;
+const METHOD_FORMAT = /^[a-z]+\/[A-Za-z0-9_]+$/;
 
 /**
  * Runtime companion to the compile-time EndpointMap restriction: even a
