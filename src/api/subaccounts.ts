@@ -59,6 +59,8 @@ export interface MarginQuery {
   subaccountId: number;
   simulatedPositionChanges?: SimulatedPositionChange[];
   simulatedCollateralChanges?: SimulatedCollateralChange[];
+  /** Margin under the delayed-liquidation override, as order checks do; rejected for a subaccount without one. */
+  isDelayedLiquidation?: boolean;
 }
 
 /** Margin figures before and after the (optionally simulated) trade. All figures are decimal strings. */
@@ -246,6 +248,7 @@ export class SubaccountsApi {
           asset_name: c.assetName,
           amount: c.amount,
         })) ?? null,
+      is_delayed_liquidation: query.isDelayedLiquidation,
     });
   }
 }

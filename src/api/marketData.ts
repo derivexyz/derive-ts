@@ -306,12 +306,14 @@ export class MarketDataApi {
   }
 
   /**
-   * Mark-to-market value and margin for a subaccount, computed on the margin
-   * basis actually in effect (see `is_delayed_liquidation` in the result).
+   * Mark-to-market value and margin for a subaccount, under its manager's
+   * params. `isDelayedLiquidation` returns them under its delayed-liquidation
+   * override; rejected for a subaccount without one.
    */
-  marginWatch(params: { subaccountId: number }): Promise<PublicMarginWatchResponse> {
+  marginWatch(params: { subaccountId: number; isDelayedLiquidation?: boolean }): Promise<PublicMarginWatchResponse> {
     return this.ctx.send('public/margin_watch', {
       subaccount_id: params.subaccountId,
+      is_delayed_liquidation: params.isDelayedLiquidation,
     });
   }
 

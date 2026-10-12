@@ -3977,6 +3977,7 @@ export interface JsonRpcRequestFor_PrivateGetMarginEdgeRpcParams {
  * via the `definition` "PrivateGetMarginEdgeRpcParams".
  */
 export interface PrivateGetMarginEdgeRpcParams {
+  is_delayed_liquidation?: boolean;
   simulated_collateral_changes?: SimulatedCollateralEdgeRpcParams[] | null;
   simulated_position_changes?: SimulatedPositionEdgeRpcParams[] | null;
   subaccount_id: number;
@@ -7777,6 +7778,7 @@ export interface JsonRpcRequestFor_MarginWatchEdgeRpcParams {
  * via the `definition` "MarginWatchEdgeRpcParams".
  */
 export interface MarginWatchEdgeRpcParams {
+  is_delayed_liquidation?: boolean;
   subaccount_id: number;
 }
 /**
@@ -7786,11 +7788,13 @@ export interface MarginWatchEdgeRpcParams {
 export interface PublicMarginWatchResponse {
   collaterals: CollateralResponse[];
   currency: string[];
+  has_delayed_liquidation: boolean;
   initial_margin: string;
   is_delayed_liquidation: boolean;
   maintenance_margin: string;
   margin_type: string;
   positions: PositionResponse[];
+  regular_margin_flagged_sec?: number | null;
   risk_universe_id: number;
   subaccount_id: number;
   subaccount_value: string;
