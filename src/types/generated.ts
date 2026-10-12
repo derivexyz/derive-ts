@@ -6351,6 +6351,7 @@ export interface InstrumentPublicResponse {
   pro_rata_amount_step: string;
   pro_rata_fraction: string;
   quote_currency: string;
+  risk_universe_id: number;
   scheduled_activation: number;
   scheduled_deactivation: number;
   taker_fee_rate: string;
