@@ -1719,6 +1719,20 @@ export type JSONRPCResponseFor_VaultsWireResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_PublicGetWalletRPCResponse".
+ */
+export type JSONRPCResponseFor_PublicGetWalletRPCResponse = JSONRPCResponseFor_PublicGetWalletRPCResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_PublicGetWalletRPCResponse1 =
+  | {
+      result: PublicGetWalletRPCResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "OffchainKeyScope".
  */
 export type OffchainKeyScope = 'account_info';
@@ -1803,35 +1817,6 @@ export type JSONRPCResponseFor_QuoteSendDebugResult = JSONRPCResponseFor_QuoteSe
 export type JSONRPCResponseFor_QuoteSendDebugResult1 =
   | {
       result: QuoteSendDebugResult;
-    }
-  | {
-      error: RPCError;
-    };
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JSONRPCResponse_for_OperationAckWireResponse".
- */
-export type JSONRPCResponseFor_OperationAckWireResponse = JSONRPCResponseFor_OperationAckWireResponse1 & {
-  id: JsonRpcId;
-};
-export type JSONRPCResponseFor_OperationAckWireResponse1 =
-  | {
-      result: OperationAckWireResponse;
-    }
-  | {
-      error: RPCError;
-    };
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JSONRPCResponse_for_PublicStartAuctionEdgeRpcResponse".
- */
-export type JSONRPCResponseFor_PublicStartAuctionEdgeRpcResponse =
-  JSONRPCResponseFor_PublicStartAuctionEdgeRpcResponse1 & {
-    id: JsonRpcId;
-  };
-export type JSONRPCResponseFor_PublicStartAuctionEdgeRpcResponse1 =
-  | {
-      result: PublicStartAuctionEdgeRpcResponse;
     }
   | {
       error: RPCError;
@@ -1929,7 +1914,8 @@ export type CancelReason =
   | 'compliance'
   | 'trigger_failed'
   | 'validation_failed'
-  | 'algo_completed';
+  | 'algo_completed'
+  | 'max_crossed_orders';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "RpcErrorCatalog".
@@ -2584,6 +2570,10 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_GetVaultsEdgeRpcParams;
     response: JSONRPCResponseFor_VaultsWireResponse;
   };
+  'public/get_wallet': {
+    request: JsonRpcRequestFor_PublicGetWalletEdgeRpcParams;
+    response: JSONRPCResponseFor_PublicGetWalletRPCResponse;
+  };
   'public/get_wallets_from_session_key': {
     request: JsonRpcRequestFor_GetWalletsFromSessionKeyEdgeRpcParams;
     response: JSONRPCResponseFor_PublicGetWalletsFromSessionKeyRPCResponse;
@@ -2611,14 +2601,6 @@ export interface EndpointMap {
   'public/send_quote_debug': {
     request: JsonRpcRequestFor_PublicSendQuoteDebugEdgeRpcParams;
     response: JSONRPCResponseFor_QuoteSendDebugResult;
-  };
-  'public/set_socialization_feed_data': {
-    request: JsonRpcRequestFor_PublicSetSocializationFeedDataEdgeRpcParams;
-    response: JSONRPCResponseFor_OperationAckWireResponse;
-  };
-  'public/start_auction': {
-    request: JsonRpcRequestFor_PublicStartAuctionEdgeRpcParams;
-    response: JSONRPCResponseFor_PublicStartAuctionEdgeRpcResponse;
   };
   'public/withdraw_debug': {
     request: JsonRpcRequestFor_PublicWithdrawDebugEdgeRpcParams;
@@ -2730,7 +2712,8 @@ export interface OrderWireResponse {
     | 'compliance'
     | 'trigger_failed'
     | 'validation_failed'
-    | 'algo_completed';
+    | 'algo_completed'
+    | 'max_crossed_orders';
   creation_timestamp: number;
   direction: Direction;
   extra_fee: string;
@@ -7682,6 +7665,33 @@ export interface VaultsWireResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicGetWalletEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_PublicGetWalletEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_wallet';
+  params: PublicGetWalletEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicGetWalletEdgeRpcParams".
+ */
+export interface PublicGetWalletEdgeRpcParams {
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicGetWalletRPCResponse".
+ */
+export interface PublicGetWalletRPCResponse {
+  subaccount_id: number;
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_GetWalletsFromSessionKeyEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_GetWalletsFromSessionKeyEdgeRpcParams {
@@ -7880,174 +7890,6 @@ export interface QuoteSendDebugResult {
   encoded_data: string;
   encoded_data_hashed: string;
   typed_data_hash: string;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_PublicSetSocializationFeedDataEdgeRpcParams".
- */
-export interface JsonRpcRequestFor_PublicSetSocializationFeedDataEdgeRpcParams {
-  headers?: {
-    [k: string]: unknown;
-  } | null;
-  id: JsonRpcId;
-  method: 'public/set_socialization_feed_data';
-  params: PublicSetSocializationFeedDataEdgeRpcParams;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicSetSocializationFeedDataEdgeRpcParams".
- */
-export interface PublicSetSocializationFeedDataEdgeRpcParams {
-  feeds: PublicSetFeedDataEdgeRpcParams;
-  universe_id: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicSetFeedDataEdgeRpcParams".
- */
-export interface PublicSetFeedDataEdgeRpcParams {
-  forward: PublicForwardFeedDataParams[];
-  funding?: PublicFundingFeedDataParams[];
-  perp: PublicPerpFeedDataParams[];
-  rate: PublicRateFeedDataParams[];
-  spot: PublicSpotFeedDataParams[];
-  vol: PublicVolFeedDataParams[];
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicForwardFeedDataParams".
- */
-export interface PublicForwardFeedDataParams {
-  confidence: string;
-  currency: string;
-  deadline?: number;
-  expiry: number;
-  fwd_diff: string;
-  signatures?: PublicOracleSignatureDataParams;
-  spot_aggregate_latest: string;
-  spot_aggregate_start: string;
-  timestamp: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicOracleSignatureDataParams".
- */
-export interface PublicOracleSignatureDataParams {
-  signatures?: string[];
-  signers?: string[];
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicFundingFeedDataParams".
- */
-export interface PublicFundingFeedDataParams {
-  confidence: string;
-  currency: string;
-  deadline?: number;
-  funding_rate: string;
-  signatures?: PublicOracleSignatureDataParams;
-  timestamp: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicPerpFeedDataParams".
- */
-export interface PublicPerpFeedDataParams {
-  confidence: string;
-  currency: string;
-  deadline?: number;
-  signatures?: PublicOracleSignatureDataParams;
-  spot_diff_value: string;
-  timestamp: number;
-  type: string;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicRateFeedDataParams".
- */
-export interface PublicRateFeedDataParams {
-  confidence: string;
-  currency: string;
-  deadline?: number;
-  expiry: number;
-  rate: string;
-  signatures?: PublicOracleSignatureDataParams;
-  timestamp: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicSpotFeedDataParams".
- */
-export interface PublicSpotFeedDataParams {
-  confidence: string;
-  currency: string;
-  deadline?: number;
-  feed_source_type?: string | null;
-  price: string;
-  signatures?: PublicOracleSignatureDataParams;
-  timestamp: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicVolFeedDataParams".
- */
-export interface PublicVolFeedDataParams {
-  confidence: string;
-  currency: string;
-  deadline?: number;
-  expiry: number;
-  signatures?: PublicOracleSignatureDataParams;
-  timestamp: number;
-  vol_data: PublicVolSVIParamDataParams;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicVolSVIParamDataParams".
- */
-export interface PublicVolSVIParamDataParams {
-  SVI_a: string;
-  SVI_b: string;
-  SVI_fwd: string;
-  SVI_m: string;
-  SVI_refTau: string;
-  SVI_rho: string;
-  SVI_sigma: string;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "OperationAckWireResponse".
- */
-export interface OperationAckWireResponse {
-  mmp_triggered: number[];
-  op_uuid: string;
-  operation_id: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "JsonRpcRequest_for_PublicStartAuctionEdgeRpcParams".
- */
-export interface JsonRpcRequestFor_PublicStartAuctionEdgeRpcParams {
-  headers?: {
-    [k: string]: unknown;
-  } | null;
-  id: JsonRpcId;
-  method: 'public/start_auction';
-  params: PublicStartAuctionEdgeRpcParams;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicStartAuctionEdgeRpcParams".
- */
-export interface PublicStartAuctionEdgeRpcParams {
-  subaccount_id: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PublicStartAuctionEdgeRpcResponse".
- */
-export interface PublicStartAuctionEdgeRpcResponse {
-  op_uuid: string;
-  operation_id: number;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema

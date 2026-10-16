@@ -305,6 +305,12 @@ export class MarketDataApi {
     return result.subaccount_ids;
   }
 
+  /** Checksummed wallet that owns `subaccountId`. */
+  async getWallet(subaccountId: number): Promise<string> {
+    const result = await this.ctx.send('public/get_wallet', { subaccount_id: subaccountId });
+    return result.wallet;
+  }
+
   /**
    * Mark-to-market value and margin for a subaccount, under its manager's
    * params. `isDelayedLiquidation` returns them under its delayed-liquidation
