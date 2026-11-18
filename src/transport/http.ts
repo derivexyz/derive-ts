@@ -37,6 +37,7 @@ export class HttpTransport {
     }
 
     logger('debug', `HTTP ${method}`, params);
+    const timeout = AbortSignal.timeout(timeoutMs);
     let response: Response | undefined;
     let body: RawRpcResponse;
     try {
@@ -47,12 +48,11 @@ export class HttpTransport {
         // Never follow a redirect: it would forward the signed X-Derive*
         // auth headers to the redirect target.
         redirect: 'error',
-        // Also bounds the body read below, not only the response headers.
-        signal: AbortSignal.timeout(timeoutMs),
+        signal: timeout,
       });
-      body = (await response.json()) as RawRpcResponse;
+      body = (await readJson(response, timeout)) as RawRpcResponse;
     } catch (cause) {
-      if (cause instanceof DOMException && cause.name === 'TimeoutError') {
+      if (timeout.aborted) {
         throw new DeriveTimeoutError(`${method}: no response within ${timeoutMs}ms`);
       }
       if (response) {
@@ -62,5 +62,32 @@ export class HttpTransport {
     }
     logger('debug', `HTTP ${method} response (${response.status})`, body);
     return unwrapResponse<ResultFor<M>>(method, body);
+  }
+}
+
+/**
+ * Reads the JSON body and cancels the read at `timeout`. The fetch signal
+ * does not always do this in Node after the response headers arrive.
+ */
+async function readJson(response: Response, timeout: AbortSignal): Promise<unknown> {
+  const reader = response.body?.getReader();
+  if (!reader) return response.json();
+
+  // Cancel rejects if the body has failed already.
+  const cancel = () => reader.cancel(timeout.reason).catch(() => {});
+  timeout.addEventListener('abort', cancel, { once: true });
+  try {
+    const decoder = new TextDecoder();
+    let text = '';
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value, { stream: true });
+    }
+    // A cancelled read ends the same way as a complete body.
+    timeout.throwIfAborted();
+    return JSON.parse(text + decoder.decode());
+  } finally {
+    timeout.removeEventListener('abort', cancel);
   }
 }
