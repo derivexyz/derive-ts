@@ -1,13 +1,21 @@
 import { formatUnits, getAddress } from 'ethers';
-import { encodeRfqExecute, encodeRfqQuote, sortRfqLegs } from '../codecs/rfq';
+import { encodeRfqExecute, encodeRfqQuote, sortRfqLegs, type RfqQuoteFields } from '../codecs/rfq';
 import { SignedAction } from '../signing/action';
 import { domainSeparator } from '../signing/eip712';
 import { expiresIn, randomNonce, toE18, type DecimalLike } from '../signing/encoding';
 import type {
+  BlockProposalGetPublicWireResponse,
+  BlockProposalGetWireResponse,
+  BlockProposalPrivateWireResponse,
+  BlockProposalResultPublic,
+  BlockTradeExecuteWireResponse,
+  BlockTradeSideCheckWireResponse,
   CancelBatchResult,
   CancelRfqResponse,
   Direction,
   InstrumentPublicResponse,
+  InvalidateBlockTradeSignatureResponse,
+  LiquidityRole,
   QuoteExecuteWireResponse,
   QuotePollWireResponse,
   QuotePrivateWireResponse,
@@ -15,6 +23,7 @@ import type {
   RFQPollWireResponse,
   RFQPrivateWireResponse,
   RfqGetBestQuoteWireResponse,
+  SignedBlockTradeSideEdgeRpcParams,
 } from '../types';
 import type { ClientContext } from './context';
 
@@ -62,6 +71,34 @@ export interface ExecuteQuoteParams {
   signatureExpirySec?: number;
 }
 
+/**
+ * One party's side of a block trade, built from the terms both parties
+ * agreed — see `signBlockTradeMakerSide` / `signBlockTradeTakerSide`.
+ */
+export interface BlockTradeSideParams {
+  /** The signing party's subaccount. */
+  subaccountId: number;
+  /** The maker side's direction. The taker side trades the opposite direction. */
+  makerDirection: Direction;
+  /** The agreed priced legs. Both sides sign and send the same legs. */
+  legs: PricedRfqLeg[];
+  /** Highest total fee this side pays, in USD, including `extraFee`. */
+  maxFee: DecimalLike;
+  /**
+   * UTC nanoseconds. The side executes from 1 minute before to 5 minutes after
+   * this time, or to 59 minutes after for a maker side sent as a block proposal.
+   * Defaults to now; date it ahead for a planned submit time.
+   */
+  nonce?: string;
+  /** Defaults to 6 minutes after the nonce time. */
+  signatureExpirySec?: number;
+  /** Broker fee for this side, in USD, paid to the owner of `referralCode`. Not signed. */
+  extraFee?: DecimalLike;
+  referralCode?: string;
+  label?: string;
+  client?: string;
+}
+
 /** A leg with resolved asset identity and e18-normalized numbers — the single source for both the signed bytes and the wire legs. */
 interface ResolvedLeg {
   instrumentName: string;
@@ -78,6 +115,13 @@ interface ResolvedLeg {
  * covers the RFQ window on every network, even for a brand-new RFQ.
  */
 const DEFAULT_QUOTE_EXPIRY_SEC = 3600;
+
+/**
+ * The API accepts a block-trade side from 1 minute before to 5 minutes after
+ * its nonce time, while its signature expires at least 60s after submission.
+ * Expiring 6 minutes after the nonce time keeps the window as the limit.
+ */
+const DEFAULT_BLOCK_TRADE_EXPIRY_SEC = 5 * 60 + 60;
 
 /**
  * RFQ trading: takers request quotes on multi-leg packages, makers answer
@@ -392,6 +436,249 @@ export class RfqApi {
       mmp: params.mmp,
       label: params.label,
     } as never);
+  }
+
+  // ── Block trades ───────────────────────────────────────────────────
+
+  /**
+   * The fee and margin of one block-trade side of your subaccount, from the
+   * agreed terms, before anyone signs. A side short of margin returns
+   * `is_valid: false`, not an error. `price_band_min_total_cost` and
+   * `price_band_max_total_cost` are the total costs between which the side
+   * is inside the RFQ price band. They do not depend on the leg prices.
+   */
+  async simulateBlockTrade(params: {
+    subaccountId: number;
+    /** This side's direction. The taker side trades opposite the maker side. */
+    direction: Direction;
+    /** The agreed priced legs, the same on both sides. */
+    legs: PricedRfqLeg[];
+    /** Broker fee for this side, in USD. */
+    extraFee?: DecimalLike;
+  }): Promise<BlockTradeSideCheckWireResponse> {
+    return this.ctx.send('private/simulate_block_trade', {
+      subaccount_id: params.subaccountId,
+      direction: params.direction,
+      legs: params.legs.map((leg) => ({
+        instrument_name: leg.instrumentName,
+        amount: wireDecimal(leg.amount),
+        price: wireDecimal(leg.price),
+        direction: leg.direction,
+      })),
+      extra_fee: params.extraFee === undefined ? undefined : wireDecimal(params.extraFee),
+    });
+  }
+
+  /**
+   * Signs the maker side of a block trade with this client's credentials.
+   * The maker signs the same payload as an RFQ quote: its own `maxFee` and
+   * the legs in `makerDirection`. Give the result only to the submitter: the
+   * signature does not name a counterparty, so any holder can take the trade.
+   */
+  async signBlockTradeMakerSide(params: BlockTradeSideParams): Promise<SignedBlockTradeSideEdgeRpcParams> {
+    return this.signBlockTradeSide(params, params.makerDirection, encodeRfqQuote);
+  }
+
+  /**
+   * Signs the taker side of a block trade with this client's credentials.
+   * The taker signs the same payload as an RFQ execute: a hash of the legs in
+   * `makerDirection` (the maker's max fee is not part of it) and its own
+   * `maxFee`. The taker trades opposite `makerDirection`.
+   */
+  async signBlockTradeTakerSide(params: BlockTradeSideParams): Promise<SignedBlockTradeSideEdgeRpcParams> {
+    const direction: Direction = params.makerDirection === 'buy' ? 'sell' : 'buy';
+    return this.signBlockTradeSide(params, direction, encodeRfqExecute);
+  }
+
+  /**
+   * Checks a signed side of your subaccount as `executeBlockTrade` would now,
+   * and returns its fee, margin and `expires_at_sec`. Pass the output of
+   * `signBlockTradeMakerSide` with `role: 'maker'`, or of
+   * `signBlockTradeTakerSide` with `role: 'taker'`. The side stays usable.
+   */
+  async verifyBlockTrade(params: {
+    side: SignedBlockTradeSideEdgeRpcParams;
+    role: LiquidityRole;
+  }): Promise<BlockTradeSideCheckWireResponse> {
+    return this.ctx.send('private/verify_block_trade', { ...params.side, role: params.role });
+  }
+
+  /**
+   * Submits both signed sides of a block trade. The caller needs no access to
+   * either subaccount: the two signatures authorize the trade.
+   */
+  async executeBlockTrade(params: {
+    makerParams: SignedBlockTradeSideEdgeRpcParams;
+    takerParams: SignedBlockTradeSideEdgeRpcParams;
+  }): Promise<BlockTradeExecuteWireResponse> {
+    return this.ctx.send('private/execute_block_trade', {
+      maker_params: params.makerParams,
+      taker_params: params.takerParams,
+    });
+  }
+
+  /**
+   * Invalidates a block-trade side that this client's account signed, so it
+   * cannot execute. Fails if the side has executed or is executing.
+   */
+  async invalidateBlockTradeSignature(params: {
+    subaccountId: number;
+    nonce: string;
+  }): Promise<InvalidateBlockTradeSignatureResponse> {
+    return this.ctx.send('private/invalidate_block_trade_signature', {
+      subaccount_id: params.subaccountId,
+      nonce: params.nonce,
+    });
+  }
+
+  private async signBlockTradeSide(
+    params: BlockTradeSideParams,
+    direction: Direction,
+    encode: (fields: RfqQuoteFields) => string,
+  ): Promise<SignedBlockTradeSideEdgeRpcParams> {
+    const maxFee = toE18(params.maxFee);
+    const legs = await this.resolveLegs(params.legs);
+    const nonce = params.nonce ?? randomNonce();
+    const nonceMs = Number(BigInt(nonce) / 1_000_000n);
+    const expirySec = params.signatureExpirySec ?? expiresIn(DEFAULT_BLOCK_TRADE_EXPIRY_SEC, nonceMs);
+    const signed = this.signRfqAction(params.subaccountId, encode({ maxFee, direction, legs }), nonce, expirySec);
+    return {
+      subaccount_id: params.subaccountId,
+      direction,
+      legs: legs.map(pricedWireLeg),
+      max_fee: formatUnits(maxFee, 18),
+      nonce,
+      signer: signed.signer,
+      signature: signed.signature,
+      signature_expiry_sec: expirySec,
+      extra_fee: params.extraFee === undefined ? undefined : wireDecimal(params.extraFee),
+      referral_code: params.referralCode,
+      label: params.label,
+      client: params.client,
+    };
+  }
+
+  // ── Block proposals ────────────────────────────────────────────────
+
+  /**
+   * Offers a signed maker side for a taker to accept with
+   * `acceptBlockProposal`. The exchange keeps the signature: no other user
+   * can see it.
+   *
+   * With `recipientWallet`, only that wallet can see and accept the proposal.
+   * With `listed`, the proposal is on the public list. With neither, anyone
+   * who has the `proposal_id` can read and accept it, so share the id only
+   * with the intended counterparty.
+   *
+   * The signed side sets how long the proposal stays open: until 60 seconds
+   * before its signature expiry, or 59 minutes after its nonce time,
+   * whichever is first. The response gives that time as `expires_at_sec`.
+   * `signBlockTradeMakerSide` signs an expiry 6 minutes after the nonce time
+   * by default, so the proposal stays open for 5 minutes. For another time,
+   * sign the side with another `signatureExpirySec`. A proposal must stay
+   * open for at least 60 seconds.
+   */
+  async sendBlockProposal(params: {
+    /**
+     * The output of `signBlockTradeMakerSide`. Its `extra_fee`,
+     * `referral_code`, `label` and `client` are not sent: a proposal trades
+     * with no broker fee.
+     */
+    side: SignedBlockTradeSideEdgeRpcParams;
+    /** The only wallet that can see and accept the proposal. Not allowed with `listed`. */
+    recipientWallet?: string;
+    /** Puts the proposal on the public list. Defaults to false. */
+    listed?: boolean;
+  }): Promise<BlockProposalPrivateWireResponse> {
+    const { side } = params;
+    return this.ctx.send('private/send_block_proposal', {
+      subaccount_id: side.subaccount_id,
+      nonce: side.nonce,
+      signer: side.signer,
+      max_fee: side.max_fee,
+      signature_expiry_sec: side.signature_expiry_sec,
+      direction: side.direction,
+      legs: side.legs,
+      signature: side.signature,
+      recipient_wallet: params.recipientWallet === undefined ? undefined : getAddress(params.recipientWallet),
+      listed: params.listed,
+    });
+  }
+
+  /**
+   * Accepts a block proposal, which executes its block trade at once. Signs
+   * the taker side like `signBlockTradeTakerSide`, over the legs and prices
+   * of `proposal`, so the taker trades opposite the proposal's `direction`.
+   * The first valid accept wins. Returns the proposal with status `executed`
+   * and its `block_trade_id`. The error of a failed accept has no `data`.
+   */
+  async acceptBlockProposal(params: {
+    /** The taker's subaccount. */
+    subaccountId: number;
+    /** The proposal, as any block proposal read or channel returns it. */
+    proposal: Pick<BlockProposalResultPublic, 'proposal_id' | 'direction' | 'legs'>;
+    /** Highest total fee the taker pays, in USD. */
+    maxFee: DecimalLike;
+    nonce?: string;
+    signatureExpirySec?: number;
+  }): Promise<BlockProposalResultPublic> {
+    const side = await this.signBlockTradeTakerSide({
+      subaccountId: params.subaccountId,
+      makerDirection: params.proposal.direction,
+      legs: params.proposal.legs.map((leg) => ({
+        instrumentName: leg.instrument_name,
+        amount: leg.amount,
+        price: leg.price,
+        direction: leg.direction,
+      })),
+      maxFee: params.maxFee,
+      nonce: params.nonce,
+      signatureExpirySec: params.signatureExpirySec,
+    });
+    return this.ctx.send('private/accept_block_proposal', {
+      proposal_id: params.proposal.proposal_id,
+      subaccount_id: side.subaccount_id,
+      nonce: side.nonce,
+      signer: side.signer,
+      max_fee: side.max_fee,
+      signature_expiry_sec: side.signature_expiry_sec,
+      signature: side.signature,
+    });
+  }
+
+  /**
+   * Ends an open block proposal, so it can never execute. The maker's call
+   * sets the status `cancelled`; the recipient wallet's call sets `declined`.
+   */
+  async cancelBlockProposal(params: { proposalId: string }): Promise<BlockProposalPrivateWireResponse> {
+    return this.ctx.send('private/cancel_block_proposal', {
+      wallet: this.ctx.credentials().ownerAddress,
+      proposal_id: params.proposalId,
+    });
+  }
+
+  /**
+   * The block proposals the wallet made or received as recipient wallet:
+   * the open ones and those that ended recently, most recently updated first.
+   */
+  async getBlockProposals(): Promise<BlockProposalGetWireResponse> {
+    return this.ctx.send('private/get_block_proposals', { wallet: this.ctx.credentials().ownerAddress });
+  }
+
+  /**
+   * The block proposals on the public list: those that have not ended, then
+   * those that ended recently. Optionally scoped to one currency (e.g. `ETH`).
+   */
+  async getListedBlockProposals(params: { currency?: string } = {}): Promise<BlockProposalGetPublicWireResponse> {
+    return this.ctx.send('public/get_block_proposals', { currency: params.currency });
+  }
+
+  /**
+   * One block proposal by its id, listed or not. Fails for a proposal with a
+   * recipient wallet: its maker and its recipient read it with `getBlockProposals`.
+   */
+  async getBlockProposal(params: { proposalId: string }): Promise<BlockProposalResultPublic> {
+    return this.ctx.send('public/get_block_proposal', { proposal_id: params.proposalId });
   }
 
   // ── Shared signing plumbing ────────────────────────────────────────

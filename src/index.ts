@@ -5,7 +5,14 @@ export type { ClientContext } from './api/context';
 export { MarketDataApi } from './api/marketData';
 export { SubaccountsApi } from './api/subaccounts';
 export { OrdersApi, type PlaceOrderParams } from './api/orders';
-export { RfqApi, type RfqLeg, type PricedRfqLeg, type SendQuoteParams, type ExecuteQuoteParams } from './api/rfq';
+export {
+  RfqApi,
+  type RfqLeg,
+  type PricedRfqLeg,
+  type SendQuoteParams,
+  type ExecuteQuoteParams,
+  type BlockTradeSideParams,
+} from './api/rfq';
 export { PositionTransfersApi, type PositionTransferLeg, type TransferPositionsParams } from './api/positionTransfers';
 export {
   SpotTransfersApi,

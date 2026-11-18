@@ -88,9 +88,9 @@ attributes (label, IP allowlist).
 | Namespace | What it does |
 |---|---|
 | `client.marketData` | instruments, tickers, currencies (public, no auth) |
-| `client.subaccounts` | portfolio, positions, margin, trade history |
+| `client.subaccounts` | portfolio, positions, margin, trade history, block-trade history (`getBlockTrades` / `getBlockTrade`) |
 | `client.orders` | place / cancel / query orders |
-| `client.rfq` | RFQ taker (request → quote → execute) and maker (quote) flows |
+| `client.rfq` | RFQ taker (request → quote → execute) and maker (quote) flows, plus block trades: a party gets its side's fee and margin from the terms (`simulateBlockTrade`), signs its own side (`signBlockTradeMakerSide` / `signBlockTradeTakerSide`), checks it (`verifyBlockTrade`) and can cancel it (`invalidateBlockTradeSignature`); anyone with both sides submits them (`executeBlockTrade`). Block proposals: a maker offers its signed side (`sendBlockProposal`) to one wallet, to anyone with the proposal id, or on the public list (`getListedBlockProposals`), and a taker accepts it (`acceptBlockProposal`); `cancelBlockProposal` ends it, `getBlockProposals` / `getBlockProposal` read it |
 | `client.spotTransfers` | `transferInternal` (own subaccounts), `transferExternal` (other wallets), `updateWhitelistedRecipients` |
 | `client.positionTransfers` | RFQ-backed `transferPositions` between subaccounts owned by the same wallet |
 | `client.withdrawals` | signed L1 withdrawals |

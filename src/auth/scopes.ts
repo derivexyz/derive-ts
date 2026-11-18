@@ -15,7 +15,7 @@
 export const ProtocolScopeCode = {
   /** Superuser grant — allows every protocol action. Grant deliberately. */
   Admin: 0,
-  /** Withdrawals, restricted to the account's whitelisted recipients. */
+  /** Withdrawals, restricted to the owner wallet and the account's whitelisted recipients. */
   Withdraw: 1,
 
   TradeAll: 2,
@@ -82,10 +82,11 @@ export type ProtocolScope = (typeof ProtocolScopeWireString)[ProtocolScopeCode];
 /**
  * Off-chain scopes validated by the server only (never signed into the
  * action data). Exact-match semantics — no hierarchy — but a key holding
- * any protocol scope bypasses them.
+ * the protocol `admin` scope bypasses them.
  */
 export const OffchainScope = {
   AccountInfo: 'account_info',
+  BlockTrade: 'block_trade',
 } as const;
 
 export type OffchainScope = (typeof OffchainScope)[keyof typeof OffchainScope];

@@ -13,6 +13,30 @@ export type JsonRpcId = string | number | null;
 export type Address = string;
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_BlockProposalResultPublic".
+ */
+export type JSONRPCResponseFor_BlockProposalResultPublic = JSONRPCResponseFor_BlockProposalResultPublic1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_BlockProposalResultPublic1 =
+  | {
+      result: BlockProposalResultPublic;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "Direction".
+ */
+export type Direction = 'buy' | 'sell';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockProposalStatus".
+ */
+export type BlockProposalStatus = ('open' | 'executing' | 'executed' | 'expired') | 'cancelled' | 'declined';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_VaultSettleWireResponse".
  */
 export type JSONRPCResponseFor_VaultSettleWireResponse = JSONRPCResponseFor_VaultSettleWireResponse1 & {
@@ -44,11 +68,6 @@ export type JSONRPCResponseFor_OrderWireResponse1 =
  * via the `definition` "AlgoType".
  */
 export type AlgoType = 'twap';
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "Direction".
- */
-export type Direction = 'buy' | 'sell';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "OrderStatus".
@@ -169,6 +188,21 @@ export type JSONRPCResponseFor_CancelBatchRfqsWireResponse = JSONRPCResponseFor_
 export type JSONRPCResponseFor_CancelBatchRfqsWireResponse1 =
   | {
       result: CancelBatchRfqsWireResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_BlockProposalPrivateWireResponse".
+ */
+export type JSONRPCResponseFor_BlockProposalPrivateWireResponse =
+  JSONRPCResponseFor_BlockProposalPrivateWireResponse1 & {
+    id: JsonRpcId;
+  };
+export type JSONRPCResponseFor_BlockProposalPrivateWireResponse1 =
+  | {
+      result: BlockProposalPrivateWireResponse;
     }
   | {
       error: RPCError;
@@ -350,6 +384,20 @@ export type JSONRPCResponseFor_SessionKeyResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_BlockTradeExecuteWireResponse".
+ */
+export type JSONRPCResponseFor_BlockTradeExecuteWireResponse = JSONRPCResponseFor_BlockTradeExecuteWireResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_BlockTradeExecuteWireResponse1 =
+  | {
+      result: BlockTradeExecuteWireResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_QuoteExecuteWireResponse".
  */
 export type JSONRPCResponseFor_QuoteExecuteWireResponse = JSONRPCResponseFor_QuoteExecuteWireResponse1 & {
@@ -427,6 +475,67 @@ export type JSONRPCResponseFor_ArrayOf_PrivateGetSubaccountRPCResponseFor_OrderW
 export type PublicAssetType = 'option' | 'perp' | 'erc20';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_BlockProposalGetWireResponse".
+ */
+export type JSONRPCResponseFor_BlockProposalGetWireResponse = JSONRPCResponseFor_BlockProposalGetWireResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_BlockProposalGetWireResponse1 =
+  | {
+      result: BlockProposalGetWireResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_BlockTradeHistoryResponse".
+ */
+export type JSONRPCResponseFor_BlockTradeHistoryResponse = JSONRPCResponseFor_BlockTradeHistoryResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_BlockTradeHistoryResponse1 =
+  | {
+      result: BlockTradeHistoryResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_PaginatedBlockTradesResult".
+ */
+export type JSONRPCResponseFor_PaginatedBlockTradesResult = JSONRPCResponseFor_PaginatedBlockTradesResult1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_PaginatedBlockTradesResult1 =
+  | {
+      result: PaginatedBlockTradesResult;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_GetChatRoomsResponse".
+ */
+export type JSONRPCResponseFor_GetChatRoomsResponse = JSONRPCResponseFor_GetChatRoomsResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_GetChatRoomsResponse1 =
+  | {
+      result: GetChatRoomsResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ChatRoom".
+ */
+export type ChatRoom = 'general' | 'fee_tier';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_PrivateGetCollateralsRPCResponse".
  */
 export type JSONRPCResponseFor_PrivateGetCollateralsRPCResponse =
@@ -440,6 +549,25 @@ export type JSONRPCResponseFor_PrivateGetCollateralsRPCResponse1 =
   | {
       error: RPCError;
     };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_GetConciergeMessagesResponse".
+ */
+export type JSONRPCResponseFor_GetConciergeMessagesResponse = JSONRPCResponseFor_GetConciergeMessagesResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_GetConciergeMessagesResponse1 =
+  | {
+      result: GetConciergeMessagesResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ConciergeSender".
+ */
+export type ConciergeSender = 'user' | 'concierge';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_VaultIdsWireResponse".
@@ -654,6 +782,20 @@ export type JSONRPCResponseFor_RFQGetWireResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_GetRoomMessagesResponse".
+ */
+export type JSONRPCResponseFor_GetRoomMessagesResponse = JSONRPCResponseFor_GetRoomMessagesResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_GetRoomMessagesResponse1 =
+  | {
+      result: GetRoomMessagesResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_PrivateGetSubaccountRPCResponse_for_OrderWireResponse_and_VaultDepositHoldResponse".
  */
 export type JSONRPCResponseFor_PrivateGetSubaccountRPCResponseFor_OrderWireResponseAnd_VaultDepositHoldResponse =
@@ -793,6 +935,26 @@ export type WithdrawalForwardStatus =
   'delivered' | 'awaiting_payout' | 'pending' | 'held' | 'in_flight' | 'failed' | 'recovered';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_InvalidateBlockTradeSignatureResponse".
+ */
+export type JSONRPCResponseFor_InvalidateBlockTradeSignatureResponse =
+  JSONRPCResponseFor_InvalidateBlockTradeSignatureResponse1 & {
+    id: JsonRpcId;
+  };
+export type JSONRPCResponseFor_InvalidateBlockTradeSignatureResponse1 =
+  | {
+      result: InvalidateBlockTradeSignatureResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InvalidateBlockTradeSignatureResponse".
+ */
+export type InvalidateBlockTradeSignatureResponse = 'ok';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_PrivateLiquidateEdgeRpcResponse".
  */
 export type JSONRPCResponseFor_PrivateLiquidateEdgeRpcResponse = JSONRPCResponseFor_PrivateLiquidateEdgeRpcResponse1 & {
@@ -801,6 +963,20 @@ export type JSONRPCResponseFor_PrivateLiquidateEdgeRpcResponse = JSONRPCResponse
 export type JSONRPCResponseFor_PrivateLiquidateEdgeRpcResponse1 =
   | {
       result: PrivateLiquidateEdgeRpcResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_MarkConciergeSeenResponse".
+ */
+export type JSONRPCResponseFor_MarkConciergeSeenResponse = JSONRPCResponseFor_MarkConciergeSeenResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_MarkConciergeSeenResponse1 =
+  | {
+      result: MarkConciergeSeenResponse;
     }
   | {
       error: RPCError;
@@ -967,6 +1143,20 @@ export type JSONRPCResponseFor_RfqGetBestQuoteWireResponse1 =
     };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_ConciergeMessage".
+ */
+export type JSONRPCResponseFor_ConciergeMessage = JSONRPCResponseFor_ConciergeMessage1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_ConciergeMessage1 =
+  | {
+      result: ConciergeMessage;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_RFQPrivateWireResponse".
  */
 export type JSONRPCResponseFor_RFQPrivateWireResponse = JSONRPCResponseFor_RFQPrivateWireResponse1 & {
@@ -975,6 +1165,20 @@ export type JSONRPCResponseFor_RFQPrivateWireResponse = JSONRPCResponseFor_RFQPr
 export type JSONRPCResponseFor_RFQPrivateWireResponse1 =
   | {
       result: RFQPrivateWireResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_RoomMessage".
+ */
+export type JSONRPCResponseFor_RoomMessage = JSONRPCResponseFor_RoomMessage1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_RoomMessage1 =
+  | {
+      result: RoomMessage;
     }
   | {
       error: RPCError;
@@ -1012,6 +1216,20 @@ export type JSONRPCResponseFor_SetCancelOnDisconnectResponse1 =
  * via the `definition` "SetCancelOnDisconnectResponse".
  */
 export type SetCancelOnDisconnectResponse = 'ok';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_SetConciergeDndResponse".
+ */
+export type JSONRPCResponseFor_SetConciergeDndResponse = JSONRPCResponseFor_SetConciergeDndResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_SetConciergeDndResponse1 =
+  | {
+      result: SetConciergeDndResponse;
+    }
+  | {
+      error: RPCError;
+    };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_SetMmpConfigResponse".
@@ -1052,6 +1270,20 @@ export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_SetSessionKey
 export type JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse1 =
   | {
       result: SignedActionDebugEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse;
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_BlockTradeSideCheckWireResponse".
+ */
+export type JSONRPCResponseFor_BlockTradeSideCheckWireResponse = JSONRPCResponseFor_BlockTradeSideCheckWireResponse1 & {
+  id: JsonRpcId;
+};
+export type JSONRPCResponseFor_BlockTradeSideCheckWireResponse1 =
+  | {
+      result: BlockTradeSideCheckWireResponse;
     }
   | {
       error: RPCError;
@@ -1310,6 +1542,21 @@ export type JSONRPCResponseFor_ArrayOf_Referrer = JSONRPCResponseFor_ArrayOf_Ref
 export type JSONRPCResponseFor_ArrayOf_Referrer1 =
   | {
       result: Referrer[];
+    }
+  | {
+      error: RPCError;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JSONRPCResponse_for_BlockProposalGetPublicWireResponse".
+ */
+export type JSONRPCResponseFor_BlockProposalGetPublicWireResponse =
+  JSONRPCResponseFor_BlockProposalGetPublicWireResponse1 & {
+    id: JsonRpcId;
+  };
+export type JSONRPCResponseFor_BlockProposalGetPublicWireResponse1 =
+  | {
+      result: BlockProposalGetPublicWireResponse;
     }
   | {
       error: RPCError;
@@ -1735,7 +1982,7 @@ export type JSONRPCResponseFor_PublicGetWalletRPCResponse1 =
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "OffchainKeyScope".
  */
-export type OffchainKeyScope = 'account_info';
+export type OffchainKeyScope = 'account_info' | 'block_trade';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JSONRPCResponse_for_PublicGetWalletsFromSessionKeyRPCResponse".
@@ -1884,9 +2131,43 @@ export type BalanceUpdateType =
   | 'double_revert';
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ConciergeEvent".
+ */
+export type ConciergeEvent =
+  | {
+      creation_timestamp: number;
+      event: 'message';
+      message_id: string;
+      sender: ConciergeSender;
+      text: string;
+      wallet: string;
+    }
+  | {
+      event: 'deleted';
+      message_id: string;
+    };
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "AuctionStateType".
  */
 export type AuctionStateType = 'ongoing' | 'ended';
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RoomEvent".
+ */
+export type RoomEvent =
+  | {
+      creation_timestamp: number;
+      event: 'message';
+      message_id: string;
+      room: ChatRoom;
+      text: string;
+      username: string;
+    }
+  | {
+      event: 'deleted';
+      message_id: string;
+    };
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "Direction2".
@@ -2013,6 +2294,13 @@ export type RpcErrorCatalog =
   | RfqDisabledForAccount
   | RfqTooManyLegs
   | RfqTooManyCounterparties
+  | BlockTradeVaultNotAllowed
+  | BlockTradeSameOwner
+  | BlockTradeNotFound
+  | BlockProposalNotFound
+  | BlockProposalNotOpen
+  | BlockTradeOutsidePriceBand
+  | BlockTradesNotAvailableForCurrency
   | InstrumentNotFound
   | CurrencyNotFound
   | AssetNotFound
@@ -2039,6 +2327,9 @@ export type RpcErrorCatalog =
   | UndecodableActionData
   | SessionKeySubaccountNotOwned
   | DuplicateSessionKeySubaccount
+  | ChatBanned
+  | ChatRoomNotAllowed
+  | ConciergeLocked
   | AccountDisabled
   | OfacBlocked
   | CrossUniverseTrade
@@ -2086,6 +2377,10 @@ export interface DeriveApi {
  * via the `definition` "EndpointMap".
  */
 export interface EndpointMap {
+  'private/accept_block_proposal': {
+    request: JsonRpcRequestFor_AcceptBlockProposalEdgeRpcParams;
+    response: JSONRPCResponseFor_BlockProposalResultPublic;
+  };
   'private/burn_vault_shares': {
     request: JsonRpcRequestFor_BurnSharesEdgeRpcParams;
     response: JSONRPCResponseFor_VaultSettleWireResponse;
@@ -2121,6 +2416,10 @@ export interface EndpointMap {
   'private/cancel_batch_rfqs': {
     request: JsonRpcRequestFor_CancelBatchRfqsEdgeRpcParams;
     response: JSONRPCResponseFor_CancelBatchRfqsWireResponse;
+  };
+  'private/cancel_block_proposal': {
+    request: JsonRpcRequestFor_CancelBlockProposalEdgeRpcParams;
+    response: JSONRPCResponseFor_BlockProposalPrivateWireResponse;
   };
   'private/cancel_by_instrument': {
     request: JsonRpcRequestFor_CancelByInstrumentEdgeRpcParams;
@@ -2162,6 +2461,10 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_EditSessionKeyEdgeRpcParams;
     response: JSONRPCResponseFor_SessionKeyResponse;
   };
+  'private/execute_block_trade': {
+    request: JsonRpcRequestFor_ExecuteBlockTradeEdgeRpcParams;
+    response: JSONRPCResponseFor_BlockTradeExecuteWireResponse;
+  };
   'private/execute_quote': {
     request: JsonRpcRequestFor_ExecuteQuoteEdgeRpcParams;
     response: JSONRPCResponseFor_QuoteExecuteWireResponse;
@@ -2182,9 +2485,29 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_GetAllPortfoliosEdgeRpcParams;
     response: JSONRPCResponseFor_ArrayOf_PrivateGetSubaccountRPCResponseFor_OrderWireResponseAnd_VaultDepositHoldResponse;
   };
+  'private/get_block_proposals': {
+    request: JsonRpcRequestFor_GetBlockProposalsEdgeRpcParams;
+    response: JSONRPCResponseFor_BlockProposalGetWireResponse;
+  };
+  'private/get_block_trade': {
+    request: JsonRpcRequestFor_GetBlockTradeEdgeRpcParams;
+    response: JSONRPCResponseFor_BlockTradeHistoryResponse;
+  };
+  'private/get_block_trades': {
+    request: JsonRpcRequestFor_GetBlockTradesEdgeRpcParams;
+    response: JSONRPCResponseFor_PaginatedBlockTradesResult;
+  };
+  'private/get_chat_rooms': {
+    request: JsonRpcRequestFor_GetChatRoomsParams;
+    response: JSONRPCResponseFor_GetChatRoomsResponse;
+  };
   'private/get_collaterals': {
     request: JsonRpcRequestFor_GetCollateralsEdgeRpcParams;
     response: JSONRPCResponseFor_PrivateGetCollateralsRPCResponse;
+  };
+  'private/get_concierge_messages': {
+    request: JsonRpcRequestFor_GetConciergeMessagesParams;
+    response: JSONRPCResponseFor_GetConciergeMessagesResponse;
   };
   'private/get_curated_vaults': {
     request: JsonRpcRequestFor_GetCuratedVaultsEdgeRpcParams;
@@ -2258,6 +2581,10 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_GetRfqsEdgeRpcParams;
     response: JSONRPCResponseFor_RFQGetWireResponse;
   };
+  'private/get_room_messages': {
+    request: JsonRpcRequestFor_GetRoomMessagesParams;
+    response: JSONRPCResponseFor_GetRoomMessagesResponse;
+  };
   'private/get_shareholder_vaults': {
     request: JsonRpcRequestFor_GetShareholderVaultsEdgeRpcParams;
     response: JSONRPCResponseFor_VaultIdsWireResponse;
@@ -2298,9 +2625,17 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_GetWithdrawalHistoryEdgeRpcParams;
     response: JSONRPCResponseFor_WithdrawalHistoryResult;
   };
+  'private/invalidate_block_trade_signature': {
+    request: JsonRpcRequestFor_InvalidateBlockTradeSignatureEdgeRpcParams;
+    response: JSONRPCResponseFor_InvalidateBlockTradeSignatureResponse;
+  };
   'private/liquidate': {
     request: JsonRpcRequestFor_PrivateLiquidateEdgeRpcParams;
     response: JSONRPCResponseFor_PrivateLiquidateEdgeRpcResponse;
+  };
+  'private/mark_concierge_seen': {
+    request: JsonRpcRequestFor_MarkConciergeSeenParams;
+    response: JSONRPCResponseFor_MarkConciergeSeenResponse;
   };
   'private/mint_vault_shares': {
     request: JsonRpcRequestFor_MintSharesEdgeRpcParams;
@@ -2362,6 +2697,14 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_RfqGetBestQuoteEdgeRpcParams;
     response: JSONRPCResponseFor_RfqGetBestQuoteWireResponse;
   };
+  'private/send_block_proposal': {
+    request: JsonRpcRequestFor_SendBlockProposalEdgeRpcParams;
+    response: JSONRPCResponseFor_BlockProposalPrivateWireResponse;
+  };
+  'private/send_concierge_message': {
+    request: JsonRpcRequestFor_SendConciergeMessageParams;
+    response: JSONRPCResponseFor_ConciergeMessage;
+  };
   'private/send_quote': {
     request: JsonRpcRequestFor_SendQuoteEdgeRpcParams;
     response: JSONRPCResponseFor_QuotePrivateWireResponse;
@@ -2370,6 +2713,10 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_SendRfqEdgeRpcParams;
     response: JSONRPCResponseFor_RFQPrivateWireResponse;
   };
+  'private/send_room_message': {
+    request: JsonRpcRequestFor_SendRoomMessageParams;
+    response: JSONRPCResponseFor_RoomMessage;
+  };
   'private/session_keys': {
     request: JsonRpcRequestFor_SessionKeysEdgeRpcParams;
     response: JSONRPCResponseFor_PrivateSessionKeysRPCResponse;
@@ -2377,6 +2724,10 @@ export interface EndpointMap {
   'private/set_cancel_on_disconnect': {
     request: JsonRpcRequestFor_SetCancelOnDisconnectEdgeRpcParams;
     response: JSONRPCResponseFor_SetCancelOnDisconnectResponse;
+  };
+  'private/set_concierge_dnd': {
+    request: JsonRpcRequestFor_SetConciergeDndParams;
+    response: JSONRPCResponseFor_SetConciergeDndResponse;
   };
   'private/set_mmp_config': {
     request: JsonRpcRequestFor_SetMmpConfigEdgeRpcParams;
@@ -2389,6 +2740,10 @@ export interface EndpointMap {
   'private/set_session_key_debug': {
     request: JsonRpcRequestFor_PrivateSetSessionKeyDebug;
     response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_SetSessionKeyActionDataEdgeRpcResponse;
+  };
+  'private/simulate_block_trade': {
+    request: JsonRpcRequestFor_SimulateBlockTradeEdgeRpcParams;
+    response: JSONRPCResponseFor_BlockTradeSideCheckWireResponse;
   };
   'private/transfer_positions': {
     request: JsonRpcRequestFor_PrivateTransferPositions;
@@ -2426,6 +2781,10 @@ export interface EndpointMap {
     request: JsonRpcRequestFor_PrivateUpdateWhitelistedRecipientsDebug;
     response: JSONRPCResponseFor_SignedActionDebugEdgeRpcResponseFor_UpdateWhitelistedRecipientsActionDataEdgeRpcResponse;
   };
+  'private/verify_block_trade': {
+    request: JsonRpcRequestFor_VerifyBlockTradeEdgeRpcParams;
+    response: JSONRPCResponseFor_BlockTradeSideCheckWireResponse;
+  };
   'private/withdraw': {
     request: JsonRpcRequestFor_PrivateWithdrawEdgeRpcParams;
     response: JSONRPCResponseFor_PrivateWithdrawEdgeRpcResponse;
@@ -2453,6 +2812,14 @@ export interface EndpointMap {
   'public/get_all_referral_codes': {
     request: JsonRpcRequestFor_GetAllReferralCodesParams;
     response: JSONRPCResponseFor_ArrayOf_Referrer;
+  };
+  'public/get_block_proposal': {
+    request: JsonRpcRequestFor_PublicGetBlockProposalEdgeRpcParams;
+    response: JSONRPCResponseFor_BlockProposalResultPublic;
+  };
+  'public/get_block_proposals': {
+    request: JsonRpcRequestFor_PublicGetBlockProposalsEdgeRpcParams;
+    response: JSONRPCResponseFor_BlockProposalGetPublicWireResponse;
   };
   'public/get_currency': {
     request: JsonRpcRequestFor_GetCurrencyEdgeRpcParams;
@@ -2617,6 +2984,67 @@ export interface EndpointMap {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_AcceptBlockProposalEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_AcceptBlockProposalEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/accept_block_proposal';
+  params: AcceptBlockProposalEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "AcceptBlockProposalEdgeRpcParams".
+ */
+export interface AcceptBlockProposalEdgeRpcParams {
+  max_fee: string;
+  nonce: string;
+  proposal_id: string;
+  signature: string;
+  signature_expiry_sec: number;
+  signer: Address;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockProposalResultPublic".
+ */
+export interface BlockProposalResultPublic {
+  block_trade_id: string | null;
+  creation_timestamp: number;
+  currency: string;
+  direction: Direction;
+  expires_at_sec: number;
+  last_update_timestamp: number;
+  legs: PricedLegParamsAndResponse[];
+  listed: boolean;
+  proposal_id: string;
+  risk_universe_id: number;
+  status: BlockProposalStatus;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PricedLegParamsAndResponse".
+ */
+export interface PricedLegParamsAndResponse {
+  amount: string;
+  direction: Direction;
+  instrument_name: string;
+  price: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RPCError".
+ */
+export interface RPCError {
+  code: number;
+  data?: string | null;
+  message: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_BurnSharesEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_BurnSharesEdgeRpcParams {
@@ -2657,15 +3085,6 @@ export interface VaultRequestId {
 export interface VaultSettleWireResponse {
   op_uuid: string;
   operation_id: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "RPCError".
- */
-export interface RPCError {
-  code: number;
-  data?: string | null;
-  message: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -2916,6 +3335,45 @@ export interface CancelBatchRfqsWireResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_CancelBlockProposalEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_CancelBlockProposalEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/cancel_block_proposal';
+  params: CancelBlockProposalEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "CancelBlockProposalEdgeRpcParams".
+ */
+export interface CancelBlockProposalEdgeRpcParams {
+  proposal_id: string;
+  wallet: Address;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockProposalPrivateWireResponse".
+ */
+export interface BlockProposalPrivateWireResponse {
+  block_trade_id: string | null;
+  creation_timestamp: number;
+  currency: string;
+  direction: Direction;
+  expires_at_sec: number;
+  last_update_timestamp: number;
+  legs: PricedLegParamsAndResponse[];
+  listed: boolean;
+  maker_wallet: Address;
+  proposal_id: string;
+  recipient_wallet?: Address | null;
+  risk_universe_id: number;
+  status: BlockProposalStatus;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_CancelByInstrumentEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_CancelByInstrumentEdgeRpcParams {
@@ -3047,16 +3505,6 @@ export interface QuotePrivateWireResponse {
   status: RFQStatus;
   subaccount_id: number;
   tx_hash?: string | null;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PricedLegParamsAndResponse".
- */
-export interface PricedLegParamsAndResponse {
-  amount: string;
-  direction: Direction;
-  instrument_name: string;
-  price: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -3234,6 +3682,83 @@ export interface SessionKeyResponse {
   public_session_key: string;
   registered_sec: number;
   subaccount_ids: number[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_ExecuteBlockTradeEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_ExecuteBlockTradeEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/execute_block_trade';
+  params: ExecuteBlockTradeEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ExecuteBlockTradeEdgeRpcParams".
+ */
+export interface ExecuteBlockTradeEdgeRpcParams {
+  maker_params: SignedBlockTradeSideEdgeRpcParams;
+  taker_params: SignedBlockTradeSideEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SignedBlockTradeSideEdgeRpcParams".
+ */
+export interface SignedBlockTradeSideEdgeRpcParams {
+  client?: string;
+  direction: Direction;
+  extra_fee?: string;
+  label?: string;
+  legs: PricedLegParamsAndResponse[];
+  max_fee: string;
+  nonce: string;
+  referral_code?: string;
+  signature: string;
+  signature_expiry_sec: number;
+  signer: Address;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockTradeExecuteWireResponse".
+ */
+export interface BlockTradeExecuteWireResponse {
+  block_trade_id: string;
+  maker_trades: TradeWireResponse[];
+  taker_trades: TradeWireResponse[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "TradeWireResponse".
+ */
+export interface TradeWireResponse {
+  batch_status?: BatchStatus | null;
+  block_trade_id: string | null;
+  direction: Direction;
+  expected_rebate: string;
+  extra_fee: string;
+  index_price: string;
+  instrument_name: string;
+  is_transfer: boolean;
+  label?: string;
+  liquidity_role: LiquidityRole;
+  mark_price: string;
+  op_uuid: string;
+  order_id: string;
+  quote_id: string | null;
+  realized_pnl: string;
+  realized_pnl_excl_fees: string;
+  rfq_id: string | null;
+  subaccount_id: number;
+  timestamp: number;
+  trade_amount: string;
+  trade_fee: string;
+  trade_id: string;
+  trade_price: string;
+  tx_hash?: string | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -3523,6 +4048,166 @@ export interface VaultDepositHoldResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetBlockProposalsEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_GetBlockProposalsEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/get_block_proposals';
+  params: GetBlockProposalsEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetBlockProposalsEdgeRpcParams".
+ */
+export interface GetBlockProposalsEdgeRpcParams {
+  wallet: Address;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockProposalGetWireResponse".
+ */
+export interface BlockProposalGetWireResponse {
+  proposals: BlockProposalPrivateWireResponse[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetBlockTradeEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_GetBlockTradeEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/get_block_trade';
+  params: GetBlockTradeEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetBlockTradeEdgeRpcParams".
+ */
+export interface GetBlockTradeEdgeRpcParams {
+  block_trade_id: string;
+  subaccount_id?: number | null;
+  wallet?: string | null;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockTradeHistoryResponse".
+ */
+export interface BlockTradeHistoryResponse {
+  block_trade_id: string;
+  liquidity_role: LiquidityRole;
+  timestamp: number;
+  trades: TradeHistoryResponse[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "TradeHistoryResponse".
+ */
+export interface TradeHistoryResponse {
+  batch_status?: BatchStatus | null;
+  block_trade_id: string | null;
+  direction: Direction;
+  expected_rebate: string;
+  extra_fee: string;
+  index_price: string;
+  instrument_name: string;
+  is_transfer: boolean;
+  label: string;
+  liquidity_role: LiquidityRole;
+  mark_price: string;
+  op_uuid: string;
+  order_id: string;
+  quote_id: string | null;
+  realized_pnl: string;
+  realized_pnl_excl_fees: string;
+  rfq_id: string | null;
+  subaccount_id: number;
+  timestamp: number;
+  trade_amount: string;
+  trade_fee: string;
+  trade_id: string;
+  trade_price: string;
+  tx_hash?: string | null;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetBlockTradesEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_GetBlockTradesEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/get_block_trades';
+  params: GetBlockTradesEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetBlockTradesEdgeRpcParams".
+ */
+export interface GetBlockTradesEdgeRpcParams {
+  direction?: Direction | null;
+  from_timestamp?: number | null;
+  instrument_name?: string | null;
+  page?: number | null;
+  page_size?: number | null;
+  subaccount_id?: number | null;
+  to_timestamp?: number | null;
+  wallet?: string | null;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PaginatedBlockTradesResult".
+ */
+export interface PaginatedBlockTradesResult {
+  block_trades: BlockTradeHistoryResponse[];
+  pagination: PaginationInfo;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PaginationInfo".
+ */
+export interface PaginationInfo {
+  count: number;
+  num_pages: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetChatRoomsParams".
+ */
+export interface JsonRpcRequestFor_GetChatRoomsParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/get_chat_rooms';
+  params: GetChatRoomsParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetChatRoomsParams".
+ */
+export interface GetChatRoomsParams {
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetChatRoomsResponse".
+ */
+export interface GetChatRoomsResponse {
+  banned: boolean;
+  concierge_dnd: boolean;
+  concierge_unlocked: boolean;
+  rooms: ChatRoom[];
+  tier?: number | null;
+  username: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_GetCollateralsEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_GetCollateralsEdgeRpcParams {
@@ -3547,6 +4232,47 @@ export interface GetCollateralsEdgeRpcParams {
 export interface PrivateGetCollateralsRPCResponse {
   collaterals: CollateralResponse[];
   subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetConciergeMessagesParams".
+ */
+export interface JsonRpcRequestFor_GetConciergeMessagesParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/get_concierge_messages';
+  params: GetConciergeMessagesParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetConciergeMessagesParams".
+ */
+export interface GetConciergeMessagesParams {
+  from_timestamp?: number | null;
+  page_size?: number;
+  to_timestamp?: number;
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetConciergeMessagesResponse".
+ */
+export interface GetConciergeMessagesResponse {
+  messages: ConciergeMessage[];
+  seen_until?: number | null;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ConciergeMessage".
+ */
+export interface ConciergeMessage {
+  creation_timestamp: number;
+  message_id: string;
+  sender: ConciergeSender;
+  text: string;
+  wallet: string;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -3735,14 +4461,6 @@ export interface PerpSettlementEventEdgeResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "PaginationInfo".
- */
-export interface PaginationInfo {
-  count: number;
-  num_pages: number;
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_GetInterestHistoryEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_GetInterestHistoryEdgeRpcParams {
@@ -3775,6 +4493,7 @@ export interface InterestHistoryResult {
  * via the `definition` "InterestPayment".
  */
 export interface InterestPayment {
+  asset?: string | null;
   interest: string;
   subaccount_id: number;
   timestamp: number;
@@ -4271,6 +4990,47 @@ export interface RFQPrivateWireResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_GetRoomMessagesParams".
+ */
+export interface JsonRpcRequestFor_GetRoomMessagesParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/get_room_messages';
+  params: GetRoomMessagesParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetRoomMessagesParams".
+ */
+export interface GetRoomMessagesParams {
+  from_timestamp?: number | null;
+  page_size?: number;
+  room: ChatRoom;
+  to_timestamp?: number;
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "GetRoomMessagesResponse".
+ */
+export interface GetRoomMessagesResponse {
+  messages: RoomMessage[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "RoomMessage".
+ */
+export interface RoomMessage {
+  creation_timestamp: number;
+  message_id: string;
+  room: ChatRoom;
+  text: string;
+  username: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_GetShareholderVaultsEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_GetShareholderVaultsEdgeRpcParams {
@@ -4415,35 +5175,6 @@ export interface PaginatedTradesResult {
   pagination: PaginationInfo;
   subaccount_id: number;
   trades: TradeHistoryResponse[];
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "TradeHistoryResponse".
- */
-export interface TradeHistoryResponse {
-  batch_status?: BatchStatus | null;
-  direction: Direction;
-  expected_rebate: string;
-  extra_fee: string;
-  index_price: string;
-  instrument_name: string;
-  is_transfer: boolean;
-  label: string;
-  liquidity_role: LiquidityRole;
-  mark_price: string;
-  op_uuid: string;
-  order_id: string;
-  quote_id: string | null;
-  realized_pnl: string;
-  realized_pnl_excl_fees: string;
-  rfq_id: string | null;
-  subaccount_id: number;
-  timestamp: number;
-  trade_amount: string;
-  trade_fee: string;
-  trade_id: string;
-  trade_price: string;
-  tx_hash?: string | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -4706,6 +5437,26 @@ export interface WithdrawalForward {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_InvalidateBlockTradeSignatureEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_InvalidateBlockTradeSignatureEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/invalidate_block_trade_signature';
+  params: InvalidateBlockTradeSignatureEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "InvalidateBlockTradeSignatureEdgeRpcParams".
+ */
+export interface InvalidateBlockTradeSignatureEdgeRpcParams {
+  nonce: string;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_PrivateLiquidateEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_PrivateLiquidateEdgeRpcParams {
@@ -4737,6 +5488,33 @@ export interface PrivateLiquidateEdgeRpcParams {
 export interface PrivateLiquidateEdgeRpcResponse {
   op_uuid: string;
   operation_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_MarkConciergeSeenParams".
+ */
+export interface JsonRpcRequestFor_MarkConciergeSeenParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/mark_concierge_seen';
+  params: MarkConciergeSeenParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MarkConciergeSeenParams".
+ */
+export interface MarkConciergeSeenParams {
+  seen_until: number;
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "MarkConciergeSeenResponse".
+ */
+export interface MarkConciergeSeenResponse {
+  seen_until?: number | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -4816,35 +5594,6 @@ export interface CreateOrderEdgeRpcParams {
 export interface OrderCreatedWireResponse {
   order: OrderWireResponse;
   trades: TradeWireResponse[];
-}
-/**
- * This interface was referenced by `DeriveApi`'s JSON-Schema
- * via the `definition` "TradeWireResponse".
- */
-export interface TradeWireResponse {
-  batch_status?: BatchStatus | null;
-  direction: Direction;
-  expected_rebate: string;
-  extra_fee: string;
-  index_price: string;
-  instrument_name: string;
-  is_transfer: boolean;
-  label?: string;
-  liquidity_role: LiquidityRole;
-  mark_price: string;
-  op_uuid: string;
-  order_id: string;
-  quote_id: string | null;
-  realized_pnl: string;
-  realized_pnl_excl_fees: string;
-  rfq_id: string | null;
-  subaccount_id: number;
-  timestamp: number;
-  trade_amount: string;
-  trade_fee: string;
-  trade_id: string;
-  trade_price: string;
-  tx_hash?: string | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5373,6 +6122,54 @@ export interface RfqGetBestQuoteWireResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_SendBlockProposalEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_SendBlockProposalEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/send_block_proposal';
+  params: SendBlockProposalEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SendBlockProposalEdgeRpcParams".
+ */
+export interface SendBlockProposalEdgeRpcParams {
+  direction: Direction;
+  legs: PricedLegParamsAndResponse[];
+  listed?: boolean;
+  max_fee: string;
+  nonce: string;
+  recipient_wallet?: Address | null;
+  signature: string;
+  signature_expiry_sec: number;
+  signer: Address;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_SendConciergeMessageParams".
+ */
+export interface JsonRpcRequestFor_SendConciergeMessageParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/send_concierge_message';
+  params: SendConciergeMessageParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SendConciergeMessageParams".
+ */
+export interface SendConciergeMessageParams {
+  text: string;
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_SendQuoteEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_SendQuoteEdgeRpcParams {
@@ -5433,6 +6230,27 @@ export interface SendRfqEdgeRpcParams {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_SendRoomMessageParams".
+ */
+export interface JsonRpcRequestFor_SendRoomMessageParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/send_room_message';
+  params: SendRoomMessageParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SendRoomMessageParams".
+ */
+export interface SendRoomMessageParams {
+  room: ChatRoom;
+  text: string;
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_SessionKeysEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_SessionKeysEdgeRpcParams {
@@ -5476,6 +6294,33 @@ export interface JsonRpcRequestFor_SetCancelOnDisconnectEdgeRpcParams {
 export interface SetCancelOnDisconnectEdgeRpcParams {
   enabled?: boolean | null;
   wallet?: string | null;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_SetConciergeDndParams".
+ */
+export interface JsonRpcRequestFor_SetConciergeDndParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/set_concierge_dnd';
+  params: SetConciergeDndParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SetConciergeDndParams".
+ */
+export interface SetConciergeDndParams {
+  enabled: boolean;
+  wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SetConciergeDndResponse".
+ */
+export interface SetConciergeDndResponse {
+  concierge_dnd: boolean;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -5607,6 +6452,43 @@ export interface SetSessionKeyActionDataEdgeRpcResponse {
   scopes: string[];
   session_key: string;
   subaccounts: number[];
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_SimulateBlockTradeEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_SimulateBlockTradeEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/simulate_block_trade';
+  params: SimulateBlockTradeEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "SimulateBlockTradeEdgeRpcParams".
+ */
+export interface SimulateBlockTradeEdgeRpcParams {
+  direction: Direction;
+  extra_fee?: string;
+  legs: PricedLegParamsAndResponse[];
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockTradeSideCheckWireResponse".
+ */
+export interface BlockTradeSideCheckWireResponse {
+  estimated_fee: string;
+  expires_at_sec?: number | null;
+  invalid_reason?: string | null;
+  is_valid: boolean;
+  post_initial_margin: string;
+  pre_initial_margin: string;
+  price_band_max_total_cost: string | null;
+  price_band_min_total_cost: string | null;
+  within_price_band?: boolean | null;
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -6057,6 +6939,37 @@ export interface UpdateWhitelistedRecipientsActionDataEdgeRpcResponse {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_VerifyBlockTradeEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_VerifyBlockTradeEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'private/verify_block_trade';
+  params: VerifyBlockTradeEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "VerifyBlockTradeEdgeRpcParams".
+ */
+export interface VerifyBlockTradeEdgeRpcParams {
+  client?: string;
+  direction: Direction;
+  extra_fee?: string;
+  label?: string;
+  legs: PricedLegParamsAndResponse[];
+  max_fee: string;
+  nonce: string;
+  referral_code?: string;
+  role: LiquidityRole;
+  signature: string;
+  signature_expiry_sec: number;
+  signer: Address;
+  subaccount_id: number;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "JsonRpcRequest_for_PrivateWithdrawEdgeRpcParams".
  */
 export interface JsonRpcRequestFor_PrivateWithdrawEdgeRpcParams {
@@ -6418,6 +7331,51 @@ export interface Referrer {
   receiving_wallet?: string | null;
   referral_code: string;
   wallet: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicGetBlockProposalEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_PublicGetBlockProposalEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_block_proposal';
+  params: PublicGetBlockProposalEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicGetBlockProposalEdgeRpcParams".
+ */
+export interface PublicGetBlockProposalEdgeRpcParams {
+  proposal_id: string;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "JsonRpcRequest_for_PublicGetBlockProposalsEdgeRpcParams".
+ */
+export interface JsonRpcRequestFor_PublicGetBlockProposalsEdgeRpcParams {
+  headers?: {
+    [k: string]: unknown;
+  } | null;
+  id: JsonRpcId;
+  method: 'public/get_block_proposals';
+  params: PublicGetBlockProposalsEdgeRpcParams;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "PublicGetBlockProposalsEdgeRpcParams".
+ */
+export interface PublicGetBlockProposalsEdgeRpcParams {
+  currency?: string | null;
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockProposalGetPublicWireResponse".
+ */
+export interface BlockProposalGetPublicWireResponse {
+  proposals: BlockProposalResultPublic[];
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
@@ -7112,6 +8070,7 @@ export interface PendingDepositEntry {
   action_type: string;
   amount?: string | null;
   asset: string;
+  below_min_deposit: boolean;
   block_number?: number | null;
   bridge_to_l1?: PendingDepositBridgeOrigin | null;
   deposit_type: string;
@@ -7432,6 +8391,7 @@ export interface PublicTradesResult {
  */
 export interface TradeSettledPublicResponse {
   batch_status?: BatchStatus | null;
+  block_trade_id: string | null;
   direction: Direction;
   expected_rebate: string;
   extra_fee: string;
@@ -8011,6 +8971,18 @@ export interface ChannelSchemaMap {
     };
     data: TradeWireResponse[];
   };
+  '{wallet}.block_proposals': {
+    params: {
+      wallet: string;
+    };
+    data: BlockProposalPrivateWireResponse;
+  };
+  '{wallet}.concierge': {
+    params: {
+      wallet: string;
+    };
+    data: ConciergeEvent;
+  };
   '{wallet}.rfqs': {
     params: {
       wallet: string;
@@ -8020,6 +8992,16 @@ export interface ChannelSchemaMap {
   'auctions.watch': {
     params: {};
     data: AuctionResult[];
+  };
+  block_proposals: {
+    params: {};
+    data: BlockProposalResultPublic;
+  };
+  'chat.{room}': {
+    params: {
+      room: 'general' | 'fee_tier';
+    };
+    data: RoomEvent;
   };
   'margin.watch': {
     params: {};
@@ -8196,6 +9178,7 @@ export interface TickerSlimPayload {
  * via the `definition` "TradePublicResponseDoc".
  */
 export interface TradePublicResponseDoc {
+  block_trade_id?: string | null;
   direction: Direction2;
   expected_rebate: string;
   extra_fee: string;
@@ -9045,6 +10028,69 @@ export interface RfqTooManyCounterparties {
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockTradeVaultNotAllowed".
+ */
+export interface BlockTradeVaultNotAllowed {
+  code: 11114;
+  data?: string | null;
+  message: 'Vault subaccounts cannot trade blocks';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockTradeSameOwner".
+ */
+export interface BlockTradeSameOwner {
+  code: 11115;
+  data?: string | null;
+  message: 'Both sides of a block trade have the same owner';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockTradeNotFound".
+ */
+export interface BlockTradeNotFound {
+  code: 11116;
+  data?: string | null;
+  message: 'Block trade not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockProposalNotFound".
+ */
+export interface BlockProposalNotFound {
+  code: 11117;
+  data?: string | null;
+  message: 'Block proposal not found';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockProposalNotOpen".
+ */
+export interface BlockProposalNotOpen {
+  code: 11118;
+  data?: string | null;
+  message: 'Block proposal is not open';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockTradeOutsidePriceBand".
+ */
+export interface BlockTradeOutsidePriceBand {
+  code: 11123;
+  data?: string | null;
+  message: 'Block trade price is too far from mark';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "BlockTradesNotAvailableForCurrency".
+ */
+export interface BlockTradesNotAvailableForCurrency {
+  code: 11124;
+  data?: string | null;
+  message: 'Block trades are not available for this currency';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
  * via the `definition` "InstrumentNotFound".
  */
 export interface InstrumentNotFound {
@@ -9276,6 +10322,33 @@ export interface DuplicateSessionKeySubaccount {
   code: 14043;
   data?: string | null;
   message: 'Session key names the same subaccount more than once';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ChatBanned".
+ */
+export interface ChatBanned {
+  code: 15000;
+  data?: string | null;
+  message: 'Wallet is banned from chat';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ChatRoomNotAllowed".
+ */
+export interface ChatRoomNotAllowed {
+  code: 15001;
+  data?: string | null;
+  message: 'Fee tier does not allow access to this chat room';
+}
+/**
+ * This interface was referenced by `DeriveApi`'s JSON-Schema
+ * via the `definition` "ConciergeLocked".
+ */
+export interface ConciergeLocked {
+  code: 15002;
+  data?: string | null;
+  message: 'Concierge is open only to wallets with a fee tier or that the concierge has messaged';
 }
 /**
  * This interface was referenced by `DeriveApi`'s JSON-Schema

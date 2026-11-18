@@ -48,8 +48,8 @@ run(async () => {
 
   // WHERE THE MONEY GOES: `recipient` is part of the signed payload and
   // defaults to the owner wallet — not the signer, and not the subaccount.
-  // Pass `recipient` to send elsewhere. A SESSION KEY may only pay out to an
-  // address on the owner's whitelist (add one with
+  // Pass `recipient` to send elsewhere. A SESSION KEY may only send elsewhere
+  // to an address on the owner's whitelist (add one with
   // client.spotTransfers.updateWhitelistedRecipients), unless it holds `Admin`.
   const ownerAddress = new Wallet(requireEnv('PRIVATE_KEY')).address;
   console.log(`Payout recipient (the owner wallet, by default): ${ownerAddress}`);

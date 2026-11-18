@@ -41,9 +41,9 @@ export interface WithdrawParams {
  * Withdrawals to L1 (`private/withdraw`).
  *
  * The payout address is part of the signed payload and defaults to the owner
- * wallet. A session key may only pay out to an address on the owner's
- * whitelisted recipients — including the owner wallet itself — unless the key
- * holds `Admin`. Add entries with `private/update_whitelisted_recipients`.
+ * wallet. A session key may only pay out to the owner wallet or an address on
+ * the owner's whitelisted recipients, unless the key holds `Admin`. Add entries
+ * with `private/update_whitelisted_recipients`.
  */
 export class WithdrawalsApi {
   constructor(private readonly ctx: ClientContext) {}

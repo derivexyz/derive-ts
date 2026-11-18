@@ -4,8 +4,11 @@ import { DEFAULT_SIGNATURE_EXPIRY_SEC, expiresIn, randomNonce } from '../signing
 import { domainSeparator } from '../signing/eip712';
 import type {
   AccountNotFound,
+  BlockTradeHistoryResponse,
+  Direction,
   InterestHistoryResult,
   OptionSettlementHistoryResponse,
+  PaginatedBlockTradesResult,
   PaginatedTradesResult,
   PrivateChangeSubaccountLabelRPCResponse,
   PrivateGetAccountEdgeRPCResponse,
@@ -27,6 +30,20 @@ export interface TradeHistoryQuery {
   fromTimestamp?: number;
   toTimestamp?: number;
   page?: number;
+  pageSize?: number;
+}
+
+export interface BlockTradesQuery {
+  subaccountId?: number;
+  /** Returns the blocks with a trade in this instrument. */
+  instrumentName?: string;
+  /** Returns the blocks in which any of your trades has this direction. */
+  direction?: Direction;
+  /** UTC-millisecond bounds. */
+  fromTimestamp?: number;
+  toTimestamp?: number;
+  page?: number;
+  /** Blocks per page. */
   pageSize?: number;
 }
 
@@ -200,6 +217,33 @@ export class SubaccountsApi {
       to_timestamp: query.toTimestamp ?? null,
       page: query.page ?? null,
       page_size: query.pageSize ?? null,
+    });
+  }
+
+  /**
+   * Your block trades, newest first, paged by block; defaults to the whole
+   * wallet. Each block holds your side only, with all of its trades.
+   */
+  getBlockTrades(query: BlockTradesQuery = {}): Promise<PaginatedBlockTradesResult> {
+    // The API rejects an explicit null `wallet` / `subaccount_id`, so the unused one is omitted.
+    return this.ctx.send('private/get_block_trades', {
+      wallet: query.subaccountId == null ? this.ctx.credentials().ownerAddress : undefined,
+      subaccount_id: query.subaccountId ?? undefined,
+      instrument_name: query.instrumentName ?? undefined,
+      direction: query.direction ?? undefined,
+      from_timestamp: query.fromTimestamp ?? undefined,
+      to_timestamp: query.toTimestamp ?? undefined,
+      page: query.page ?? undefined,
+      page_size: query.pageSize ?? undefined,
+    });
+  }
+
+  /** Your side of one block trade, by its `block_trade_id`; defaults to the whole wallet. */
+  getBlockTrade(params: { blockTradeId: string; subaccountId?: number }): Promise<BlockTradeHistoryResponse> {
+    return this.ctx.send('private/get_block_trade', {
+      wallet: params.subaccountId == null ? this.ctx.credentials().ownerAddress : undefined,
+      subaccount_id: params.subaccountId ?? undefined,
+      block_trade_id: params.blockTradeId,
     });
   }
 
